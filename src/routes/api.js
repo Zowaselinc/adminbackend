@@ -93,10 +93,6 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/message/getbyid/:id',MessageController.getMessagebyid);
     router.get('/admin/message/edit',MessageController.editMessage);
     router.get('/admin/message/delete/:id',MessageController.deleteMessage);
-
-   
-
- 
  });
 
 
