@@ -16,7 +16,7 @@ class TicketController{
 
             var ticket = await Ticket.create({
                 ticket_id :"ZWLTKT"+ticketid,
-                ticket_id :"ZWLUSER"+userid,
+                user_id :"ZWLUSER"+userid,
                 subject:req.body.subject,
                 description:req.body.description,
                 priority:req.body.priority,
