@@ -11,13 +11,14 @@ class Ticket_conversationController{
 /* ----------------------- CREATE/ADD ADMIN NOTIFICATION END POINT ----------------------- */
     static async createNotification(req, res){
         try{
-
+            const notificationid = crypto.randomBytes(16).toString("hex")
             var notification = await AdminNotification.create({
-                ticket_id:req.bopdy.ticket_id,
-                conversation_id:req.body.conversation_id,
-                sender_id:req.body.sender_id,
-                message:req.body.message,
-                message_type:req.body.message_type,
+                notification_id:"ZWLNOTF"+notificationid,
+                notification_title:req.body.notification_title,
+                notify_description:req.body.notify_description,
+                notification_type:req.body.notification_type,
+                notification_status:req.body.notification_status,
+                admin_id:req.body.admin_id
             });
 
             if(notification){

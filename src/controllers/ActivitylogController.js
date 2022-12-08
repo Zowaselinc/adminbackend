@@ -20,11 +20,8 @@ class AdminlogController{
                     data: {}
                     });
             }
-
-            
-            const adminid = crypto.randomBytes(16).toString("hex")
             var activlog = await Activitylog.create({
-                admin_id: "ZWLADM"+adminid,
+                admin_id:req.body.admin_id,
                 section_accessed:req.body.section_accessed,
                 page_route:req.body.page_route,
                 action:req.body.action

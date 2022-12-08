@@ -1,7 +1,7 @@
 
 const {request} = require("express");
 const jwt = require("jsonwebtoken");
-const {Admin,  AccessToken } = require("~database/models");
+const {Admin,  AccessToken, Activitylog } = require("~database/models");
 const { validationResult } = require("express-validator");
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
@@ -31,16 +31,33 @@ class AuthController{
             var passwordCheck = await bcrypt.compare(req.body.password, admin.password);
 
             if(passwordCheck){
+
+
                 var token = jwt.sign(
                     {id: admin.id},
                     process.env.TOKEN_KEY,
                     {expiresIn : "48h"}
                 )
-                return res.status(200).json({
-                    error : false,
-                    token : token,
-                    message : "Logged in successfully"
-                })
+
+                delete admin['password'];
+                /* -------------------------- RECORD LOGIN ACTIVITY ------------------------- */
+                var activlog = await Activitylog.create({
+                    admin_id:admin['admin_id'],
+                    section_accessed:'Dashboard Home',
+                    page_route:'/api/admin/auth/login',
+                    action:'Logged In'
+                });
+
+                if(activlog){
+                    return res.status(200).json({
+                        error : false,
+                        token : token,
+                        keyid:data.admin_id,
+                        message : "Logged in successfully",
+                        data: admin
+                    })
+                }
+               
 
             }else{
                 return res.status(400).json({

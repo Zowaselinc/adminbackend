@@ -69,6 +69,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 // Routes for activitylogs 
 Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/activitylog/getall',ActivitylogController.getAllActivitylogs);
+    router.get('/admin/activitylog/add',ActivitylogController.createActivitylog);
     router.get('/admin/activitylog/getbyid/:id',ActivitylogController.getActivitylogbyid);
     router.get('/admin/activitylog/getbyadminid/:admin_id',ActivitylogController.getActivitylogbyAdminid);
     router.get('/admin/activitylog/getallparams/:offset/:limit',ActivitylogController.getActivitylogbyparams);

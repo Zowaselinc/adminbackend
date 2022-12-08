@@ -268,6 +268,16 @@ class AdminController{
     static async editAdminbyadminid(req, res){
         try{
 
+            const errors = validationResult(req);
+  
+            if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors:true,
+                message: "All fields are required",
+                data: {}
+                });
+            }
+
         var editAdmin = await Admin.update({
             first_name : req.body.first_name,
             last_name : req.body.last_name,
@@ -276,15 +286,16 @@ class AdminController{
             role: req.body.role,
         }, { where : { admin_id : req.body.admin_id } });
 
-        if(editAdmin == null){
-            return res.status(200).json({
-                error: true,
-                message: "Not found"
-            })
-        }else{
+        if(editAdmin){
             return res.status(200).json({
                 error : false,
                 message : "Admin edited succesfully",
+                
+            })
+        }else{
+            return res.status(200).json({
+                error : true,
+                message : "Failed to edit admin",
                 data : editAdmin
             })
         }
@@ -309,6 +320,15 @@ class AdminController{
     /* ---------------------- EDIT ADMIN BY ID END POINT ---------------------- */
     static async editAdminbyid(req, res){
         try{
+            const errors = validationResult(req);
+  
+            if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors:true,
+                message: "All fields are required",
+                data: {}
+                });
+            }
 
         var editAdmin = await Admin.update({
             first_name : req.body.first_name,
@@ -318,15 +338,16 @@ class AdminController{
             role: req.body.role,
         }, { where : {id : req.body.id } });
 
-        if(editAdmin == null){
+        if(editAdmin){
             return res.status(200).json({
-                error: true,
-                message: "Not found"
+                error : false,
+                message : "Admin edited succesfully",
+                data : editAdmin
             })
         }else{
             return res.status(200).json({
                 error : false,
-                message : "Admin edited succesfully",
+                message : "Failed to edit admin",
                 data : editAdmin
             })
         }

@@ -11,8 +11,8 @@ class TicketController{
         try{
 
           
-            const userid = crypto.randomBytes(8).toString("hex")
-            const ticketid = crypto.randomBytes(8).toString("hex")
+            const userid = crypto.randomBytes(16).toString("hex")
+            const ticketid = crypto.randomBytes(16).toString("hex")
 
             var ticket = await Ticket.create({
                 ticket_id :"ZWLTKT"+ticketid,
@@ -25,6 +25,7 @@ class TicketController{
                
             });
 
+            
             if(ticket){
                 return res.status(200).json({
                     error : false,
