@@ -8,6 +8,8 @@ const RoleController = require('~controllers/RoleController');
 const ActivitylogController = require('~controllers/ActivitylogController');
 const TicketController = require('~controllers/TicketController');
 const MessageController = require('~controllers/MessageController');
+const Ticket_conversationController = require('~controllers/Ticket_conversationController');
+const Admin_notificationController = require('~controllers/Admin_notificationController')
 
 
 
@@ -76,7 +78,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 //  ROUTE FOR TICKETS END POINT 
 Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/ticket/add',TicketController.createTicket);
-    router.get('/admin/ticket/getll',TicketController.getAllTickets);
+    router.get('/admin/ticket/getall',TicketController.getAllTickets);
     router.get('/admin/ticket/getbyid/:id',TicketController.getTicketbyid);
     router.get('/admin/ticket/getbyticketid/:ticket_id',TicketController.getbyTicketid);
     router.get('/admin/ticket/getbyuserid/:user_id',TicketController.getticketbyuserid);
@@ -96,9 +98,24 @@ Router.middleware(['isAuthenticated']).group((router)=>{
  });
 
 
+ //  ROUTE FOR TICKET CONVERSATION END POINT 
+ Router.middleware(['isAuthenticated']).group((router)=>{
+    router.get('/admin/ticketcovtn/add',Ticket_conversationController.createTconvtn);  
+    router.get('/admin/ticketcovtn/getall',Ticket_conversationController.getAllTconvtn);  
+    router.get('/admin/ticketcovtn/getallparams/:offset/:limit',Ticket_conversationController.getTconvtnbyparams);  
+    router.get('/admin/ticketcovtn/getbyid/:id',Ticket_conversationController.getTconvtnbyid);  
+    router.get('/admin/ticketcovtn/delete/:id',Ticket_conversationController.deleteTconvtn);  
+ });
 
-
-
+ //  ROUTE FOR ADMIN NOTIFICATION END POINT 
+ Router.middleware(['isAuthenticated']).group((router)=>{
+    router.get('/admin/notification/add',Admin_notificationController.createNotification);  
+    router.get('/admin/notification/getall',Admin_notificationController.getAllNotification);  
+    router.get('/admin/notification/getallparams/:offset/:limit',Admin_notificationController.getNotificationbyparams);  
+    router.get('/admin/notification/getbyid/:id',Admin_notificationController.getNotificationbyid); 
+    router.get('/admin/notification/edit',Admin_notificationController.editNotification); 
+    router.get('/admin/notification/delete/:id',Admin_notificationController.deleteNotification);  
+ });
 
 
 
