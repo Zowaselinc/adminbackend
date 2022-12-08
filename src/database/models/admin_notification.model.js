@@ -7,28 +7,24 @@ const generateTimestamps = require("./timestamps");
 let Schema = (Sequelize,mode) => {
 
     return {
-        ticket_id: {
+        notification_id: {
             type: Sequelize.STRING
         },
-        user_id : {
+        notification_title : {
             type: Sequelize.STRING
         },
-        subject: {
-            type: Sequelize.STRING
-        },
-        description: {
+        notify_description: {
             type: Sequelize.TEXT
         },
-        priority: {
-            type: Sequelize.INTEGER
-        },
-        admin_assigned: {
+        notification_type: {
             type: Sequelize.STRING
         },
-        ticket_status: {
+        notification_status: {
             type: Sequelize.INTEGER
         },
-        
+        admin_id: {
+            type: Sequelize.STRING
+        }, 
         ...generateTimestamps(Sequelize,mode)
     }
 }
