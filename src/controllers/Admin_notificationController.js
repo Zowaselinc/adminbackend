@@ -3,16 +3,16 @@
 
 const { request } = require("express");
 const { validationResult } = require("express-validator");
-const {TicketConversation, ErrorLog } = require("~database/models");
+const {AdminNotification, ErrorLog } = require("~database/models");
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
 
 class Ticket_conversationController{
-/* ----------------------- CREATE/ADD TICKET CONVERSATION END POINT ----------------------- */
-    static async createTconvtn(req, res){
+/* ----------------------- CREATE/ADD ADMIN NOTIFICATION END POINT ----------------------- */
+    static async createNotification(req, res){
         try{
 
-            var conversation = await TicketConversation.create({
+            var notification = await AdminNotification.create({
                 ticket_id:req.bopdy.ticket_id,
                 conversation_id:req.body.conversation_id,
                 sender_id:req.body.sender_id,
@@ -20,17 +20,17 @@ class Ticket_conversationController{
                 message_type:req.body.message_type,
             });
 
-            if(conversation){
+            if(notification){
                 return res.status(200).json({
                     error : false,
-                     message : "Ticket Conversation created succesfully"
+                     message : "Admin Notification created succesfully"
 
                  });
  
             }else{
                 return res.status(200).json({
                     error : true,
-                     message : "Failed to create Ticket Conversation"
+                     message : "Failed to create Admin Notification"
   
                  });
 
@@ -38,9 +38,9 @@ class Ticket_conversationController{
 
         }catch(e){
             var logError = await ErrorLog.create({
-                error_name: "Error on creating Ticket Conversation",
+                error_name: "Error on creating Admin Notification",
                 error_description: e.toString(),
-                route: "/api/admin/ticketcovtn/add",
+                route: "/api/admin/notification/add",
                 error_code: "500"
             });
             if(logError){
@@ -57,31 +57,31 @@ class Ticket_conversationController{
     /* -------------------------------------------------------------------------- */
 
 
-/* ------------------------ GET ALL TICKET CONVERSATION END POINT ------------------------ */
-            static async getAllTconvtn(req, res){
+/* ------------------------ GET ALL ADMIN NOTIFICATION END POINT ------------------------ */
+            static async getAllNotification(req, res){
                 try{
 
-                var allconversation = await TicketConversation.findAll();
-                if(allconversation){
+                var allnotification = await AdminNotification.findAll();
+                if(allnotification){
                     return res.status(200).json({
                         error : false,
-                        message: "Ticket Conversation acquired successfully",
-                        data : allconversation
+                        message: "Admin NotificationS acquired successfully",
+                        data : allnotification
                     });
 
                 }else{
                     return res.status(200).json({
                         error : true,
-                        message: "Unable to acquire Ticket Conversation",
+                        message: "Unable to acquire Admin Notification",
                     });
 
                 }
 
             }catch(e){
                 var logError = await ErrorLog.create({
-                    error_name: "Error on getting all Ticket Conversation",
+                    error_name: "Error on getting all Admin Notification",
                     error_description: e.toString(),
-                    route: "/api/admin/ticketcovtn/getall",
+                    route: "/api/admin/notification/getall",
                     error_code: "500"
                 });
                 if(logError){
@@ -93,33 +93,33 @@ class Ticket_conversationController{
             }
             }
 
-      /* --------------------------- GET TICKET CONVERSATION BY PARAMS -------------------------- */
-      static async getTconvtnbyparams(req,res){
+      /* --------------------------- GET ADMIN NOTIFICATION BY PARAMS -------------------------- */
+      static async getNotificationbyparams(req,res){
         try{
             const limit = Number(req.params.limit);
             const offset = Number(req.params.offset);
        
-        var conversationparams = await TicketConversation.findAll({
+        var notificationparams = await AdminNotification.findAll({
             limit:limit,
             offset:offset
         });
-        if(conversationparams){
+        if(notificationparams){
             return res.status(200).json({
                 error: false,
-                message: 'Ticket Conversation acquired successfully',
-                data: conversationparams
+                message: 'Admin Notification acquired successfully',
+                data: notificationparams
             })
         }else{
             return res.status(200).json({
                 error: true,
-                message: 'Failed to acquire Ticket Conversation',
+                message: 'Failed to acquire Admin Notification',
             })
         }
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on getting all Ticket Conversation by paprams",
+            error_name: "Error on getting all Admin Notification by paprams",
             error_description: e.toString(),
-            route: "/api/admin/ticketcovtn/getallparams/:offset/:limit",
+            route: "/api/admin/notification/getallparams/:offset/:limit",
             error_code: "500"
         });
         if(logError){
@@ -134,12 +134,12 @@ class Ticket_conversationController{
 
     }
 
-    /* --------------------- GET GET TICKET CONVERSATION BY  ID ENDPOINT --------------------- */
-    static async getTconvtnbyid(req,res){
+    /* --------------------- GET ADMIN NOTIFICATION BY  ID ENDPOINT --------------------- */
+    static async getNotificationbyid(req,res){
         try{
 
-        var conversationid = await TicketConversation.findOne({where: {id : req.params.id}});
-        if(conversationid == null){
+        var notificationid = await AdminNotification.findOne({where: {id : req.params.id}});
+        if(notificationid == null){
             return res.status(200).json({
                 error:true,
                 message: 'Not found'
@@ -147,15 +147,15 @@ class Ticket_conversationController{
         }else{
             return res.status(200).json({
                 error: false,
-                message: 'Ticket Conversation acquired successfully',
-                data: conversationid
+                message: 'Admin Notification acquired successfully',
+                data: notificationid
             })
         }
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on getting Ticket Conversation by id",
+            error_name: "Error on getting Admin Notification by id",
             error_description: e.toString(),
-            route: "/api/admin/ticketcovtn/getbyid/:id",
+            route: "/api/admin/notification/getbyid/:id",
             error_code: "500"
         });
         if(logError){
@@ -168,13 +168,54 @@ class Ticket_conversationController{
     }
     }
 
-    /* ------------------------ DELETE GET TICKET CONVERSATION BY ID ------------------------ */
-    static async deleteTconvtn(req, res){
+    /* ------------------------- EDIT NOTIFICATION BY ID ------------------------ */
+
+    static async editNotification(req, res){
         try{
 
-        var delconversation = await TicketConversation.destroy({ where : {id : req.params.id}});
+        var editmessage = await Message.update({
+           notification_status:req.body.notification_status
+        }, { where : { id : req.body.id } });
 
-        if(delconversation == null){
+        if(editmessage== null){
+            return res.status(200).json({
+                error: true,
+                message: "Not found"
+            })
+        }else{
+            return res.status(200).json({
+                error : false,
+                message : "Notification status edited succesfully",
+                data : editmessage
+            })
+        }
+       
+    }catch(e){
+        var logError = await ErrorLog.create({
+            error_name: "Error on editting Notification status ",
+            error_description: e.toString(),
+            route: "/api/admin/notification/edit",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+                
+            })
+
+        }
+    }
+    }
+
+
+    /* ------------------------ DELETE ADMIN NOTIFICATION BY ID ------------------------ */
+    static async deleteNotification(req, res){
+        try{
+
+        var delnotification = await AdminNotification.destroy({ where : {id : req.params.id}});
+
+        if(delnotification == null){
             return res.send(200).json({
                 error : true,
                 message : "Not found",
@@ -182,15 +223,15 @@ class Ticket_conversationController{
         }else{
             return res.status(200).json({
                 error : false,
-                message : "Ticket Conversation deleted successfully",
+                message : "Admin Notification deleted successfully",
             })
         }
 
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on deleting Ticket Conversation",
+            error_name: "Error on deleting Admin Notification",
             error_description: e.toString(),
-            route: "/api/admin/message/delete/:id",
+            route: "/api/admin/notification/delete/:id",
             error_code: "500"
         });
         if(logError){

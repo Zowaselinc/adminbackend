@@ -221,17 +221,17 @@ static async editRole(req,res){
             role_description:req.body.role_description
         },{where: {id:req.body.id}});
 
-        if(editRoles){
+        if(editRoles == null){
             return res.status(200).json({
-                error : false,
-                message : "Role edited succesfully",
+                error : true,
+                message : "Not found",
                 data : editRoles
             })
 
         }else {
             return res.status(200).json({
-                error : true,
-                message : "Failed to edit role",
+                error : false,
+                message : "Role edited successfully",
                 
             });
         }
