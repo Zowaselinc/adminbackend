@@ -13,7 +13,8 @@ const Admin_notificationController = require('~controllers/Admin_notificationCon
 const emailController = require('~controllers/emailController');
 const UserController = require('~controllers/UserController');
 const ErrorlogController = require('~controllers/ErrorlogController');
-const CompanyController = require('~controllers/CompanyController')
+const CompanyController = require('~controllers/CompanyController');
+const OrderController = require('~controllers/OrderController')
 
 
 
@@ -157,6 +158,16 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/company/getbyuserid/:user_id',CompanyController.getcompanybyuserid);  
     router.get('/admin/company/getbycompanyemail/:company_email',CompanyController.getcompanybyCompanyemail);
     router.get('/admin/company/getallparams/:offset/:limit', CompanyController.getcompaniesbyparams);
+ 
+ });
+
+  //  ROUTE FOR COMPANIES END POINT 
+Router.middleware(['isAuthenticated']).group((router)=>{
+
+    router.get('/admin/order/getall',OrderController.getallOrders);  
+    router.get('/admin/order/getbyorderid/:order_id',OrderController.getorderbyorderid);  
+    router.get('/admin/order/getbyid/:id',OrderController.getorderbyid);
+    router.get('/admin/order/getallparams/:offset/:limit', OrderController.getordersbyparams);
  
  });
 
