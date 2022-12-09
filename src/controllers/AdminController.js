@@ -23,8 +23,8 @@ class AdminController{
 
 
             var encrypted = await bcrypt.hash(req.body.password, 10);
-            const adminid = crypto.randomBytes(16).toString("hex")
-            const recoveryPhrase = crypto.randomBytes(16).toString("hex")
+            const adminid = crypto.randomBytes(16).toString("hex");
+            const recoveryPhrase = crypto.randomBytes(16).toString("hex");
 
             var admin = await Admin.create({
                 admin_id :"ZWLADM"+adminid,
@@ -296,7 +296,6 @@ class AdminController{
             return res.status(200).json({
                 error : true,
                 message : "Failed to edit admin",
-                data : editAdmin
             })
         }
        
@@ -374,10 +373,10 @@ class AdminController{
     static async deleteAdminbyadminid(req, res){
         try{
 
-        var delAdmin = await Admin.destroy({ where : {admin_id : req.params.admin_id}});
+        var delAdminid = await Admin.destroy({ where : {admin_id : req.params.admin_id}});
 
-        if(delAdmin){
-            return res.send(200).json({
+        if(delAdminid){
+            return res.status(200).json({
                 error : false,
                 message : "Admin deleted succesfully",
             })
@@ -411,7 +410,7 @@ class AdminController{
         var delAdminid = await Admin.destroy({ where : {id : req.params.id}});
 
         if(delAdminid == null){
-            return res.send(200).json({
+            return res.status(200).json({
                 error : true,
                 message : "Not found",
             })

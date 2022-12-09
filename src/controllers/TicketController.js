@@ -11,12 +11,12 @@ class TicketController{
         try{
 
           
-            const userid = crypto.randomBytes(16).toString("hex")
-            const ticketid = crypto.randomBytes(16).toString("hex")
+            
+            const ticketid = crypto.randomBytes(16).toString("hex");
 
             var ticket = await Ticket.create({
                 ticket_id :"ZWLTKT"+ticketid,
-                user_id :"ZWLUSER"+userid,
+                user_id :req.body.user_id,
                 subject:req.body.subject,
                 description:req.body.description,
                 priority:req.body.priority,
@@ -261,16 +261,15 @@ class TicketController{
            ticket_status:req.body.ticket_status
         }, { where : { id : req.body.id } });
 
-        if(editTicket== null){
+        if(editTicket){
             return res.status(200).json({
-                error: true,
-                message: "Not found"
+                error: false,
+                message: "Ticket Status edited succesfully" 
             })
         }else{
             return res.status(200).json({
-                error : false,
-                message : "Ticket Status edited succesfully",
-                data : editTicket
+                error : true,
+                message : "Failed to edit ticket status",
             })
         }
        
@@ -298,15 +297,15 @@ class TicketController{
 
         var delticket = await Ticket.destroy({ where : {id : req.params.id}});
 
-        if(delticket == null){
-            return res.send(200).json({
-                error : true,
-                message : "Not found",
-            })
-        }else{
+        if(delticket){
             return res.status(200).json({
                 error : false,
                 message : "Ticket deleted successfully",
+            })
+        }else{
+            return res.status(200).json({
+                error :true,
+                message : "Failed to delete Ticket",
             })
         }
 

@@ -9,7 +9,11 @@ const ActivitylogController = require('~controllers/ActivitylogController');
 const TicketController = require('~controllers/TicketController');
 const MessageController = require('~controllers/MessageController');
 const Ticket_conversationController = require('~controllers/Ticket_conversationController');
-const Admin_notificationController = require('~controllers/Admin_notificationController')
+const Admin_notificationController = require('~controllers/Admin_notificationController');
+const emailController = require('~controllers/emailController');
+const UserController = require('~controllers/UserController');
+const ErrorlogController = require('~controllers/ErrorlogController');
+const CompanyController = require('~controllers/CompanyController')
 
 
 
@@ -27,6 +31,12 @@ const Router = RouteProvider.Router;
 // Authentication route 
 Router.group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
+   
+});
+
+// mailer end point 
+Router.group((router)=>{
+    router.post('/admin/email/sendmail',emailController.sendEmail);
    
 });
 
@@ -58,6 +68,18 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/roles/delete/:id',RoleController.deleteRole);
 
 });
+
+
+
+// Routes for Errorlogs 
+Router.middleware(['isAuthenticated']).group((router)=>{
+    router.get('/admin/errolog/getall',ErrorlogController.getallErrologs);
+    router.get('/admin/errolog/getallparams/:offset/:limit',ErrorlogController.geterrologsbyparams);
+    router.get('/admin/errolog/getbyid/:id',ErrorlogController.getErrorlogbyid);
+    router.post('/admin/errolog/delete/:id',ErrorlogController.deleteErrorlogbyid);
+ });
+
+
 // Routes for Adminlogs 
 Router.middleware(['isAuthenticated']).group((router)=>{
    router.get('/admin/adminlog/getall',AdminlogController.getAllAdminlog);
@@ -78,44 +100,64 @@ Router.middleware(['isAuthenticated']).group((router)=>{
  });
 //  ROUTE FOR TICKETS END POINT 
 Router.middleware(['isAuthenticated']).group((router)=>{
-    router.get('/admin/ticket/add',TicketController.createTicket);
+    router.post('/admin/ticket/add',TicketController.createTicket);
     router.get('/admin/ticket/getall',TicketController.getAllTickets);
     router.get('/admin/ticket/getbyid/:id',TicketController.getTicketbyid);
     router.get('/admin/ticket/getbyticketid/:ticket_id',TicketController.getbyTicketid);
     router.get('/admin/ticket/getbyuserid/:user_id',TicketController.getticketbyuserid);
     router.get('/admin/ticket/getallparams/:offset/:limit',TicketController.getTicketsbyparams);
-    router.get('/admin/ticket/edit',TicketController.editTicket);
-    router.get('/admin/ticket/delete',TicketController.deleteTicket);
+    router.post('/admin/ticket/edit',TicketController.editTicket);
+    router.post('/admin/ticket/delete/:id',TicketController.deleteTicket);
  });
 
  //  ROUTE FOR MESSAGE END POINT 
 Router.middleware(['isAuthenticated']).group((router)=>{
-    router.get('/admin/message/add',MessageController.createMessage);
-    router.get('/admin/message/getall',MessageController.getAllMessages);
+    router.post('/admin/message/add',MessageController.createMessage);
     router.get('/admin/message/getallparams/:offset/:limit',MessageController.getMessagesbyparams);
-    router.get('/admin/message/getbyid/:id',MessageController.getMessagebyid);
-    router.get('/admin/message/edit',MessageController.editMessage);
-    router.get('/admin/message/delete/:id',MessageController.deleteMessage);
+    router.get('/admin/message/getbyuserid/:id',MessageController.getMessagebyid);
+    router.post('/admin/message/edit',MessageController.editMessage);
+    router.post('/admin/message/delete/:id',MessageController.deleteMessage);
  });
 
 
  //  ROUTE FOR TICKET CONVERSATION END POINT 
  Router.middleware(['isAuthenticated']).group((router)=>{
-    router.get('/admin/ticketcovtn/add',Ticket_conversationController.createTconvtn);  
+    router.post('/admin/ticketcovtn/add',Ticket_conversationController.createTconvtn);  
     router.get('/admin/ticketcovtn/getall',Ticket_conversationController.getAllTconvtn);  
     router.get('/admin/ticketcovtn/getallparams/:offset/:limit',Ticket_conversationController.getTconvtnbyparams);  
     router.get('/admin/ticketcovtn/getbyid/:id',Ticket_conversationController.getTconvtnbyid);  
-    router.get('/admin/ticketcovtn/delete/:id',Ticket_conversationController.deleteTconvtn);  
+    router.post('/admin/ticketcovtn/delete/:id',Ticket_conversationController.deleteTconvtn);  
  });
 
  //  ROUTE FOR ADMIN NOTIFICATION END POINT 
  Router.middleware(['isAuthenticated']).group((router)=>{
-    router.get('/admin/notification/add',Admin_notificationController.createNotification);  
+    router.post('/admin/notification/add',Admin_notificationController.createNotification);  
     router.get('/admin/notification/getall',Admin_notificationController.getAllNotification);  
     router.get('/admin/notification/getallparams/:offset/:limit',Admin_notificationController.getNotificationbyparams);  
     router.get('/admin/notification/getbyid/:id',Admin_notificationController.getNotificationbyid); 
-    router.get('/admin/notification/edit',Admin_notificationController.editNotification); 
-    router.get('/admin/notification/delete/:id',Admin_notificationController.deleteNotification);  
+    router.post('/admin/notification/edit',Admin_notificationController.editNotification); 
+    router.post('/admin/notification/delete/:id',Admin_notificationController.deleteNotification);  
+ });
+
+//  ROUTE FOR USERS END POINT 
+Router.middleware(['isAuthenticated']).group((router)=>{
+
+    router.post('/admin/users/regitermerchant',UserController.registerMerchant);  
+    router.get('/admin/users/getall',UserController.getAllUsers);  
+    router.get('/admin/users/bytype/:type', UserController.getUsersByType);
+    router.get('/admin/users/:id', UserController.getUserById);
+ 
+ });
+
+
+ //  ROUTE FOR COMPANIES END POINT 
+Router.middleware(['isAuthenticated']).group((router)=>{
+
+    router.get('/admin/company/getall',CompanyController.getallCompanies);  
+    router.get('/admin/company/getbyuserid/:user_id',CompanyController.getcompanybyuserid);  
+    router.get('/admin/company/getbycompanyemail/:company_email',CompanyController.getcompanybyCompanyemail);
+    router.get('/admin/company/getallparams/:offset/:limit', CompanyController.getcompaniesbyparams);
+ 
  });
 
 

@@ -171,7 +171,7 @@ class AdminlogController{
         try{
 
         var adminlogid = await Adminlog.findOne({where: {admin_id : req.params.admin_id}});
-        if(adminlogid == null){
+        if(adminlogid.length<1){
             return res.status(200).json({
                 error:true,
                 message: 'Not found'

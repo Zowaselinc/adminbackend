@@ -6,6 +6,7 @@ const { validationResult } = require("express-validator");
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 require('dotenv').config();
+const mailer = require("../services/mailer");
 
 class AuthController{
 
@@ -13,6 +14,8 @@ class AuthController{
 
     static async login(req, res){
         const errors = validationResult(req);
+        var admin = await Admin.findOne({where : { email : req.body.email }});
+
         try{
 
 
@@ -25,8 +28,7 @@ class AuthController{
 
         }
 
-        var admin = await Admin.findOne({where : {email : req.body.email }});
-
+      
         if(admin){
             var passwordCheck = await bcrypt.compare(req.body.password, admin.password);
 
@@ -39,7 +41,7 @@ class AuthController{
                     {expiresIn : "48h"}
                 )
 
-                delete admin['password'];
+                
                 /* -------------------------- RECORD LOGIN ACTIVITY ------------------------- */
                 var activlog = await Activitylog.create({
                     admin_id:admin['admin_id'],
@@ -48,11 +50,15 @@ class AuthController{
                     action:'Logged In'
                 });
 
+                /* ------------------------- SEND NOTIFICATION EMAIL ------------------------ */
+            
                 if(activlog){
+                    await mailer().to(req.body.email).from(process.env.MAIL_FROM)
+                    .subject('Login Notification').template("emails/LoginNotify").send();
+                     admin['password']="";
                     return res.status(200).json({
                         error : false,
                         token : token,
-                        keyid:data.admin_id,
                         message : "Logged in successfully",
                         data: admin
                     })

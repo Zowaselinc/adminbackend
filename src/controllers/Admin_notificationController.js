@@ -178,16 +178,16 @@ class Ticket_conversationController{
            notification_status:req.body.notification_status
         }, { where : { id : req.body.id } });
 
-        if(editmessage== null){
-            return res.status(200).json({
-                error: true,
-                message: "Not found"
-            })
-        }else{
+        if(editmessage){
             return res.status(200).json({
                 error : false,
                 message : "Notification status edited succesfully",
-                data : editmessage
+            })
+           
+        }else{
+            return res.status(200).json({
+                error: true,
+                message: "Failed to edit notification"
             })
         }
        
@@ -216,15 +216,16 @@ class Ticket_conversationController{
 
         var delnotification = await AdminNotification.destroy({ where : {id : req.params.id}});
 
-        if(delnotification == null){
-            return res.send(200).json({
-                error : true,
-                message : "Not found",
-            })
-        }else{
+        if(delnotification){
             return res.status(200).json({
                 error : false,
                 message : "Admin Notification deleted successfully",
+            })
+        }else{
+           
+            return res.send(200).json({
+                error : true,
+                message : "Failed to delete notification",
             })
         }
 
