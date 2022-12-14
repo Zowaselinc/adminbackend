@@ -58,6 +58,8 @@ const Router = RouteProvider.Router;
 /* ------------------------- // Authentication route ------------------------ */
 Router.group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
+    router.post('/admin/auth/register',AdminValidator.createAdminValidator,AuthController.registerAdmin);
+   
 });
 
 /* --------------------------- // mailer end point -------------------------- */
