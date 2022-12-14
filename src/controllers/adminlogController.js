@@ -19,14 +19,27 @@ class AdminlogController{
                     });
             }
 
+
             
             const adminid = crypto.randomBytes(16).toString("hex")
             var adminlog = await Adminlog.create({
                 admin_id: "ZWLADM"+adminid,
-               device_info:req.body.device_info,
+                device_info:req.body.device_info,
                 ip_address:req.body.ip_address,
                 location:req.body.location
             });
+
+                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
+
+            await Activitylog.create({
+              admin_id:adminId ,
+              section_accessed:'Create Adminlogs',
+              page_route:'/api/admin/adminlog/add',
+              action:'Adding Adminlogs'
+          });
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
             if(adminlog){
                 return res.status(200).json({
                     error:false,
@@ -61,14 +74,31 @@ class AdminlogController{
             static async getAllAdminlog(req, res){
                 try{
 
-                var adminlogs = await Adminlog.findAll();
-   
-                return res.status(200).json({
-                    error : false,
-                    message: "Adminlog acquired successfully",
-                    data : adminlogs
-                })
 
+                var adminlogs = await Adminlog.findAll();
+
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
+
+            await Activitylog.create({
+              admin_id:adminId ,
+              section_accessed:'View all Adminlogs',
+              page_route:'/api/admin/adminlog/getall',
+              action:'Viewing all adminlogs'
+          });
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                    if(adminlogs){
+                        return res.status(200).json({
+                            error : false,
+                            message: "Adminlog acquired successfully",
+                            data : adminlogs
+                        })
+                    }else{
+                        return res.status(200).json({
+                            error : true,
+                            message: "Failed to acquire adminlog",
+                        })
+                    }
             }catch(e){
                 var logError = await ErrorLog.create({
                     error_name: "Error on getting all Adminlogs",
@@ -98,6 +128,18 @@ class AdminlogController{
             limit:limit,
             offset:offset
         });
+
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+              var adminId = await  serveAdminid.getTheId(req);
+
+              await Activitylog.create({
+                admin_id:adminId ,
+                section_accessed:'View sets of adminlogs',
+                page_route:'/api/admin/adminlog/getallparams',
+                action:'View adminlogs by parameters'
+            });
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(adminlogparams){
             return res.status(200).json({
                 error: false,
@@ -135,6 +177,18 @@ class AdminlogController{
         try{
 
         var adminlogid = await Adminlog.findOne({where: {id : req.params.id}});
+
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+              var adminId = await  serveAdminid.getTheId(req);
+
+              await Activitylog.create({
+                admin_id:adminId ,
+                section_accessed:'View Adminlog',
+                page_route:'/api/admin/adminlog/getbyid/:id',
+                action:'Viewing an adminlog'
+            });
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(adminlogid == null){
             return res.status(200).json({
                 error:true,
@@ -171,6 +225,17 @@ class AdminlogController{
         try{
 
         var adminlogid = await Adminlog.findOne({where: {admin_id : req.params.admin_id}});
+
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'view Adminlogs',
+            page_route:'/api/admin/adminlog/getbyadminid/;admin_id',
+            action:'Viewing an Adminlog by its admmin id'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(adminlogid.length<1){
             return res.status(200).json({
                 error:true,

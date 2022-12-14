@@ -11,6 +11,14 @@ module.exports = {
         body('role').isString().not().isEmpty()
     ],
 
+
+    editAdminValidator: [
+        body('first_name').isString().not().isEmpty(),
+        body('last_name' ).isString().not().isEmpty(),
+        body('phone').isString().not().isEmpty(),
+        body('role').isString().not().isEmpty()
+    ],
+
     loginAdminValidator : [
         body('email').isString().isEmail(),
         body('password').isString()

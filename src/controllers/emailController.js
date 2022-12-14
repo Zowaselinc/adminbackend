@@ -18,7 +18,7 @@ class emailController{
 
         return res.status(200).json({
             error : false,
-             message : "Message created succesfully"
+             message : "Message sent successfully"
 
          });
 

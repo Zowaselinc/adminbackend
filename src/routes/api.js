@@ -1,6 +1,8 @@
 
 
-
+/* -------------------------------------------------------------------------- */
+/*                               ALL CONTROLLERS                              */
+/* -------------------------------------------------------------------------- */
 const AdminController = require('~controllers/AdminController');
 const AdminlogController = require('~controllers/adminlogController');
 const AuthController = require('~controllers/AuthController');
@@ -14,34 +16,57 @@ const emailController = require('~controllers/emailController');
 const UserController = require('~controllers/UserController');
 const ErrorlogController = require('~controllers/ErrorlogController');
 const CompanyController = require('~controllers/CompanyController');
-const OrderController = require('~controllers/OrderController')
+const OrderController = require('~controllers/OrderController');
+const Input = require('~controllers/InputProductController');
+const CropController = require('~controllers/CropController');
+const CropRequestController = require('~controllers/CropRequestController');
+const CropSpecificationController = require('~controllers/CropSpecificationController');
+
+
+/* -------------------------------------------------------------------------- */
+/*                               ALL CONTROLLERS                              */
+/* -------------------------------------------------------------------------- */
 
 
 
-const {Role} = require('~database/models');
-const { Admin} = require('~database/models');
-const RouteProvider = require('~providers/RouteProvider');
+/* -------------------------------------------------------------------------- */
+/*                              // ALL VALIDATORS                             */
+/* -------------------------------------------------------------------------- */
 const AdminValidator = require('./validators/AdminValidator');
 const AuthValidator = require('./validators/AuthValidator');
+const Ticketvalidator = require('./validators/TicketValidator');
+const MessageValidator =require('./validators/MessageValidator');
+const InputsValidator = require('./validators/InputsValidator');
+const OrderValidator = require('./validators/OrderValidator');
+const CropValidator = require('./validators/CropValidator');
+const CropSpecificationValidator = require('./validators/CropSpecificationValidator');
+const CropRequestValidator = require('./validators/CropRequestValidator');
+/* -------------------------------------------------------------------------- */
+/*                              // ALL VALIDATORS                             */
+/* -------------------------------------------------------------------------- */
+
+
+/* --------------------------- // providerS --------------------------- */
+const RouteProvider = require('~providers/RouteProvider');
 
 const Router = RouteProvider.Router;
+/* --------------------------- // providerS --------------------------- */
 
+                // **********************************************
+/* --------------------------- // DASHBOARD ROUTES -------------------------- */
 
-// Routes
-
-// Authentication route 
+/* ------------------------- // Authentication route ------------------------ */
 Router.group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
-   
 });
 
-// mailer end point 
+/* --------------------------- // mailer end point -------------------------- */
 Router.group((router)=>{
     router.post('/admin/email/sendmail',emailController.sendEmail);
    
 });
 
-// Admin routes 
+/* ----------------------------- // Admin routes ---------------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
 
     router.post('/admin/add', AdminValidator.createAdminValidator, AdminController.createAdmin);
@@ -49,16 +74,16 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/getbyadminid/:admin_id', AdminController.getadminbyadminid);
     router.get('/admin/getbyid/:id', AdminController.getadminbyid);
     router.get('/admin/getbyemail/:email', AdminController.getbyemail);
-    router.post('/admin/edit', AdminValidator.createAdminValidator, AdminController.editAdminbyid);
-    router.post('/admin/editbyadminid', AdminValidator.createAdminValidator, AdminController.editAdminbyadminid);
+    // router.post('/admin/edit', AdminValidator.editAdminValidator, AdminController.editAdminbyid);
+    router.post('/admin/editbyadminid', AdminValidator.editAdminValidator, AdminController.editAdminbyadminid);
     router.post('/admin/deletebyadminid/:admin_id', AdminController.deleteAdminbyadminid);
-    router.post('/admin/delete/:id', AdminController.deleteAdminbyid);
+    // router.post('/admin/delete/:id', AdminController.deleteAdminbyid);
     router.get('/admin/getallparams/:offset/:limit', AdminController.getadminbyparams);
 
 
 });
 
-// Routes for roles 
+/* --------------------------- // Routes for roles -------------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/roles/add',RoleController.createRoles);
     router.get('/admin/roles/getall',RoleController.getAllRoles);
@@ -72,7 +97,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
 
 
-// Routes for Errorlogs 
+/* ------------------------- // Routes for Errorlogs ------------------------ */
 Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/errolog/getall',ErrorlogController.getallErrologs);
     router.get('/admin/errolog/getallparams/:offset/:limit',ErrorlogController.geterrologsbyparams);
@@ -81,7 +106,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
  });
 
 
-// Routes for Adminlogs 
+/* ------------------------- // Routes for Adminlogs ------------------------ */
 Router.middleware(['isAuthenticated']).group((router)=>{
    router.get('/admin/adminlog/getall',AdminlogController.getAllAdminlog);
    router.get('/admin/adminlog/getallparams/:offset/:limit',AdminlogController.getadminlogbyparams);
@@ -89,7 +114,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
    router.get('/admin/adminlog/getbyadminid/:admin_id',AdminlogController.getadminlogbyAdminid);
 });
 
-// Routes for activitylogs 
+/* ----------------------- // Routes for activitylogs ----------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/activitylog/getall',ActivitylogController.getAllActivitylogs);
     router.get('/admin/activitylog/add',ActivitylogController.createActivitylog);
@@ -99,9 +124,9 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
  
  });
-//  ROUTE FOR TICKETS END POINT 
+/* --------------------- //  ROUTE FOR TICKETS END POINT -------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
-    router.post('/admin/ticket/add',TicketController.createTicket);
+    router.post('/admin/ticket/add',Ticketvalidator.ticketValidator,TicketController.createTicket);
     router.get('/admin/ticket/getall',TicketController.getAllTickets);
     router.get('/admin/ticket/getbyid/:id',TicketController.getTicketbyid);
     router.get('/admin/ticket/getbyticketid/:ticket_id',TicketController.getbyTicketid);
@@ -111,9 +136,9 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/ticket/delete/:id',TicketController.deleteTicket);
  });
 
- //  ROUTE FOR MESSAGE END POINT 
+ /* --------------------- //  ROUTE FOR MESSAGE END POINT -------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
-    router.post('/admin/message/add',MessageController.createMessage);
+    router.post('/admin/message/add',MessageValidator.createMessageValidator,MessageController.createMessage);
     router.get('/admin/message/getallparams/:offset/:limit',MessageController.getMessagesbyparams);
     router.get('/admin/message/getbyuserid/:id',MessageController.getMessagebyid);
     router.post('/admin/message/edit',MessageController.editMessage);
@@ -121,7 +146,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
  });
 
 
- //  ROUTE FOR TICKET CONVERSATION END POINT 
+ /* --------------- //  ROUTE FOR TICKET CONVERSATION END POINT -------------- */
  Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/ticketcovtn/add',Ticket_conversationController.createTconvtn);  
     router.get('/admin/ticketcovtn/getall',Ticket_conversationController.getAllTconvtn);  
@@ -130,7 +155,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/ticketcovtn/delete/:id',Ticket_conversationController.deleteTconvtn);  
  });
 
- //  ROUTE FOR ADMIN NOTIFICATION END POINT 
+ /* --------------- //  ROUTE FOR ADMIN NOTIFICATION END POINT --------------- */
  Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/notification/add',Admin_notificationController.createNotification);  
     router.get('/admin/notification/getall',Admin_notificationController.getAllNotification);  
@@ -140,7 +165,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/notification/delete/:id',Admin_notificationController.deleteNotification);  
  });
 
-//  ROUTE FOR USERS END POINT 
+/* ---------------------- //  ROUTE FOR USERS END POINT --------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
 
     router.post('/admin/users/regitermerchant',UserController.registerMerchant);  
@@ -151,7 +176,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
  });
 
 
- //  ROUTE FOR COMPANIES END POINT 
+ /* -------------------- //  ROUTE FOR COMPANIES END POINT ------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
 
     router.get('/admin/company/getall',CompanyController.getallCompanies);  
@@ -161,15 +186,56 @@ Router.middleware(['isAuthenticated']).group((router)=>{
  
  });
 
-  //  ROUTE FOR COMPANIES END POINT 
+  /* ---------------------- //  ROUTE FOR ORDER END POINT --------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
 
-    router.get('/admin/order/getall',OrderController.getallOrders);  
-    router.get('/admin/order/getbyorderid/:order_id',OrderController.getorderbyorderid);  
-    router.get('/admin/order/getbyid/:id',OrderController.getorderbyid);
-    router.get('/admin/order/getallparams/:offset/:limit', OrderController.getordersbyparams);
+    router.post('/admin/crop/order/add', OrderValidator.cropAddOrderValidators, OrderController.createNewOrder);
+    router.get('/admin/crop/order/getbyorderid/:orderid', OrderValidator.cropGetOrderByIdValidators, OrderController.getByOrderId);
+    router.get('/admin/crop/order/getbybuyer/:buyerid/:buyertype', OrderController.getByBuyer);
+    router.get('/admin/crop/order/getbynegotiationid/:negotiationid', OrderController.getByNegotiationId);
+    // router.get('/admin/crop/order/getall    ', OrderController.getByNegotiationId);
+    router.get('/admin/crop/order/getbypaymentstatus/:paymentstatus', OrderController.getByPaymentStatus);
+    // Tracking Details
+    router.post('/admin/crop/trackingdetails/updatebyorderid', OrderController.updateTrackingDetailsByOrderId);
+
  
  });
+
+ /* ---------------------------------- INPUT --------------------------------- */
+Router.middleware(['isAuthenticated']).group((router) => {
+
+    router.post('/admin/input/add', InputsValidator.createInputValidator,Input.createInput);
+    router.get('/admin/input/getallbyuserid/:user_id', Input.getallInputsByUser);
+    router.get('/admin/input/getall', Input.getallInputs);
+    router.get('/admin/input/getallbycategory/:category', Input.getallInputsByCategory);
+    router.get('/admin/input/getallbymanufacturer/:manufacturer', Input.getallInputsByManufacturer);
+    router.get('/admin/input/getallbypackaging/:packaging', Input.getallInputsByPackaging);
+});
+
+/* --------------------- // ROUTES FOR CROPS END POINTS --------------------- */
+/* ------------------------------- Crop ------------------------------ */
+Router.middleware(['isAuthenticated']).group((router) => {
+router.router.post('/admin/crop/add', CropValidator.addCropValidator, CropController.add);
+router.get('/admin/crop/product/getbyproductwanted', CropController.getbyproductwanted);
+router.get('/admin/crop/product/getbyproductoffer', CropController.getbyproductoffer);
+router.post('/admin/crop/product/getbyid', CropController.getbyid);
+router.post('/admin/crop/product/editbyid', CropValidator.addCropValidator, CropController.editbyid);
+
+
+/* ------------------------------- CropSpecification ------------------------------ */
+router.post('/admin/crop/cropspecification/add', CropSpecificationValidator.addCropSpecificationValidator, CropSpecificationController.add);
+
+
+
+
+/* ------------------------------- CropRequest ------------------------------ */
+router.post('/admin/crop/croprequest/add', CropRequestValidator.addCropRequestValidator, CropRequestController.add);
+router.get('/admin/crop/croprequest/getall', CropRequestController.getall);
+router.get('/admin/crop/croprequest/getall/:offset/:limit', CropRequestController.getallbyLimit);
+router.post('/admin/crop/croprequest/getbyid', CropRequestController.getbyid);
+router.post('/admin/crop/croprequest/getbyproductid', CropRequestController.getbyproductid);
+router.post('/admin/crop/croprequest/editbyid', CropRequestController.editbyid);
+});
 
 
 

@@ -13,7 +13,7 @@ class AuthMiddleware{
     }
 
 
-    isAuthenticated(req,res){
+  async  isAuthenticated (req,res){
         let headers = req.headers;
       
      
@@ -21,13 +21,12 @@ class AuthMiddleware{
 
             let auth = headers.authorization.substring(7, headers.authorization.length);
             // let auth = headers.authorization;
-            var data = jwt.decode(auth,{complete:true});
-
+            var data = jwt.decode(auth,{complete:false});
+                console.log(data);
             var now = Math.floor((new Date()).getTime()/1000);
           
-            console.log(data);
-             var admin = Admin.findByPk(data.id);
-
+             var admin = await Admin.findByPk(data.id);
+            console.log(admin)
             if(admin){
 
                 if(now > data.exp){

@@ -1,15 +1,16 @@
 const { request } = require("express");
 const { validationResult } = require("express-validator");
-const { Admin, ErrorLog } = require("~database/models");
+const { Admin, ErrorLog , Activitylog} = require("~database/models");
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjY5ODE5NTQwLCJleHAiOjE2Njk5OTIzNDB9.6nuXTimj8kSSxxq7PvP6cg9vkOuysZPEWjRay9_zXWs
-
+const serveAdminid = require("~utilities/serveAdminId");
 class AdminController{
 /* ----------------------- CREATE/ADD ADMIN END POINT ----------------------- */
     static async createAdmin(req, res){
         try{
+            var adminId = await  serveAdminid.getTheId(req);
 
             const errors = validationResult(req);
   
@@ -36,6 +37,16 @@ class AdminController{
                 role: req.body.role,
                 recovery_phrase:recoveryPhrase
             });
+
+                      /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                     
+                      await Activitylog.create({
+                        admin_id:adminId ,
+                        section_accessed:'Adding new administrator',
+                        page_route:'/api/admin/add',
+                        action:'Added new administrator'
+                    });
+                     /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
             if(admin){
                 return res.status(200).json({
@@ -76,8 +87,20 @@ class AdminController{
 
 /* ------------------------ GET ALL ADMINS END POINT ------------------------ */
             static async getAllAdmins(req, res){
+              var adminId = await  serveAdminid.getTheId(req);
+
+               
                 try{
 
+                /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                await Activitylog.create({
+                    admin_id:adminId ,
+                    section_accessed:'View All Admin',
+                    page_route:'/api/admin/getall',
+                    action:'Viewing all administrators in the list'
+                });
+                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+             
                 var admins = await Admin.findAll();
                 if(admins){
                     return res.status(200).json({
@@ -122,6 +145,17 @@ class AdminController{
             limit:limit,
             offset:offset
         });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        var adminId = await  serveAdminid.getTheId(req);
+
+        await Activitylog.create({
+          admin_id:adminId ,
+          section_accessed:'View admin by offset and limit',
+          page_route:'/api/admin/getallparams',
+          action:'Viewing sets of administrators in the list '
+      });
+       /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(adminparams){
             return res.status(200).json({
                 error: false,
@@ -162,7 +196,7 @@ class AdminController{
         if(adminid == null){
             return res.status(200).json({
                 error:true,
-                message: 'Not found'
+                message: 'id not found'
             })
         }else{
             return res.status(200).json({
@@ -195,10 +229,22 @@ class AdminController{
         try{
 
         var theadminid = await Admin.findOne({where: {admin_id : req.params.admin_id}});
+
+      /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        var adminId = await  serveAdminid.getTheId(req);
+
+        await Activitylog.create({
+          admin_id:adminId ,
+          section_accessed:'View admin by admin id',
+          page_route:'/api/admin/getbyadminid/:admin_id',
+          action:'Viewing administrator by id '
+      });
+       /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(theadminid == null){
             return res.status(200).json({
                 error:true,
-                message: 'Not found'
+                message: 'Invalid admin id'
             })
         }else{
             return res.status(200).json({
@@ -230,12 +276,22 @@ class AdminController{
     static async getbyemail(req,res){
         try{
 
-       
-        var adminemail = await Admin.findOne({where: {email : req.params.email}});
+            var adminemail = await Admin.findOne({where: {email : req.params.email}});
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        var adminId = await  serveAdminid.getTheId(req);
+
+        await Activitylog.create({
+          admin_id:adminId ,
+          section_accessed:'View admin by admin email',
+          page_route:'/api/admin/getbyemail/:email',
+          action:'Viewing administrator by administrator email '
+      });
+       /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(adminemail == null){
             return res.status(200).json({
                 error:true,
-                message: 'Not found'
+                message: 'Invalid admin email'
             })
         }else{
             return res.status(200).json({
@@ -286,6 +342,20 @@ class AdminController{
             role: req.body.role,
         }, { where : { admin_id : req.body.admin_id } });
 
+
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
+
+            await Activitylog.create({
+              admin_id:adminId ,
+              section_accessed:'Edit Admin',
+              page_route:'/api/admin/edit',
+              action:'Updating administrator information '
+          });
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+    
+
+
         if(editAdmin){
             return res.status(200).json({
                 error : false,
@@ -317,63 +387,75 @@ class AdminController{
     }
     }
     /* ---------------------- EDIT ADMIN BY ID END POINT ---------------------- */
-    static async editAdminbyid(req, res){
-        try{
-            const errors = validationResult(req);
+    // static async editAdminbyid(req, res){
+    //     try{
+    //         const errors = validationResult(req);
   
-            if (!errors.isEmpty()) {
-            return res.status(400).json({
-                errors:true,
-                message: "All fields are required",
-                data: {}
-                });
-            }
+    //         if (!errors.isEmpty()) {
+    //         return res.status(400).json({
+    //             errors:true,
+    //             message: "All fields are required",
+    //             data: {}
+    //             });
+    //         }
 
-        var editAdmin = await Admin.update({
-            first_name : req.body.first_name,
-            last_name : req.body.last_name,
-            email : req.body.email,
-            phone : req.body.phone,
-            role: req.body.role,
-        }, { where : {id : req.body.id } });
+    //     var editAdmin = await Admin.update({
+    //         first_name : req.body.first_name,
+    //         last_name : req.body.last_name,
+    //         email : req.body.email,
+    //         phone : req.body.phone,
+    //         role: req.body.role,
+    //     }, { where : {id : req.body.id } });
 
-        if(editAdmin){
-            return res.status(200).json({
-                error : false,
-                message : "Admin edited succesfully",
-                data : editAdmin
-            })
-        }else{
-            return res.status(200).json({
-                error : false,
-                message : "Failed to edit admin",
-                data : editAdmin
-            })
-        }
+    //     if(editAdmin){
+    //         return res.status(200).json({
+    //             error : false,
+    //             message : "Admin edited succesfully",
+    //             data : editAdmin
+    //         })
+    //     }else{
+    //         return res.status(200).json({
+    //             error : false,
+    //             message : "Failed to edit admin",
+    //             data : editAdmin
+    //         })
+    //     }
        
-    }catch(e){
-        var logError = await ErrorLog.create({
-            error_name: "Error on editting Admin by id",
-            error_description: e.toString(),
-            route: "/api/admin/edit/:id",
-            error_code: "500"
-        });
-        if(logError){
-            return res.status(500).json({
-                error: true,
-                message: 'Unable to complete request at the moment',
+    // }catch(e){
+    //     var logError = await ErrorLog.create({
+    //         error_name: "Error on editting Admin by id",
+    //         error_description: e.toString(),
+    //         route: "/api/admin/edit/:id",
+    //         error_code: "500"
+    //     });
+    //     if(logError){
+    //         return res.status(500).json({
+    //             error: true,
+    //             message: 'Unable to complete request at the moment',
                 
-            })
+    //         })
 
-        }
-    }
-    }
+    //     }
+    // }
+    // }
 
     /* ------------------------ DELETE ADMIN BY ADMIN ID ------------------------ */
     static async deleteAdminbyadminid(req, res){
         try{
 
-        var delAdminid = await Admin.destroy({ where : {admin_id : req.params.admin_id}});
+
+        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        var adminId = await  serveAdminid.getTheId(req);
+
+        await Activitylog.create({
+          admin_id:adminId ,
+          section_accessed:'Delete Admin',
+          page_route:'/api/admin/delete/:id',
+          action:'Deleted an administrator'
+      });
+       /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
+       var delAdminid = await Admin.destroy({ where : {admin_id : req.params.admin_id}});
 
         if(delAdminid){
             return res.status(200).json({
@@ -404,39 +486,39 @@ class AdminController{
     }
     }
     /* --------------------------- DELETE ADMIN BY ID --------------------------- */
-    static async deleteAdminbyid(req, res){
-        try{
+    // static async deleteAdminbyid(req, res){
+    //     try{
 
-        var delAdminid = await Admin.destroy({ where : {id : req.params.id}});
+    //     var delAdminid = await Admin.destroy({ where : {id : req.params.id}});
 
-        if(delAdminid == null){
-            return res.status(200).json({
-                error : true,
-                message : "Not found",
-            })
-        }else{
-            return res.status(200).json({
-                error : false,
-                message : "Admin deleted successfully",
-            })
-        }
+    //     if(delAdminid == null){
+    //         return res.status(200).json({
+    //             error : true,
+    //             message : "Not found",
+    //         })
+    //     }else{
+    //         return res.status(200).json({
+    //             error : false,
+    //             message : "Admin deleted successfully",
+    //         })
+    //     }
 
-    }catch(e){
-        var logError = await ErrorLog.create({
-            error_name: "Error on deleting Admin by id",
-            error_description: e.toString(),
-            route: "/api/admin/delete/:id",
-            error_code: "500"
-        });
-        if(logError){
-            return res.status(500).json({
-                error: true,
-                message: 'Unable to complete request at the moment',
-            })
+    // }catch(e){
+    //     var logError = await ErrorLog.create({
+    //         error_name: "Error on deleting Admin by id",
+    //         error_description: e.toString(),
+    //         route: "/api/admin/delete/:id",
+    //         error_code: "500"
+    //     });
+    //     if(logError){
+    //         return res.status(500).json({
+    //             error: true,
+    //             message: 'Unable to complete request at the moment',
+    //         })
 
-        }
-    }
-    }
+    //     }
+    // }
+    // }
 
 
 }

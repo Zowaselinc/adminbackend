@@ -130,7 +130,7 @@ class UserController{
 
     static async getAllUsers(req, res){
 
-        var users =await User.findAll();
+        // var users =await User.findAll();
         var merchants = await Merchant.findAll({ include : User});
 
         var corporates = await Corporate.findAll({ include : User});
@@ -139,7 +139,7 @@ class UserController{
 
         var partners = await Partner.findAll({ include : User});
 
-        var resultSet = [ ...users, ...merchants, ...corporates , ...agents, ...partners];
+        var resultSet = [...merchants, ...corporates , ...agents, ...partners];
 
         resultSet = resultSet.sort((a,b) => b.user_id - a.user_id);
 
@@ -212,6 +212,10 @@ class UserController{
             message : "User fetched successfully",
             data : user
         });
+    }
+
+    static async getUserStats(req ,res){
+        
     }
 
 

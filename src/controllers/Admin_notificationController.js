@@ -11,6 +11,18 @@ class Ticket_conversationController{
 /* ----------------------- CREATE/ADD ADMIN NOTIFICATION END POINT ----------------------- */
     static async createNotification(req, res){
         try{
+
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+             var adminId = await  serveAdminid.getTheId(req);
+
+             await Activitylog.create({
+               admin_id:adminId ,
+               section_accessed:'Create Notification',
+               page_route:'/api/admin/notification/add',
+               action:'Creating notification'
+           });
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+     
             const notificationid = crypto.randomBytes(16).toString("hex")
             var notification = await AdminNotification.create({
                 notification_id:"ZWLNOTF"+notificationid,
@@ -62,6 +74,17 @@ class Ticket_conversationController{
             static async getAllNotification(req, res){
                 try{
 
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+             var adminId = await  serveAdminid.getTheId(req);
+
+             await Activitylog.create({
+               admin_id:adminId ,
+               section_accessed:'View all notifications',
+               page_route:'/api/admin/notification/getall',
+               action:' viewing all notifications'
+           });
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
                 var allnotification = await AdminNotification.findAll();
                 if(allnotification){
                     return res.status(200).json({
@@ -96,7 +119,20 @@ class Ticket_conversationController{
 
       /* --------------------------- GET ADMIN NOTIFICATION BY PARAMS -------------------------- */
       static async getNotificationbyparams(req,res){
+
         try{
+
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
+
+            await Activitylog.create({
+              admin_id:adminId ,
+              section_accessed:'View sets of notifications',
+              page_route:'/api/admin/notification/getallparams',
+              action:'viewing all notification by parameters'
+          });
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
             const limit = Number(req.params.limit);
             const offset = Number(req.params.offset);
        
@@ -139,6 +175,17 @@ class Ticket_conversationController{
     static async getNotificationbyid(req,res){
         try{
 
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
+
+            await Activitylog.create({
+              admin_id:adminId ,
+              section_accessed:'View notification by id',
+              page_route:'/api/admin/notification/getbyid',
+              action:'Viewing a particular notification'
+          });
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         var notificationid = await AdminNotification.findOne({where: {id : req.params.id}});
         if(notificationid == null){
             return res.status(200).json({
@@ -173,6 +220,17 @@ class Ticket_conversationController{
 
     static async editNotification(req, res){
         try{
+
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
+
+            await Activitylog.create({
+              admin_id:adminId ,
+              section_accessed:'Edit notification',
+              page_route:'/api/admin/notification/edit',
+              action:'Editing notification'
+          });
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
         var editmessage = await Message.update({
            notification_status:req.body.notification_status
@@ -213,6 +271,17 @@ class Ticket_conversationController{
     /* ------------------------ DELETE ADMIN NOTIFICATION BY ID ------------------------ */
     static async deleteNotification(req, res){
         try{
+
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+             var adminId = await  serveAdminid.getTheId(req);
+
+             await Activitylog.create({
+               admin_id:adminId ,
+               section_accessed:'Delete notifications',
+               page_route:'/api/admin/notification/delete/:id',
+               action:'Deleting notification'
+           });
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
         var delnotification = await AdminNotification.destroy({ where : {id : req.params.id}});
 
