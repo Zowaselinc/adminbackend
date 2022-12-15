@@ -33,7 +33,16 @@ class TicketController{
                
             });
 
-            
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'Create Ticket',
+            page_route:'/api/admin/ticket/add',
+            action:'Created ticket '
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(ticket){
                 return res.status(200).json({
                     error : false,
@@ -76,6 +85,17 @@ class TicketController{
                 try{
 
                 var alltickets = await Ticket.findAll();
+
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'View all tickets',
+            page_route:'/api/admin/ticket/getall',
+            action:'Viewing all tickets in the list '
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                 if(alltickets){
                     return res.status(200).json({
                         error : false,
@@ -119,6 +139,17 @@ class TicketController{
             limit:limit,
             offset:offset
         });
+
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+           var adminId = await  serveAdminid.getTheId(req);
+
+           await Activitylog.create({
+             admin_id:adminId ,
+             section_accessed:'View ticket by offset and limit',
+             page_route:'/api/admin/ticket/getallparams/;offset/:limit',
+             action:'Viewing sets of tickets in the list'
+         });
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(ticketparams){
             return res.status(200).json({
                 error: false,
@@ -156,6 +187,17 @@ class TicketController{
         try{
 
         var ticketid = await Ticket.findOne({where: {id : req.params.id}});
+
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+           var adminId = await  serveAdminid.getTheId(req);
+
+           await Activitylog.create({
+             admin_id:adminId ,
+             section_accessed:'View ticket by id',
+             page_route:'/api/admin/ticket/getbyid/:id',
+             action:'Viewing ticket'
+         });
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(ticketid == null){
             return res.status(200).json({
                 error:true,
@@ -192,6 +234,17 @@ class TicketController{
         try{
 
         var ticketid = await Ticket.findOne({where: {ticket_id : req.params.ticket_id}});
+
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+           var adminId = await  serveAdminid.getTheId(req);
+
+           await Activitylog.create({
+             admin_id:adminId ,
+             section_accessed:'View ticket by ticket id',
+             page_route:'/api/admin/ticket/getbyticketid/:ticket_id',
+             action:'Viewing ticket '
+         });
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(ticketid == null){
             return res.status(200).json({
                 error:true,
@@ -229,6 +282,17 @@ class TicketController{
 
        
         var tickuserid = await Ticket.findOne({where: {user_id: req.params.user_id}});
+
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+           var adminId = await  serveAdminid.getTheId(req);
+
+           await Activitylog.create({
+             admin_id:adminId ,
+             section_accessed:'View ticket by user id',
+             page_route:'/api/admin/ticket/getbyuserid/:user_id',
+             action:'Viewing ticket '
+         });
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(tickuserid == null){
             return res.status(200).json({
                 error:true,
@@ -269,6 +333,17 @@ class TicketController{
            ticket_status:req.body.ticket_status
         }, { where : { id : req.body.id } });
 
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+           var adminId = await  serveAdminid.getTheId(req);
+
+           await Activitylog.create({
+             admin_id:adminId ,
+             section_accessed:'Edit ticket status',
+             page_route:'/api/admin/ticket/edit',
+             action:'Editted ticket status'
+         });
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(editTicket){
             return res.status(200).json({
                 error: false,
@@ -304,6 +379,17 @@ class TicketController{
         try{
 
         var delticket = await Ticket.destroy({ where : {id : req.params.id}});
+
+           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+           var adminId = await  serveAdminid.getTheId(req);
+
+           await Activitylog.create({
+             admin_id:adminId ,
+             section_accessed:'Delete ticket',
+             page_route:'/api/admin/ticket/delete/:id',
+             action:'deleted ticket '
+         });
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
         if(delticket){
             return res.status(200).json({

@@ -168,9 +168,18 @@ class OrderController{
                 waybill_details: req.body.waybill_details,
                 receipt_note: req.body.receipt_note,
                 extra_documents: req.body.extra_documents
-            })
+            });
 
-    
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'Add new order',
+            page_route:'/api/admin/crop/order/add',
+            action:'initiated a new order'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             return res.status(200).json({
                 "error": false,
                 "message": "New order created",
@@ -183,6 +192,7 @@ class OrderController{
                 route: "/api/crop/order/add",
                 error_code: "500"
             });
+            if(logError)
             return res.status(500).json({
                 error: true,
                 message: 'Unable to complete request at the moment '+e.toString()
@@ -205,6 +215,17 @@ class OrderController{
 
         try{
             var findOrder = await Order.findOne({ where: { order_id: req.params.orderid } });
+            
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'view order by orderid',
+            page_route:'/api/admin/crop/order/getbyorderid/:order_id',
+            action:'Viewing orders'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(findOrder){
                 return res.status(200).json({
                     error : false,
@@ -247,6 +268,18 @@ class OrderController{
 
         try{
             var findOrder = await Order.findOne({ where: { buyer_id: req.params.buyerid, buyer_type: req.params.buyertype } });
+
+
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'View order by buyerid and buyer type',
+            page_route:'/api/admin/crop/order/getbybuyer/;buyer_id/:buyer_type',
+            action:'viewed orders'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(findOrder){
                 return res.status(200).json({
                     error : false,
@@ -287,6 +320,18 @@ class OrderController{
 
         try{
             var findOrder = await Order.findOne({ where: { negotiation_id: req.params.negotiationid } });
+
+
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'View oder negotiation',
+            page_route:'/api/admin/crop/order/getbynegotiationid/:negotiation_id',
+            action:'Viewed order negotiation'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(findOrder){
                 return res.status(200).json({
                     error : false,
@@ -328,6 +373,19 @@ class OrderController{
 
         try{
             var findOrder = await Order.findOne({ where: { payment_status: req.params.paymentstatus } });
+
+
+
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'view order by payment status',
+            page_route:'/api/admin/crop/order/getbypaymentstatus/:payment_status',
+            action:'viewing oder by payment status'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(findOrder){
                 return res.status(200).json({
                     error : false,
@@ -376,6 +434,18 @@ class OrderController{
                 var updateOrderTrackingDetails = await Order.update({
                     tracking_details: thetrackingDetails
                 }, { where : { order_id: req.body.order_id } });
+
+
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'Update tracking details',
+            page_route:'/api/admin/crop/trackingdetails/updatebyorderid',
+            action:'Updating tracking details'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
                 return res.status(400).json({
                     error : false,

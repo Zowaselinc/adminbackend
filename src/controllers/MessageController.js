@@ -30,7 +30,16 @@ class MessageController{
                 message:req.body.message,
                 message_type:req.body.message_type,
             });
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
 
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'Create Message',
+            page_route:'/api/admin/message/add',
+            action:'Composed and sent a message'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(themessage){
                 return res.status(200).json({
                     error : false,
@@ -45,8 +54,10 @@ class MessageController{
   
                  });
 
-            }
+                 
 
+            }
+            
         }catch(e){
             var logError = await ErrorLog.create({
                 error_name: "Error on creating Message",
@@ -78,6 +89,17 @@ class MessageController{
             limit:limit,
             offset:offset
         });
+
+                /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                var adminId = await  serveAdminid.getTheId(req);
+
+                await Activitylog.create({
+                  admin_id:adminId ,
+                  section_accessed:'View messages by offset and limit',
+                  page_route:'/api/admin/message/getallparams',
+                  action:'Viewing messages '
+              });
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(messageparams){
             return res.status(200).json({
                 error: false,
@@ -118,7 +140,16 @@ class MessageController{
         var messagereceived = await Message.findOne({where: {receiver_id : req.params.id}});
       console.log(messagesent)
         var allMessages = messagesent.concat(messagereceived);
-       
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+               var adminId = await  serveAdminid.getTheId(req);
+
+               await Activitylog.create({
+                 admin_id:adminId ,
+                 section_accessed:'View message by id',
+                 page_route:'/api/admin/message/getbyid/:id',
+                 action:'Viewing message'
+             });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(allMessages.length<1){
             return res.status(200).json({
                 error:true,
@@ -163,16 +194,27 @@ class MessageController{
            message_type:req.body.message_type
         }, { where : { id : req.body.id } });
 
-        if(editmessage== null){
+                /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                var adminId = await  serveAdminid.getTheId(req);
+
+                await Activitylog.create({
+                  admin_id:adminId ,
+                  section_accessed:'Edit Message',
+                  page_route:'/api/admin/message/edit',
+                  action:'Edited a message'
+              });
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        if(editmessage){
             return res.status(200).json({
-                error: true,
-                message: "Not found"
+                error: false,
+                message: "Message edited successfully",
+                data: editmessage
             })
         }else{
             return res.status(200).json({
-                error : false,
-                message : "Message edited succesfully",
-                data : editmessage
+                error : true,
+                message : "Failed to edit message",
+               
             })
         }
        
@@ -199,16 +241,25 @@ class MessageController{
         try{
 
         var delmessage = await Message.destroy({ where : {id : req.params.id}});
+      /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
 
-        if(delmessage == null){
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'Delete Message',
+            page_route:'/api/admin/message/delete/:id',
+            action:'Deleted a message'
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        if(delmessage){
             return res.send(200).json({
-                error : true,
-                message : "Not found",
+                error : false,
+                message : "message deleted successfully",
             })
         }else{
             return res.status(200).json({
-                error : false,
-                message : "Message deleted successfully",
+                error : true,
+                message : "Failed to delete message",
             })
         }
 

@@ -119,7 +119,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 /* ----------------------- // Routes for activitylogs ----------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/activitylog/getall',ActivitylogController.getAllActivitylogs);
-    router.get('/admin/activitylog/add',ActivitylogController.createActivitylog);
+    // router.get('/admin/activitylog/add',ActivitylogController.createActivitylog);
     router.get('/admin/activitylog/getbyid/:id',ActivitylogController.getActivitylogbyid);
     router.get('/admin/activitylog/getbyadminid/:admin_id',ActivitylogController.getActivitylogbyAdminid);
     router.get('/admin/activitylog/getallparams/:offset/:limit',ActivitylogController.getActivitylogbyparams);
@@ -193,10 +193,10 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
     router.post('/admin/crop/order/add', OrderValidator.cropAddOrderValidators, OrderController.createNewOrder);
     router.get('/admin/crop/order/getbyorderid/:orderid', OrderValidator.cropGetOrderByIdValidators, OrderController.getByOrderId);
-    router.get('/admin/crop/order/getbybuyer/:buyerid/:buyertype', OrderController.getByBuyer);
-    router.get('/admin/crop/order/getbynegotiationid/:negotiationid', OrderController.getByNegotiationId);
+    router.get('/admin/crop/order/getbybuyer/:buyer_id/:buyer_type', OrderController.getByBuyer);
+    router.get('/admin/crop/order/getbynegotiationid/:negotiation_id', OrderController.getByNegotiationId);
     // router.get('/admin/crop/order/getall    ', OrderController.getByNegotiationId);
-    router.get('/admin/crop/order/getbypaymentstatus/:paymentstatus', OrderController.getByPaymentStatus);
+    router.get('/admin/crop/order/getbypaymentstatus/:payment_status', OrderController.getByPaymentStatus);
     // Tracking Details
     router.post('/admin/crop/trackingdetails/updatebyorderid', OrderController.updateTrackingDetailsByOrderId);
 

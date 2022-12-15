@@ -85,7 +85,16 @@ class CropspecController{
                     kg: req.body.kg,
                     liters: req.body.liters
                 })
-                console.log(req.body)
+                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                 var adminId = await  serveAdminid.getTheId(req);
+
+                 await Activitylog.create({
+                     admin_id:adminId ,
+                     section_accessed:'Add crop specification',
+                     page_route:'/api/admin/crop/cropspecification/add',
+                     action:'Added specified crop'
+                 });
+                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                 return res.status(200).json({
                     "error": false,
                     "message": "Crop specification created successfully",

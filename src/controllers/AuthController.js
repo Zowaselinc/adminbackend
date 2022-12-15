@@ -63,8 +63,7 @@ class AuthController{
                         data: admin
                     })
                 }
-               
-
+   
             }else{
                 return res.status(400).json({
                     error: true,

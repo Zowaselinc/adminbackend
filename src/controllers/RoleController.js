@@ -14,6 +14,16 @@ class RoleController{
             role_name:req.body.role_name,
             role_description:req.body.role_description
         });
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'Create admin role',
+            page_route:'/api/admin/roles/add',
+            action:'Creating administrative roles '
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(role){
             return res.status(200).json({   
                 error : false,
@@ -28,7 +38,7 @@ class RoleController{
         
         }catch(e){
             var logError = await ErrorLog.create({
-                error_name: "Error creating role",
+                error_name: "Error on creating admin role",
                 error_description: e.toString(),
                 route: "/api/admin/roles/add",
                 error_code: "500"
@@ -49,6 +59,16 @@ class RoleController{
         try{
 
             var allroles = await Role.findAll();
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        var adminId = await  serveAdminid.getTheId(req);
+
+        await Activitylog.create({
+          admin_id:adminId ,
+          section_accessed:'View all administrative roles',
+          page_route:'/api/admin/roles/getall',
+          action:'Viewing all administrative roles'
+      });
+       /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
             if(allroles){
                 return res.status(200).json({
@@ -97,6 +117,17 @@ static async getRolesbyparams(req,res){
             offset:offset
         });
 
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'View administrative roles by offset and limit',
+            page_route:'/api/admin/roles/getallparams',
+            action:'Viewing sets of administrative roles in the list '
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(rolesparams ){
             return res.status(200).json({
                 error:false,
@@ -132,6 +163,17 @@ static async getRolesbyid(req,res){
     try{
        
         var role = await Role.findOne({where: {id:req.params.id}});
+
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+         var adminId = await  serveAdminid.getTheId(req);
+
+         await Activitylog.create({
+           admin_id:adminId ,
+           section_accessed:'View administrative roles by id',
+           page_route:'/api/admin/roles/getbyid/:id',
+           action:'Viewing administrative roles in the list '
+       });
+        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
         if(role == null){
             return res.status(200).json({
@@ -177,6 +219,16 @@ static async getRolebyroleid(req,res){
     try{
        
         var therole = await Role.findOne({where: {role_id:req.params.role_id}});
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+         var adminId = await  serveAdminid.getTheId(req);
+
+         await Activitylog.create({
+           admin_id:adminId ,
+           section_accessed:'View administrative roles by roleid',
+           page_route:'/api/admin/roles/getbyroleid/:role_id',
+           action:'Viewing sets of administrative roles in the list '
+       });
+        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
         if(therole == null){
             return res.status(200).json({
@@ -221,11 +273,22 @@ static async editRole(req,res){
             role_description:req.body.role_description
         },{where: {id:req.body.id}});
 
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+         var adminId = await  serveAdminid.getTheId(req);
+
+         await Activitylog.create({
+           admin_id:adminId ,
+           section_accessed:'Edit administrative role',
+           page_route:'/api/admin/roles/edit',
+           action:'Editing administrative role '
+       });
+        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(editRoles == null){
             return res.status(200).json({
                 error : true,
                 message : "Not found",
-                data : editRoles
+               
             })
 
         }else {
@@ -257,6 +320,17 @@ static async deleteRole(req, res){
     try{
 
     var delrole = await Role.destroy({where: {id:req.params.id}});
+
+     /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+     var adminId = await  serveAdminid.getTheId(req);
+
+     await Activitylog.create({
+       admin_id:adminId ,
+       section_accessed:'Delete administrative role',
+       page_route:'/api/admin/roles/delete/:id',
+       action:'Deleted adminstrative role '
+   });
+    /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
     if(delrole){
         return res.status(200).json({

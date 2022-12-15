@@ -20,6 +20,16 @@ class Ticket_conversationController{
                 message_type:req.body.message_type,
             });
 
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'create ticket conversation',
+            page_route:'/api/admin/ticketcovtn/add',
+            action:'Created ticket conversation '
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(conversation){
                 return res.status(200).json({
                     error : false,
@@ -62,6 +72,17 @@ class Ticket_conversationController{
                 try{
 
                 var allconversation = await TicketConversation.findAll();
+
+                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'View all ticket conversation',
+            page_route:'/api/admin/ticketcovtn/getall',
+            action:'Viewing all ticket conversations in the list '
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                 if(allconversation){
                     return res.status(200).json({
                         error : false,
@@ -103,6 +124,17 @@ class Ticket_conversationController{
             limit:limit,
             offset:offset
         });
+
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+         var adminId = await  serveAdminid.getTheId(req);
+
+         await Activitylog.create({
+           admin_id:adminId ,
+           section_accessed:'View ticket conversation by offset and limit',
+           page_route:'/api/admin/ticketcovtn/getallparams/:offset/:limit',
+           action:'viewed ticket conversation '
+       });
+        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(conversationparams){
             return res.status(200).json({
                 error: false,
@@ -139,6 +171,17 @@ class Ticket_conversationController{
         try{
 
         var conversationid = await TicketConversation.findOne({where: {id : req.params.id}});
+
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+         var adminId = await  serveAdminid.getTheId(req);
+
+         await Activitylog.create({
+           admin_id:adminId ,
+           section_accessed:'View ticket conversation by id',
+           page_route:'/api/admin/ticketcovtn/getbyid/:id',
+           action:'Viewed ticket conversation'
+       });
+        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(conversationid == null){
             return res.status(200).json({
                 error:true,
@@ -173,6 +216,17 @@ class Ticket_conversationController{
         try{
 
         var delconversation = await TicketConversation.destroy({ where : {id : req.params.id}});
+
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+         var adminId = await  serveAdminid.getTheId(req);
+
+         await Activitylog.create({
+           admin_id:adminId ,
+           section_accessed:'Delete ticket conversation',
+           page_route:'/api/admin/ticketcovtn/delete/:id',
+           action:'Deleted ticket conversation '
+       });
+        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
         if(delconversation == null){
             return res.send(200).json({

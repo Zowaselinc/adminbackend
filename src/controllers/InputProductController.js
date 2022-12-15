@@ -75,9 +75,17 @@ class InputProducts{
                     video: req.body.video
                 })
                 
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                  var adminId = await  serveAdminid.getTheId(req);
+
+                  await Activitylog.create({
+                      admin_id:adminId ,
+                      section_accessed:'Add input',
+                      page_route:'/api/admin/input/add',
+                      action:'Added input'
+                  });
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                 /* ------------------------ INSERT INTO PRODUCT TABLE ----------------------- */
-
-
                 if(input){
 
                     return res.status(200).json({
@@ -116,7 +124,16 @@ class InputProducts{
                     user_id: req.params.user_id
                 }
             });
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+             var adminId = await  serveAdminid.getTheId(req);
 
+             await Activitylog.create({
+                 admin_id:adminId ,
+                 section_accessed:'View all input',
+                 page_route:'/api/admin/input/getallbyuser',
+                 action:'Viewed all input by user id'
+             });
+             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(alluserinputs.length > 0){
 
                 return res.status(200).json({
@@ -153,6 +170,16 @@ class InputProducts{
     static async getallInputs(req , res){
         try{
             var alluserinputs = await Input.findAll();
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
+
+            await Activitylog.create({
+                admin_id:adminId ,
+                section_accessed:'View all input',
+                page_route:'/api/admin/input/getallbyuser',
+                action:'Viewing all inputs in the list'
+            });
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
             if(alluserinputs.length > 0){
 
@@ -194,7 +221,16 @@ class InputProducts{
                     category: req.params.category
                 }
             });
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
 
+            await Activitylog.create({
+                admin_id:adminId ,
+                section_accessed:'View all input category',
+                page_route:'/api/admin/input/getallbycategory/:category',
+                action:'Viewing all inputs in the list'
+            });
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(allInputs.length > 0){
 
                 return res.status(200).json({
@@ -235,6 +271,16 @@ class InputProducts{
                 }
             });
 
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+               var adminId = await  serveAdminid.getTheId(req);
+
+               await Activitylog.create({
+                   admin_id:adminId ,
+                   section_accessed:'View all input ',
+                   page_route:'/api/admin/input/getallbymanufacturer/:manufacturer',
+                   action:'Viewing all inputs by manufacturer'
+               });
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(allInputs.length > 0){
 
                 return res.status(200).json({
@@ -274,6 +320,17 @@ class InputProducts{
                     packaging: req.params.packaging
                 }
             });
+
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+               var adminId = await  serveAdminid.getTheId(req);
+
+               await Activitylog.create({
+                   admin_id:adminId ,
+                   section_accessed:'View all input',
+                   page_route:'/api/admin/input/getallbypackaging/:packaging',
+                   action:'Viewing input by packaging'
+               });
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
             if(allInputs.length > 0){
 

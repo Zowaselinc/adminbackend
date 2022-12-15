@@ -65,6 +65,17 @@ class CropRequestController{
                         delivery_date: req.body.delivery_date,
                         delivery_window: req.body.delivery_window
                     })
+
+                /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                    var adminId = await  serveAdminid.getTheId(req);
+
+                    await Activitylog.create({
+                        admin_id:adminId ,
+                        section_accessed:'Crop request',
+                        page_route:'/api/admin/crop/croprequest/add',
+                        action:'Added crop request'
+                    });
+                    /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             
                     return res.status(200).json({
                         "error": false,
@@ -90,8 +101,6 @@ class CropRequestController{
 
             }
         }
-
-        
     }
     /* ---------------------------- * ADD PRODUCT REQUEST * ---------------------------- */
 
@@ -110,6 +119,16 @@ class CropRequestController{
 
         try{
             var Crop_Request = await CropRequest.findAll();
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+              var adminId = await  serveAdminid.getTheId(req);
+
+              await Activitylog.create({
+                  admin_id:adminId ,
+                  section_accessed:'View all crop request',
+                  page_route:'/api/admin/crop/croprequest/getall',
+                  action:'Viewing all requested crops in the list'
+              });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
             return res.status(200).json({
                 error : false,
@@ -151,6 +170,16 @@ class CropRequestController{
 
         try{
             var Crop_Request = await CropRequest.findAll({ offset: offset, limit: limit });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+              var adminId = await  serveAdminid.getTheId(req);
+
+              await Activitylog.create({
+                  admin_id:adminId ,
+                  section_accessed:'View crop request by limit',
+                  page_route:'/api/admin/crop/croprequest/getall/:offset/:limit',
+                  action:'Viewing requested crops in the list'
+              });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
             return res.status(200).json({
                 error : false,
@@ -193,6 +222,16 @@ class CropRequestController{
             }
     
             var croprequest = await CropRequest.findOne({ where: { id: req.body.id } });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+              var adminId = await  serveAdminid.getTheId(req);
+
+              await Activitylog.create({
+                  admin_id:adminId ,
+                  section_accessed:'View single crop request',
+                  page_route:'/api/admin/crop/croprequest/getbyid',
+                  action:'Viewing single crop request'
+              });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(croprequest){
                 return res.status(200).json({
                     error : false,
@@ -233,10 +272,20 @@ class CropRequestController{
             }
     
             var croprequest = await CropRequest.findOne({ where: { crop_id: req.body.crop_id } });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+              var adminId = await  serveAdminid.getTheId(req);
+
+              await Activitylog.create({
+                  admin_id:adminId ,
+                  section_accessed:'View single product request',
+                  page_route:'/api/admin/crop/croprequest/getbyproductid',
+                  action:'Viewing single product request'
+              });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             if(croprequest){
                 return res.status(200).json({
                     error : false,
-                    message : "Single project request grabbed successfully",
+                    message : "Single product request grabbed successfully",
                     croprequest : croprequest
                 })
             }else{
@@ -275,6 +324,7 @@ class CropRequestController{
             }
             
             var findCropRequest = await CropRequest.findOne({ where: { id: req.body.id } });
+            
 
             if(findCropRequest){
 
@@ -283,7 +333,16 @@ class CropRequestController{
                         id: req.body.id 
                     } 
                 });
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                  var adminId = await  serveAdminid.getTheId(req);
 
+                  await Activitylog.create({
+                      admin_id:adminId ,
+                      section_accessed:'Edit crop request',
+                      page_route:'/api/admin/crop/croprequest/editbyid',
+                      action:'edited single crop request'
+                  });
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                 if(cropRequest){
                     return res.status(200).json({
                         error : false,

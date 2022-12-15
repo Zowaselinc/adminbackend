@@ -14,6 +14,17 @@ class ErrorlogController{
                 try{
 
                 var allcompanies = await Company.findAll();
+
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        var adminId = await  serveAdminid.getTheId(req);
+
+        await Activitylog.create({
+          admin_id:adminId ,
+          section_accessed:'View all companies',
+          page_route:'/api/admin/company/getall',
+          action:'Viewing all companies in the list '
+      });
+       /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                 if(allcompanies){
                     return res.status(200).json({
                         error : false,
@@ -54,6 +65,17 @@ class ErrorlogController{
             limit:limit,
             offset:offset
         });
+
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'View companies by offset and limit',
+            page_route:'/api/admin/company/getallparams',
+            action:'Viewing sets of companies in the list '
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         if(companyparams){
             return res.status(200).json({
                 error: false,
@@ -91,16 +113,28 @@ class ErrorlogController{
             
         var companyid = await Company.findOne({where: {user_id:req.params.user_id}});
 
-        if(companyid){
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'View company by user id',
+            page_route:'/api/admin/getbyuserid/:user_id',
+            action:"Viewing a company's details"
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
+        if(companyid.lenght<1){
             return res.status(200).json({
-                error: false,
-                message: 'Company fetched successfully',
-                data: companyid
+                error: true,
+                message: 'Invalid user id',
+                
             })
         }else{
             return res.status(200).json({
-                error: true,
-                message: 'Failed to fetch company',
+                error: false,
+                message: 'Company fetched',
+                data: companyid
                 
             })
         }
@@ -128,6 +162,17 @@ class ErrorlogController{
 
         var comapanyEmail = await Company.findOne({where: {company_email:req.params.company_email}});
 
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+
+          await Activitylog.create({
+            admin_id:adminId ,
+            section_accessed:'View company by company email',
+            page_route:'/api/admin/company/getbycompanyemail/:email',
+            action:"Viewing a company's details"
+        });
+         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
         if(comapanyEmail){
             return res.status(200).json({
                 error:false,
@@ -143,9 +188,9 @@ class ErrorlogController{
         }
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on getting Company by id",
+            error_name: "Error on getting Company email",
             error_description: e.toString(),
-            route: "/api/admin/company/getbyemail/:company_id",
+            route: "/api/admin/company/getbyemail/:email",
             error_code: "500"
         });
         if(logError){
@@ -157,7 +202,7 @@ class ErrorlogController{
         }
     }
     }
-    /* ------------------------ GET COMPANY COMPANY email ----------------------- */
+    /* ------------------------ GET COMPANY by COMPANY email ----------------------- */
 }
 
 module.exports = ErrorlogController;
