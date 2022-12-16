@@ -101,7 +101,7 @@ class AdminController{
                 });
                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
              
-                var admins = await Admin.findAll();
+                var admins = await Admin.findAll({ include: Activitylog });
                 if(admins){
                     return res.status(200).json({
                         error : false,

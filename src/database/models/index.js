@@ -103,6 +103,10 @@ Crop.hasMany(CropSpecification,{
   as: 'crop_specification'
 })
 
+
+
+
+
 CropSpecification.belongsTo(Crop,{
   foreignKey: 'model_id',
   as: 'crop'

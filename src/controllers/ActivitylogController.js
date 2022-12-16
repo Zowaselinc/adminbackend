@@ -3,7 +3,7 @@
 const { request } = require("express");
 const crypto = require('crypto');
 const { validationResult } = require("express-validator");
-const { Activitylog, ErrorLog } = require("~database/models");
+const { Activitylog, ErrorLog, Admin } = require("~database/models");
 const jwt = require("jsonwebtoken");
 
 
@@ -59,14 +59,25 @@ class AdminlogController{
 /* ------------------------ GET ALL ACTIVITYLOGS END POINT ------------------------ */
             static async getAllActivitylogs(req, res){
                 try{
+             
+               var activitylogs = await Activitylog.findAll();
 
-                var activitylogs = await Activitylog.findAll();
+            var newarray = [];
+            await Promise.all( activitylogs.map(async (element) => {
+                var admindata = await Admin.findOne({where: {admin_id : element.admin_id}});
+                 admindata.password="";
+               admindata.recovery_phrase="";
+                element.dataValues.theadmin= admindata;
+                element._previousDataValues.theadmin= admindata;
+                newarray.push(element);
+            }))
 
+                 
                 if(activitylogs){
                     return res.status(200).json({
                         error : false,
                         message: "Activitylogs acquired successfully",
-                        data : activitylogs
+                        data :activitylogs
                     });
                 }else{
                     return res.status(200).json({
