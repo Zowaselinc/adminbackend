@@ -1,7 +1,8 @@
 //Import validation result
 const { validationResult } = require('express-validator');
 const crypto = require('crypto');
-const { Crop, CropRequest, ErrorLog } = require('~database/models');
+const { Crop, CropRequest, ErrorLog, Activitylog } = require('~database/models');
+const serveAdminid = require("~utilities/serveAdminId");
 
 class CropRequestController{
 
