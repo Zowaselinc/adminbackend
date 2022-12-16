@@ -87,21 +87,23 @@ class AdminController{
 
 /* ------------------------ GET ALL ADMINS END POINT ------------------------ */
             static async getAllAdmins(req, res){
-              var adminId = await  serveAdminid.getTheId(req);
+             
 
                
                 try{
 
-                /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-                await Activitylog.create({
-                    admin_id:adminId ,
-                    section_accessed:'View All Admin',
-                    page_route:'/api/admin/getall',
-                    action:'Viewing all administrators in the list'
-                });
-                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
              
-                var admins = await Admin.findAll({ include: Activitylog });
+             
+                var admins = await Admin.findAll({req});
+                   /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                   var adminId = await  serveAdminid.getTheId(req);
+                   await Activitylog.create({
+                       admin_id:adminId ,
+                       section_accessed:'View All Admin',
+                       page_route:'/api/admin/getall',
+                       action:'Viewing all administrators in the list'
+                   });
+                    /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                 if(admins){
                     return res.status(200).json({
                         error : false,
