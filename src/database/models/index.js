@@ -69,95 +69,109 @@ const Input = DB.input = require("./input.model.js").Model(initialInstance, crea
 //Register Relationships
 //---------------------------------------------------
 
-// Merchant.belongsTo(User , { foreignKey : "user_id"});
+Merchant.belongsTo(User , { foreignKey : "user_id"});
 
-// Corporate.belongsTo(User , { foreignKey : "user_id"});
+Corporate.belongsTo(User , { foreignKey : "user_id"});
 
-// Agent.belongsTo(User , { foreignKey : "user_id"});
+Agent.belongsTo(User , { foreignKey : "user_id"});
 
-// Partner.belongsTo(User , { foreignKey : "user_id"});
+Partner.belongsTo(User , { foreignKey : "user_id"});
 
-// Crop.hasMany(CropSpecification,{
-//   foreignKey: 'model_id',
-//   as: 'product_specification'
-// })
 
-// CropSpecification.belongsTo(Crop,{
-//   foreignKey: 'model_id',
-//   as: 'product'
-// })
+/* ---------------------------------- CROP ---------------------------------- */
+User.hasMany(Crop, {
+  foreignKey: "user_id",
+  as: "crops"
+})
+Crop.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user"
+});
 
-// Crop.hasMany(CropRequest,{
-//   foreignKey: 'crop_id',
-//   as: 'product_request'
-// })
+Crop.belongsTo(Category, {
+  foreignKey: "category_id",
+  as: "category"
+});
 
-// CropRequest.belongsTo(Crop,{
-//   foreignKey: 'crop_id',
-//   as: 'product'
-// })
-
-// 1
-Crop.hasMany(CropSpecification,{
+Crop.hasOne(CropSpecification, {
   foreignKey: 'model_id',
-  as: 'crop_specification'
+  as: 'specification'
 })
 
+Crop.hasOne(Auction,{
+  foreignKey : "crop_id",
+  as : "auction"
+})
 
-
-
-
-CropSpecification.belongsTo(Crop,{
+CropSpecification.belongsTo(Crop, {
   foreignKey: 'model_id',
   as: 'crop'
 });
 
-Crop.hasMany(CropRequest,{
+Crop.hasMany(CropRequest, {
   foreignKey: 'crop_id',
   as: 'crop_request'
 })
 
-CropRequest.belongsTo(Crop,{
+CropRequest.belongsTo(Crop, {
   foreignKey: 'crop_id',
   as: 'crop'
 });
 
-
-
-// 2
-Negotiation.hasMany(CropSpecification,{
-  foreignKey: 'model_id',
-  as: 'crop_specification'
-})
-
-
-
-
-Category.hasMany(Crop ,{
-  foreignKey : "category",
+Category.hasMany(Crop, {
+  foreignKey: "category_id",
 });
 
-Category.hasMany(Input ,{
-  foreignKey : "category",
+Category.hasMany(Input, {
+  foreignKey: "category_id",
 });
 
-SubCategory.hasMany(Input,{
-  foreignKey : "sub_category",
+SubCategory.hasMany(Input, {
+  foreignKey: "subcategory_id",
 });
 
-SubCategory.hasMany(Crop,{
-  foreignKey : "sub_category",
+SubCategory.hasMany(Crop, {
+  foreignKey: "subcategory_id",
 });
 
-// InputCart.hasOne(Input,{ foreignKey: 'id' })
+// Cart.hasOne(Input,{ foreignKey: 'id' })
 
-// Input.hasMany(InputCart,{
+// Input.hasMany(Cart,{
 //   foreignKey: 'input_id',
 //   as: 'input_cart'
 // })
 
-// InputOrder.hasMany(Input, { foreignKey: 'id' })
-// InputOrder.hasOne(DeliveryAddress, {foreignKey: 'id'})
+Negotiation.hasOne(CropSpecification, {
+  foreignKey: "model_id",
+  as: "specification"
+});
+
+Negotiation.hasOne(Order, {
+  foreignKey : "negotiation_id",
+  as : "order"
+});
+
+// Conversation.hasMany(Negotiation, {
+//   foreignKey : "conversation_id",
+//   as : "negotiations"
+// });
+
+// Conversation.belongsTo(Crop, {
+//   foreignKey : "crop_id",
+//   as : "crop"
+// });
+
+// Conversation.belongsTo(User , {
+//   foreignKey : "user_one",
+//   as : "initiator",
+//   constraints : false
+// });
+
+// Conversation.belongsTo(User , {
+//   foreignKey : "user_two",
+//   as : "participant",
+//   constraints : false
+// });
 
 module.exports = {
   DB,

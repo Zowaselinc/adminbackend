@@ -83,10 +83,6 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.STRING,
             allowNull : false
         },
-        ash_content : {
-            type: Sequelize.STRING,
-            allowNull : false
-        },
         acid_ash : {
             type: Sequelize.STRING,
             allowNull : false
@@ -123,15 +119,10 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.STRING,
             allowNull : false
         },
-        kg : {
+        unit : {
             type: Sequelize.STRING,
             allowNull : false
         },
-        liters : {
-            type: Sequelize.STRING,
-            allowNull : false
-        },
-        
         ...generateTimestamps(Sequelize,mode)
     }
 }

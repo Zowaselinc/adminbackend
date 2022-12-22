@@ -78,8 +78,23 @@ class TicketController{
 
         }
     }
-    /* -------------------------------------------------------------------------- */
-
+    /* ------------------------------TOTAL ACTIVE TICKETS-------------------------------------------- */
+        static async ticketStatus(req, res){
+            var ticketStatus = await Ticket.findAll({where:{ticket_status:'1'}});
+            if(ticketStatus<0){
+                return res.status(200).json({
+                    error:true,
+                    message:"active status not found"
+                })
+            }else{
+                return res.status(200).json({
+                    error:false,
+                    message:"Total status found",
+                    data:[{"Non-ActiveTicket":ticketStatus.length}]
+                })
+            }
+        }
+  /* ------------------------------------ TOTAL ACTIVE TICKETS --------------------------------------------- */
 
 /* ------------------------ GET ALL TICKETS END POINT ------------------------ */
             static async getAllTickets(req, res){

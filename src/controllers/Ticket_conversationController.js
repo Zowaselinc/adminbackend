@@ -12,7 +12,7 @@ class Ticket_conversationController{
 /* ----------------------- CREATE/ADD TICKET CONVERSATION END POINT ----------------------- */
     static async createTconvtn(req, res){
         try{
-
+            // INSERT INFORMATION INTO TicketConversation TABLE 
             var conversation = await TicketConversation.create({
                 ticket_id:req.bopdy.ticket_id,
                 conversation_id:req.body.conversation_id,
@@ -46,7 +46,7 @@ class Ticket_conversationController{
                  });
 
             }
-
+            /* -------------------------------- ERRORLOGS ------------------------------- */
         }catch(e){
             var logError = await ErrorLog.create({
                 error_name: "Error on creating Ticket Conversation",
@@ -65,7 +65,7 @@ class Ticket_conversationController{
 
         }
     }
-    /* -------------------------------------------------------------------------- */
+    /* ----------------------------ERRORLOGS---------------------------------------------- */
 
 
 /* ------------------------ GET ALL TICKET CONVERSATION END POINT ------------------------ */
@@ -74,7 +74,7 @@ class Ticket_conversationController{
 
                 var allconversation = await TicketConversation.findAll();
 
-                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+    /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
           var adminId = await  serveAdminid.getTheId(req);
 
           await Activitylog.create({
@@ -98,7 +98,7 @@ class Ticket_conversationController{
                     });
 
                 }
-
+                            // ERRORLOGS
             }catch(e){
                 var logError = await ErrorLog.create({
                     error_name: "Error on getting all Ticket Conversation",

@@ -21,6 +21,9 @@ const Input = require('~controllers/InputProductController');
 const CropController = require('~controllers/CropController');
 const CropRequestController = require('~controllers/CropRequestController');
 const CropSpecificationController = require('~controllers/CropSpecificationController');
+const CategoryController= require('~controllers/CategoryController');
+const SubCategoryController= require('~controllers/SubcategoryController');
+
 
 
 /* -------------------------------------------------------------------------- */
@@ -41,6 +44,8 @@ const OrderValidator = require('./validators/OrderValidator');
 const CropValidator = require('./validators/CropValidator');
 const CropSpecificationValidator = require('./validators/CropSpecificationValidator');
 const CropRequestValidator = require('./validators/CropRequestValidator');
+const CategoryValidator = require('./validators/CategoryValidator');
+const SubCategoryValidator = require('./validators/SubCategoryValidator');
 /* -------------------------------------------------------------------------- */
 /*                              // ALL VALIDATORS                             */
 /* -------------------------------------------------------------------------- */
@@ -136,6 +141,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/ticket/getallparams/:offset/:limit',TicketController.getTicketsbyparams);
     router.post('/admin/ticket/edit',TicketController.editTicket);
     router.post('/admin/ticket/delete/:id',TicketController.deleteTicket);
+    router.post('/admin/ticket/getstatus',TicketController.ticketStatus);
  });
 
  /* --------------------- //  ROUTE FOR MESSAGE END POINT -------------------- */
@@ -218,10 +224,11 @@ Router.middleware(['isAuthenticated']).group((router) => {
 /* ------------------------------- Crop ------------------------------ */
 Router.middleware(['isAuthenticated']).group((router) => {
 router.router.post('/admin/crop/add', CropValidator.addCropValidator, CropController.add);
-router.get('/admin/crop/product/getbyproductwanted', CropController.getbyproductwanted);
-router.get('/admin/crop/product/getbyproductoffer', CropController.getbyproductoffer);
-router.post('/admin/crop/product/getbyid', CropController.getbyid);
-router.post('/admin/crop/product/editbyid', CropValidator.addCropValidator, CropController.editbyid);
+router.get('/admin/crop/getbycropwanted', CropController.getByCropWanted);
+router.get('/admin/crop/getbycropauction', CropController.getByCropAuctions);
+router.get('/admin/crop/getbycropoffer', CropController.getByCropOffer);
+router.get('/admin/crop/getbyid/:id', CropController.getById);
+// router.post('/admin/crop/product/editbyid', CropValidator.addCropValidator, CropController.editbyid);
 
 
 /* ------------------------------- CropSpecification ------------------------------ */
@@ -240,6 +247,27 @@ router.post('/admin/crop/croprequest/editbyid', CropRequestController.editbyid);
 });
 
 
+
+Router.group((router) => {
+
+    /* -------------------------------- Category -------------------------------- */
+    router.get('/admin/category/:type/getall', CategoryController.getAllCategories);
+    router.get('/admin/category/:type/getall/:offset/:limit', CategoryController.getAllByLimit);
+    router.get('/admin/category/:id', CategoryController.getById);
+    // router.post('/crop/category/add', CategoryValidator.addCategoryValidator, CategoryController.add);
+    // router.post('/crop/category/editbyid', CategoryValidator.addCategoryValidator, CategoryController.editbyid);
+    // router.post('/crop/category/deletebyid', CategoryController.deletebyid);
+
+    /* ------------------------------- SubCategory ------------------------------ */
+
+    router.get('/admin/subcategory/getbycategory/:categoryId', SubCategoryController.getByCategory);
+    router.get('/admin/subcategory/getbyid/:id', SubCategoryController.getById);
+    // router.post('/crop/subcategory/add', SubCategoryValidator.addSubCategoryValidator, SubCategoryController.add);
+    // router.post('/crop/subcategory/editbyid', SubCategoryValidator.addSubCategoryValidator, SubCategoryController.editbyid);
+    // router.post('/crop/subcategory/deletebyid', SubCategoryController.deletebyid);
+
+
+})
 
 module.exports = Router;
 

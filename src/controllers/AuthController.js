@@ -1,12 +1,13 @@
 
 const {request} = require("express");
 const jwt = require("jsonwebtoken");
-const {Admin,  AccessToken, Activitylog } = require("~database/models");
+const {Admin,  AccessToken, Activitylog,User, Company, Merchant, Partner, Corporate, Agent, UserCode, MerchantType } = require("~database/models");
 const { validationResult } = require("express-validator");
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
+const md5  = require('md5');
 require('dotenv').config();
-const mailer = require("../services/mailer");
+const mailer = require("~services/mailer");
 
 class AuthController{
 
@@ -88,7 +89,7 @@ class AuthController{
     }
 
 
-    // register admin 
+    /* ---------------------------- // register admin --------------------------- */
 
     static async registerAdmin(req, res){
         try{
@@ -120,7 +121,7 @@ class AuthController{
                 recovery_phrase:recoveryPhrase
             });
 
-                      /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                      
                       await Activitylog.create({
                         admin_id:adminId ,
@@ -164,6 +165,9 @@ class AuthController{
 
         }
     }
+
+
+    /* ------------------------------ register user ----------------------------- */
 
 
 

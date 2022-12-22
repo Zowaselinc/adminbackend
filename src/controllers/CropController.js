@@ -1,7 +1,7 @@
 //Import validation result
 const { validationResult } = require('express-validator');
 const crypto = require('crypto');
-const { Crop, CropSpecification, CropRequest, ErrorLog, Activitylog } = require('~database/models');
+const { Crop, CropSpecification, CropRequest, ErrorLog, Activitylog, Category, User, Auction } = require('~database/models');
 // const { uploads } = require('~cropimageupload');
 const serveAdminid = require("~utilities/serveAdminId");
 
@@ -9,14 +9,6 @@ const serveAdminid = require("~utilities/serveAdminId");
 
 class CropController{
 
-    static async hello(req , res){
-
-        return res.status(200).json({
-            message : "Hello Crop"
-        });
-    }
-
-   
     /* ---------------------------- * ADD Cropdescription * ---------------------------- */
     static async add(req , res){
 
@@ -70,7 +62,7 @@ class CropController{
 
                     sampleFile.mv(uploadPath, function(err) {
                         if (err){
-                            return res.status(500).send(err);
+                            return res.status(500).send(err+" Error in uploading file");
                         }else{
                             
                             // res.send('File uploaded!');
@@ -86,15 +78,16 @@ class CropController{
 
 
 
-                /* ------------------------ INSERT INTO PRODUCT TABLE ----------------------- */
+                /* ------------------------ INSERT INTO CROP TABLE ----------------------- */
                
-                var product = await Crop.create({
+                var crop = await Crop.create({
                     user_id: req.body.user_id,
+                    title: req.body.title,
                     type: req.body.type,
-                    category: req.body.category,
-                    sub_category: req.body.sub_category,
+                    category_id: req.body.category_id,
+                    subcategory_id: req.body.subcategory_id,
                     active: 0,
-                    market: "cropmarket",
+                    market: "crop",
                     description: req.body.description,
                     images: my_object.toString(),
                     currency: req.body.currency,
@@ -107,13 +100,13 @@ class CropController{
                     expiration_date: req.body.expiration_date
                 })
                 
-                /* ------------------------ INSERT INTO PRODUCT TABLE ----------------------- */
+                /* ------------------------ INSERT INTO CROP TABLE ----------------------- */
 
 
-                if(product){
+                if(crop){
 
-                    var Cropspec = await CropSpecification.create({
-                        model_id: product.id,
+                    var createCropSpecification = await CropSpecification.create({
+                        model_id: crop.id,
                         model_type: req.body.model_type,
                         qty: req.body.qty,
                         price: req.body.price,
@@ -143,16 +136,16 @@ class CropController{
                         infested_by_weight: req.body.infested_by_weight,
                         curcumin_content: req.body.curcumin_content,
                         extraneous: req.body.extraneous,
-                        kg: req.body.kg,
+                        unit: req.body.unit,
                         liters: req.body.liters
                     })
 
 
 
 
-                    if(Cropspec){
-                        var ProdRequest = await CropRequest.create({
-                            crop_id: product.id,
+                    if(createCropSpecification){
+                        var createCroropRequest = await CropRequest.create({
+                            crop_id: crop.id,
                             state: req.body.state,
                             zip: req.body.zip,
                             country: req.body.country,
@@ -161,17 +154,6 @@ class CropController{
                             delivery_date: req.body.delivery_date,
                             delivery_window: req.body.delivery_window
                         })
-
-          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-          var adminId = await  serveAdminid.getTheId(req);
-
-          await Activitylog.create({
-            admin_id:adminId ,
-            section_accessed:'Create crop',
-            page_route:'/api/admin/crop/add',
-            action:'created crop specification'
-        });
-         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
                         return res.status(200).json({
                             "error": false,
@@ -203,20 +185,11 @@ class CropController{
         
     }
     // /* ---------------------------- * ADD Cropdescription * ---------------------------- */
-
-
-
-
-
-
-
-
-
-    /* --------------------------- GET ALL WANTED PRODUCTS --------------------------- */
-    static async getbyproductwanted(req , res){
+    /* --------------------------- GET ALL WANTED CROPS --------------------------- */
+    static async getByCropWanted(req , res){
 
         // return res.status(200).json({
-        //     message : "GET Category By Category ID"
+        //     message : "GET Wanted Crops"
         // });
 
         const errors = validationResult(req);
@@ -226,49 +199,41 @@ class CropController{
                 return res.status(400).json({ errors: errors.array() });
             }
     
-            var findwantedCrops = await Crop.findAll({ 
+            var findWantedCrops = await Crop.findAndCountAll({ 
                 include: [{
                     model: CropSpecification,
-                    as: 'product_specification',
-                    order: [['id', 'DESC']],
-                    limit: 1,
+                    as: 'specification',
                 },
                 {
                     model: CropRequest,
-                    as: 'product_request',
-                    order: [['id', 'DESC']],
-                    limit: 1,
-                    
+                    as: 'crop_request',
+                },
+                {
+                    model : Category,
+                    as : "category"
+                },
+                {
+                    model : User,
+                    as : 'user',
                 }],
-                
                 where: { type: "wanted" },
                 order: [['id', 'DESC']]
             });
 
-        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-          var adminId = await  serveAdminid.getTheId(req);
-
-          await Activitylog.create({
-            admin_id:adminId ,
-            section_accessed:'View crop wanted',
-            page_route:'/api/admin/crop/product/getproductwanted',
-            action:'Viewing crops wanted'
-        });
-         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
         
             /* --------------------- If fetched the Wanted Crops --------------------- */
             
             return res.status(200).json({
                 error : false,
                 message : "Crops wanted grabbed successfully",
-                products : findwantedCrops
+                data : findWantedCrops
             })
             
-        }catch(error){
+        }catch(e){
             var logError = await ErrorLog.create({
-                error_name: "Error on fetching product wanted",
+                error_name: "Error on fetching crop wanted",
                 error_description: e.toString(),
-                route: "/api/crop/product/getbyproductwanted",
+                route: "/api/crop/getbycropwanted",
                 error_code: "500"
             });
             if(logError){
@@ -279,73 +244,51 @@ class CropController{
             } 
         }
     }
-    /* --------------------------- GET ALL WANTED PRODUCTS --------------------------- */
+    /* --------------------------- GET ALL WANTED CROPS --------------------------- */
 
 
 
 
-
-
-
-
-
-    /* --------------------------- GET ALL OFFERED PRODUCTS --------------------------- */
-    static async getbyproductoffer(req , res){
-
-        // return res.status(200).json({
-        //     message : "GET Category By Category ID"
-        // });
-
-        const errors = validationResult(req);
+    /* --------------------------- GET ALL AUCTION CROPS --------------------------- */
+    static async getByCropAuctions(req , res){
 
         try{
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
-    
-            var findofferCrops = await Crop.findAll({ 
+            var findCropAuctions = await Crop.findAndCountAll({ 
                 include: [{
                     model: CropSpecification,
-                    as: 'product_specification',
-                    order: [['id', 'DESC']],
-                    limit: 1,
+                    as: 'specification',
                 },
                 {
-                    model: CropRequest,
-                    as: 'product_request',
-                    order: [['id', 'DESC']],
-                    limit: 1,
-                    
+                    model : Category,
+                    as : "category"
+                },
+                {
+                    model : User,
+                    as : 'user',
+                },
+                {
+                    model : Auction,
+                    as : "auction"
                 }],
                 
-                where: { type: "offer" },
+                where: { type: "auction" },
                 order: [['id', 'DESC']]
             });
 
         
             /* --------------------- If fetched the Wanted Crops --------------------- */
-                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-          var adminId = await  serveAdminid.getTheId(req);
-
-          await Activitylog.create({
-            admin_id:adminId ,
-            section_accessed:'View products offer',
-            page_route:'/api/admin/crop/product/getbyproductoffered',
-            action:'Viewing products offers'
-        });
-         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             
             return res.status(200).json({
                 error : false,
-                message : "Crops offer grabbed successfully",
-                products : findwantedCrops
+                message : "Crops auctions grabbed successfully",
+                data : findCropAuctions
             })
             
         }catch(error){
             var logError = await ErrorLog.create({
-                error_name: "Error on fetching product offer",
-                error_description: e.toString(),
-                route: "/api/crop/product/getbyproductoffer",
+                error_name: "Error on fetching crop wanted",
+                error_description: error.toString(),
+                route: "/api/crop/getbycropauction",
                 error_code: "500"
             });
             if(logError){
@@ -356,75 +299,124 @@ class CropController{
             } 
         }
     }
-    /* --------------------------- GET ALL OFFERED PRODUCTS --------------------------- */
+    /* --------------------------- GET ALL WANTED CROPS --------------------------- */
 
 
 
 
 
-    /* --------------------------- GET PRODUCT BY ID --------------------------- */
-    static async getbyid(req , res){
 
-        // return res.status(200).json({
-        //     message : "GET Crop by ID"
-        // });
-
-        const errors = validationResult(req);
+    /* --------------------------- GET ALL OFFERED CROPS --------------------------- */
+    static async getByCropOffer(req , res){
 
         try{
-            if (!errors.isEmpty()) {
-                return res.status(400).json({ errors: errors.array() });
-            }
+            
+            const { count, rows } = await Crop.findAndCountAll({ where: { type: "offer" } });
+
+            if(count<1){
+                return res.status(200).json({
+                    error : true,
+                    message : "No crop offer found",
+                    data : []
+                })
+            }else{
+                var findCropOffers = await Crop.findAndCountAll({ 
+                    include: [{
+                        model: CropSpecification,
+                        as: 'specification',
+                        where : { model_type : "crop"},
+                    },
+                    {
+                        model : Category,
+                        as : "category"
+                    },
+                    {
+                        model : User,
+                        as : 'user',
+                    }],
+                    where: { type: "offer" },
+                    order: [['id', 'DESC']]
+                });
     
-            var product = await Crop.findOne({ where: { id: req.body.id } });
-            if(product){
+            
+                /* --------------------- If fetched the Wanted Crops --------------------- */
+                
+                return res.status(200).json({
+                    error : false,
+                    message : "Crops offer grabbed successfully",
+                    data : findCropOffers
+                })
+            }
+            
+            
+        }catch(e){
+            var logError = await ErrorLog.create({
+                error_name: "Error on fetching crops offer",
+                error_description: e.toString(),
+                route: "/api/crop/getbycropoffer",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment'
+                })
+            } 
+        }
+    }
+    /* --------------------------- GET ALL OFFERED CROPS --------------------------- */
+
+    /* --------------------------- GET CROP BY ID --------------------------- */
+    static async getById(req , res){
+
+
+        try{
+            const cropId = req.params.id;
+    
+            var crop = await Crop.findOne({ where: { id: cropId } });
+            if(crop){
 
                 var findCrop = await Crop.findOne({ 
                     include: [{
                         model: CropSpecification,
-                        as: 'product_specification',
-                        order: [['id', 'DESC']],
-                        limit: 1,
+                        as: 'specification',
+                    },
+                    {
+                        model : Category,
+                        as : 'category'
                     },
                     {
                         model: CropRequest,
-                        as: 'product_request',
+                        as: 'crop_request',
                         order: [['id', 'DESC']],
                         limit: 1,
                         
+                    },{
+                        model : User,
+                        as : 'user'
                     }],
                     
-                    where: { id: req.body.id },
+                    where: { id: cropId },
                     order: [['id', 'DESC']]
                 });
-                     /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-          var adminId = await  serveAdminid.getTheId(req);
-
-          await Activitylog.create({
-            admin_id:adminId ,
-            section_accessed:'View single crop',
-            page_route:'/api/admin/crop/product/getbyid',
-            action:'View single crop'
-        });
-         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
     
                 return res.status(200).json({
                     error : false,
-                    message : "Single product grabbed successfully",
+                    message : "Single crop grabbed successfully",
                     data : findCrop
                 })
             }else{
                 return res.status(400).json({
                     error : true,
-                    message : "No such product found",
-                    data : req.body
+                    message : "No such crop found",
+                    data : []
                 })
             }
         }catch(e){
             var logError = await ErrorLog.create({
-                error_name: "Error on getting single product by id",
+                error_name: "Error on getting single crop by id",
                 error_description: e.toString(),
-                route: "/api/crop/product/getbyid",
+                route: "/api/crop/getbyid",
                 error_code: "500"
             });
             if(logError){
@@ -435,174 +427,8 @@ class CropController{
             } 
         }
     }
-    /* --------------------------- GET PRODUCT BY ID --------------------------- */
-
-
-
-
-
-
-
-
-
-    /* ---------------------------- * EDIT Project by ID * ---------------------------- */
-    static async editbyid(req , res){
-
-        // return res.status(200).json({
-        //     message : "Add Cropdescription "
-        // });
-
-        let sampleFile;
-        let uploadPath;
-
-        const errors = validationResult(req);
-
-        let randomid = crypto.randomBytes(8).toString('hex');
-        // let allImages = Object.keys(req.files);
-        // console.log(__dirname + '/uploads/' + req.files[allImages[0]].name);
-        try{
-
-            if(!errors.isEmpty()){
-                // return res.status(400).json({ errors: errors.array() });
-                return res.status(200).json({
-                    "error": true,
-                    "message": "All fields are required",
-                    "data": errors
-                }) 
-            }
-
-        
-
-            /* ------------------------ UPDATE INTO PRODUCT TABLE ----------------------- */
-
-            var product = await Crop.findOne({ where: { id: req.body.crop_id } });
-            if(product){
-            
-                var product = await Crop.update({
-                    user_id: req.body.user_id,
-                    type: req.body.type,
-                    category: req.body.category,
-                    sub_category: req.body.sub_category,
-                    active: 0,
-                    market: "cropmarket",
-                    description: req.body.description,
-                    // images: my_object.toString(),
-                    currency: req.body.currency,
-                    is_negotiable: req.body.is_negotiable,
-                    video: req.body.video,
-                    packaging: req.body.packaging,
-                    application: req.body.application,
-                    manufacture_name: req.body.manufacture_name,
-                    manufacture_date: req.body.manufacture_date,
-                    expiration_date: req.body.expiration_date
-                }, { where : { id: req.body.crop_id } });
-                
-                /* ------------------------ UPDATE INTO PRODUCT TABLE ----------------------- */
-
-
-                if(product){
-
-                    var Cropspec = await CropSpecification.update({
-                        model_id: product.id,
-                        model_type: req.body.model_type,
-                        qty: req.body.qty,
-                        price: req.body.price,
-                        color: req.body.color,
-                        moisture: req.body.moisture,
-                        foreign_matter: req.body.foreign_matter,
-                        broken_grains: req.body.broken_grains,
-                        weevil: req.body.weevil,
-                        dk: req.body.dk,
-                        rotten_shriveled: req.body.rotten_shriveled,
-                        test_weight: req.body.test_weight,
-                        hectoliter: req.body.hectoliter,
-                        hardness: req.body.hardness,
-                        splits: req.body.splits,
-                        oil_content: req.body.oil_content,
-                        infestation: req.body.infestation,
-                        grain_size: req.body.grain_size,
-                        total_defects: req.body.total_defects,
-                        dockage: req.body.dockage,
-                        ash_content: req.body.ash_content,
-                        acid_ash: req.body.acid_ash,
-                        volatile: req.body.volatile,
-                        mold: req.body.mold,
-                        drying_process: req.body.drying_process,
-                        dead_insect: req.body.dead_insect,
-                        mammalian: req.body.mammalian,
-                        infested_by_weight: req.body.infested_by_weight,
-                        curcumin_content: req.body.curcumin_content,
-                        extraneous: req.body.extraneous,
-                        kg: req.body.kg,
-                        liters: req.body.liters
-                    }, { where : { model_id: req.body.crop_id  } });
-
-
-
-
-                    if(Cropspec){
-                        var ProdRequest = await CropRequest.update({
-                            crop_id: product.id,
-                            state: req.body.state,
-                            zip: req.body.zip,
-                            country: req.body.country,
-                            address: req.body.address,
-                            delivery_method: req.body.delivery_method,
-                            delivery_date: req.body.delivery_date,
-                            delivery_window: req.body.delivery_window
-                        }, { where : { crop_id: req.body.crop_id,  } });
-
-     /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-                        var adminId = await  serveAdminid.getTheId(req);
-
-                        await Activitylog.create({
-                        admin_id:adminId ,
-                        section_accessed:'Edit crop',
-                        page_route:'/api/admin/crop/product/editbyid',
-                        action:'Edited crops'
-                    });
-         /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-
-                        return res.status(200).json({
-                            "error": false,
-                            "message": "Crop edited successfully",
-                            // "product": product, Cropspec, ProdRequest
-                        })
-                    }
-
-                }
-
-            }else{
-                return res.status(400).json({
-                    error : true,
-                    message : "No such product found",
-                    data : req.body
-                })
-            }
-  
-        }catch(e){
-            var logError = await ErrorLog.create({
-                error_name: "Error on edit a product",
-                error_description: e.toString(),
-                route: "/api/crop/product/editbyid",
-                error_code: "500"
-            });
-            if(logError){
-                return res.status(500).json({
-                    error: true,
-                    message: 'Unable to complete request at the moment'
-                })
-            }  
-        }
-
-        
-    }
-    // /* ---------------------------- * EDIT Project by ID * ---------------------------- */
-
-
-
-   
-
+    /* --------------------------- GET CROP BY ID --------------------------- */
+    
 }
 
 module.exports = CropController;

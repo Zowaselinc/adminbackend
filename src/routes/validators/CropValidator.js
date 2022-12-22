@@ -4,11 +4,12 @@ const { body } = require('express-validator');
 module.exports = {
 
     addCropValidator : [
-        // body('type').isString(),
+        
         body('user_id').isString(),
+        body('title').isString(),
         body('type').isString(),
-        body('category').isString(),
-        body('sub_category').isString(),
+        body('category_id').isString(),
+        body('subcategory_id').isString(),
         // body('active').isString(),
         // body('market').isString(),
         body('description').isString(),
@@ -51,8 +52,9 @@ module.exports = {
         body('infested_by_weight').isNumeric(),
         body('curcumin_content').isNumeric(),
         body('extraneous').isNumeric(),
-        body('kg').isNumeric(),
-        body('liters').isNumeric(),
+        body('unit').isString(),
+        // body('kg').isNumeric(),
+        // body('liters').isNumeric()
 
         // body('crop_id').isNumeric(),
         body('state').isString(),
@@ -63,5 +65,4 @@ module.exports = {
         body('delivery_date').isString(),
         body('delivery_window').isString()
     ],
-
 }
