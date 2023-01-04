@@ -179,7 +179,8 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/users/regitermerchant',UserController.registerMerchant);  
     router.get('/admin/users/getall',UserController.getAllUsers);  
     router.get('/admin/users/bytype/:type', UserController.getUsersByType);
-    router.get('/admin/users/:id', UserController.getUserById);
+    router.get('/admin/users/getbyid/:id', UserController.getUserById);
+    router.get('/admin/users/getstats', UserController.getUserStats);
  
  });
 

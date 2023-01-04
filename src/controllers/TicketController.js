@@ -90,7 +90,7 @@ class TicketController{
                 return res.status(200).json({
                     error:false,
                     message:"Total status found",
-                    data:[{"Non-ActiveTicket":ticketStatus.length}]
+                    data:[{"ActiveTicket":ticketStatus.length}]
                 })
             }
         }

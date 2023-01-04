@@ -178,6 +178,7 @@ class UserController{
             error : false,
             message : "Users fetched successfully",
             data : result
+            
         });
     }
 
@@ -211,14 +212,52 @@ class UserController{
             error : false,
             message : "User fetched successfully",
             data : user
+            
         });
     }
-
+    /* ------------------------- // get all users stats ------------------------- */
     static async getUserStats(req ,res){
+        try{
+
+    //    uers stats 
+        var verifiedUsers = await User.findAll({where:{is_verified:'1'}});
+        var activeUsers = await User.findAll({where:{active:'1'}});
+        var totalUsers = await User.findAll();
+        var totalMerchant = await User.findAll({where :{type:'merchant'}});
+        var totalCorporate = await User.findAll({where :{type:'corporate'}});
+
+        // fetch all users stats 
+        return res.status(200).json({
+            error:false,
+            message:"Users stats fetched",
+            data:[{
+                "Totalusers":totalUsers.length,
+                "TotalMerchant":totalMerchant.length,
+                "TotalCorporate":totalCorporate.length,
+                "VerifiedUsers":verifiedUsers.length,
+                "ActiveUsers":activeUsers.length
         
+        }]
+        })
+         }catch(error){
+            var logError = await ErrorLog.create({
+                error_name: "Error on getting users stats",
+                error_description: e.toString(),
+                route: "/api/admin/users/getstats",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment',
+                    
+                })
+    
+            }
+         }
     }
 
-
+    
 }
 
 module.exports = UserController;
