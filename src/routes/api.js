@@ -23,6 +23,7 @@ const CropRequestController = require('~controllers/CropRequestController');
 const CropSpecificationController = require('~controllers/CropSpecificationController');
 const CategoryController= require('~controllers/CategoryController');
 const SubCategoryController= require('~controllers/SubcategoryController');
+const NegotiationController= require('~controllers/NegotiationController');
 
 
 
@@ -46,6 +47,7 @@ const CropSpecificationValidator = require('./validators/CropSpecificationValida
 const CropRequestValidator = require('./validators/CropRequestValidator');
 const CategoryValidator = require('./validators/CategoryValidator');
 const SubCategoryValidator = require('./validators/SubCategoryValidator');
+const NegotiationValidator = require('./validators/NegotiationValidator');
 /* -------------------------------------------------------------------------- */
 /*                              // ALL VALIDATORS                             */
 /* -------------------------------------------------------------------------- */
@@ -198,11 +200,11 @@ Router.middleware(['isAuthenticated']).group((router)=>{
   /* ---------------------- //  ROUTE FOR ORDER END POINT --------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
 
-    router.post('/admin/crop/order/add', OrderValidator.cropAddOrderValidators, OrderController.createNewOrder);
-    router.get('/admin/crop/order/getbyorderid/:orderid', OrderValidator.cropGetOrderByIdValidators, OrderController.getByOrderId);
+    router.post('/admin/crop/order/add', OrderValidator.cropAddOrderValidators, OrderController.createNewOrderOld);
+    // router.get('/admin/crop/order/getbyorderid/:orderid', OrderValidator.cropGetOrderByIdValidators, OrderController.getByOrderId);
     router.get('/admin/crop/order/getbybuyer/:buyer_id/:buyer_type', OrderController.getByBuyer);
     router.get('/admin/crop/order/getbynegotiationid/:negotiation_id', OrderController.getByNegotiationId);
-    // router.get('/admin/crop/order/getall    ', OrderController.getByNegotiationId);
+    router.get('/admin/crop/order/getall    ', OrderController.getByNegotiationId);
     router.get('/admin/crop/order/getbypaymentstatus/:payment_status', OrderController.getByPaymentStatus);
     // Tracking Details
     router.post('/admin/crop/trackingdetails/updatebyorderid', OrderController.updateTrackingDetailsByOrderId);
@@ -268,8 +270,22 @@ Router.group((router) => {
     // router.post('/crop/subcategory/deletebyid', SubCategoryController.deletebyid);
 
 
-})
+});
 
+
+/* ------------------------------- Negotiation ------------------------------ */
+Router.middleware(['isAuthenticated']).group((router) => {
+router.post('/admin/crop/negotiation/add', NegotiationValidator.addNegotiationValidator, NegotiationController.add);
+// router.post('/crop/negotiation/admin/add', NegotiationValidator.addNegotiationValidator, NegotiationController.addmsgbyadmin);
+router.get('/admin/crop/:cropId/negotiation/getbyuserid/:userid', NegotiationController.getbyuserid);
+router.get('/admin/crop/negotiation/:userid', NegotiationController.getListByUser);
+router.post('/admin/crop/negotiation/sendoffer', NegotiationController.sendNegotiationOffer);
+router.post('/admin/crop/negotiation/accept', NegotiationValidator.negotiation, NegotiationController.acceptNegotiation);
+router.post('/admin/crop/negotiation/decline',NegotiationValidator.negotiation, NegotiationController.declineNegotiation);
+router.post('/admin/crop/negotiation/close',NegotiationValidator.negotiation, NegotiationController.closeNegotiation);
+router.get('/admin/crop/negotiation/grabtransactionby/:status/:userid', NegotiationController.getNegotiationTransactionSummary);
+router.get('/admin/crop/negotiation/getallsummary', NegotiationController.getAllNegotiationTransactionSummary);
+});
 module.exports = Router;
 
 

@@ -63,6 +63,7 @@ const Category = DB.categories = require("./category.model.js").Model(initialIns
 const SubCategory = DB.subcategories = require("./subcategory.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Negotiation = DB.negotiation = require("./negotiation.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Input = DB.input = require("./input.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Conversation = DB.conversation = require("./conversation.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -151,27 +152,27 @@ Negotiation.hasOne(Order, {
   as : "order"
 });
 
-// Conversation.hasMany(Negotiation, {
-//   foreignKey : "conversation_id",
-//   as : "negotiations"
-// });
+Conversation.hasMany(Negotiation, {
+  foreignKey : "conversation_id",
+  as : "negotiations"
+});
 
-// Conversation.belongsTo(Crop, {
-//   foreignKey : "crop_id",
-//   as : "crop"
-// });
+Conversation.belongsTo(Crop, {
+  foreignKey : "crop_id",
+  as : "crop"
+});
 
-// Conversation.belongsTo(User , {
-//   foreignKey : "user_one",
-//   as : "initiator",
-//   constraints : false
-// });
+Conversation.belongsTo(User , {
+  foreignKey : "user_one",
+  as : "initiator",
+  constraints : false
+});
 
-// Conversation.belongsTo(User , {
-//   foreignKey : "user_two",
-//   as : "participant",
-//   constraints : false
-// });
+Conversation.belongsTo(User , {
+  foreignKey : "user_two",
+  as : "participant",
+  constraints : false
+});
 
 module.exports = {
   DB,
@@ -195,6 +196,7 @@ module.exports = {
   Transaction,
   CropSpecification,
   Crop,
+  Conversation,
   CropRequest,
   Auction,
   Order,

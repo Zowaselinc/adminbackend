@@ -221,10 +221,14 @@ class UserController{
 
     //    uers stats 
         var verifiedUsers = await User.findAll({where:{is_verified:'1'}});
+        var verifiedMerchants = await User.findAll({where:{is_verified:'1', type: 'merchant'}});
+        var verifiedCorporate = await User.findAll({where:{is_verified:'1', type: 'corporate'}});
         var activeUsers = await User.findAll({where:{active:'1'}});
         var totalUsers = await User.findAll();
         var totalMerchant = await User.findAll({where :{type:'merchant'}});
         var totalCorporate = await User.findAll({where :{type:'corporate'}});
+        var activeMerchants = await User.findAll({where:{active:'1', type: 'merchant'}});
+        var activeCorporate = await User.findAll({where:{active:'1', type: 'corporate'}});
 
         // fetch all users stats 
         return res.status(200).json({
@@ -235,9 +239,12 @@ class UserController{
                 "TotalMerchant":totalMerchant.length,
                 "TotalCorporate":totalCorporate.length,
                 "VerifiedUsers":verifiedUsers.length,
-                "ActiveUsers":activeUsers.length
-        
-        }]
+                "VerifiedMerchants":verifiedMerchants.length,
+                "VerifiedCorporate":verifiedCorporate.length,
+                "ActiveUsers":activeUsers.length,
+                "ActiveMerchants":activeMerchants.length,    
+                "ActiveCorporate":activeCorporate.length     
+            }]
         })
          }catch(error){
             var logError = await ErrorLog.create({

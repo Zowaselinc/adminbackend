@@ -117,7 +117,7 @@ class InputProducts{
 
         
     }
-
+       /* ------------------------ get all input by user id ------------------------ */
     static async getallInputsByUser(req , res){
         try{
             var alluserinputs = await Input.findAll({
@@ -167,7 +167,7 @@ class InputProducts{
             }  
         }
     }
-
+/* ----------------------------- get all inputs ----------------------------- */
     static async getallInputs(req , res){
         try{
             var alluserinputs = await Input.findAll();
@@ -214,7 +214,7 @@ class InputProducts{
             }  
         }
     }
-
+        /* -------------------------- get input by category ------------------------- */
     static async getallInputsByCategory(req , res){
         try{
             var allInputs = await Input.findAll({
@@ -264,6 +264,7 @@ class InputProducts{
             }  
         }
     }
+    /* ------------------------ Get input by manufacturer ----------------------- */
     static async getallInputsByManufacturer(req , res){
         try{
             var allInputs = await Input.findAll({
@@ -314,6 +315,8 @@ class InputProducts{
             }  
         }
     }
+
+    /* ------------------------- get input by packaging ------------------------- */
     static async getallInputsByPackaging(req , res){
         try{
             var allInputs = await Input.findAll({

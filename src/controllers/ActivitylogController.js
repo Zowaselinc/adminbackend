@@ -7,7 +7,7 @@ const { Activitylog, ErrorLog, Admin } = require("~database/models");
 const jwt = require("jsonwebtoken");
 
 
-class AdminlogController{
+class ActivitylogController{
 
     /* --------------------------- CREATE ACTIVITYLOG --------------------------- */
     // static async createActivitylog(req, res){
@@ -66,7 +66,7 @@ class AdminlogController{
             await Promise.all( activitylogs.map(async (element) => {
                 var admindata = await Admin.findOne({where: {admin_id : element.admin_id}});
                  admindata.password="";
-               admindata.recovery_phrase="";
+                admindata.recovery_phrase="";
                 element.dataValues.theadmin= admindata;
                 element._previousDataValues.theadmin= admindata;
                 newarray.push(element);
@@ -155,6 +155,9 @@ class AdminlogController{
         try{
 
         var activitylogid = await Activitylog.findOne({where: {id : req.params.id}});
+
+            
+
         if(activitylogid == null){
             return res.status(200).json({
                 error:true,
@@ -222,6 +225,6 @@ class AdminlogController{
 
 }
 
-module.exports = AdminlogController;
+module.exports = ActivitylogController;
 
     

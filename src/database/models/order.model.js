@@ -2,7 +2,7 @@ const generateTimestamps = require("./timestamps");
 
 let Schema = (Sequelize,mode) => {
     return {
-        order_id : {
+        order_hash : {
             type: Sequelize.STRING,
             allowNull : false
         },
@@ -18,15 +18,22 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.STRING,
             allowNull : true
         },
-        payment_option : {
-            type: Sequelize.STRING,
-            allowNull : false
-        },
-        payment_status : {
+        total : {
             type : Sequelize.STRING,
             allowNull : false
         },
-        product : {
+        currency : {
+            type : Sequelize.STRING,
+            allowNull : false
+        },
+        payment_option : {
+            type: Sequelize.STRING,
+        },
+        payment_status : {
+            type : Sequelize.ENUM( "UNPAID", "PARTIALLY_PAID", "PAID" ),
+            allowNull : false
+        },
+        products : {
             type : Sequelize.TEXT,
             allowNull : false
         },
@@ -46,7 +53,6 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.TEXT,
             allowNull : true
         },
-
         ...generateTimestamps(Sequelize,mode)
     }
 }
