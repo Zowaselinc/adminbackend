@@ -65,8 +65,8 @@ class ActivitylogController{
             var newarray = [];
             await Promise.all( activitylogs.map(async (element) => {
                 var admindata = await Admin.findOne({where: {admin_id : element.admin_id}});
-                 admindata.password="";
-                admindata.recovery_phrase="";
+                //  admindata.password="";
+                // admindata.recovery_phrase="";
                 element.dataValues.theadmin= admindata;
                 element._previousDataValues.theadmin= admindata;
                 newarray.push(element);
