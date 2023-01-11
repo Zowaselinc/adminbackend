@@ -31,13 +31,13 @@ class AdminController{
                 admin_id :"ZWLADM"+adminid,
                 first_name : req.body.first_name,
                 last_name : req.body.last_name,
-                email : req.body.email,
-                password : encrypted,
+                email : req.body.email.trim(),
+                password : encrypted.trim(),
                 phone : req.body.phone,
                 role: req.body.role,
                 recovery_phrase:recoveryPhrase
             });
-
+                    
                       /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                      
                       await Activitylog.create({
@@ -87,13 +87,9 @@ class AdminController{
 
 /* ------------------------ GET ALL ADMINS END POINT ------------------------ */
             static async getAllAdmins(req, res){
-             
-
-               
+          
                 try{
 
-             
-             
                 var admins = await Admin.findAll({req});
                    /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                    var adminId = await  serveAdminid.getTheId(req);

@@ -24,6 +24,8 @@ const CropSpecificationController = require('~controllers/CropSpecificationContr
 const CategoryController= require('~controllers/CategoryController');
 const SubCategoryController= require('~controllers/SubcategoryController');
 const NegotiationController= require('~controllers/NegotiationController');
+const SectionController= require('~controllers/SectionController');
+
 
 
 
@@ -48,6 +50,8 @@ const CropRequestValidator = require('./validators/CropRequestValidator');
 const CategoryValidator = require('./validators/CategoryValidator');
 const SubCategoryValidator = require('./validators/SubCategoryValidator');
 const NegotiationValidator = require('./validators/NegotiationValidator');
+const SectionValidator = require('./validators/SectionValidator');
+const RoleValidator = require('./validators/RoleValidator');
 /* -------------------------------------------------------------------------- */
 /*                              // ALL VALIDATORS                             */
 /* -------------------------------------------------------------------------- */
@@ -94,7 +98,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
 /* --------------------------- // Routes for roles -------------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
-    router.post('/admin/roles/add',RoleController.createRoles);
+    router.post('/admin/roles/add',RoleValidator.roleValidator, RoleController.createRoles);
     router.get('/admin/roles/getall',RoleController.getAllRoles);
     router.get('/admin/roles/getallparams/:offset/:limit',RoleController.getRolesbyparams);
     router.get('/admin/roles/getbyid/:id',RoleController.getRolesbyid);
@@ -145,6 +149,22 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/ticket/delete/:id',TicketController.deleteTicket);
     router.post('/admin/ticket/getstatus',TicketController.ticketStatus);
  });
+
+
+
+ /* --------------------- //  ROUTE FOR SECTION END POINT -------------------- */
+Router.middleware(['isAuthenticated']).group((router)=>{
+    router.post('/admin/section/add',SectionValidator.sectionValidator,SectionController. createSection);
+    router.get('/admin/section/getall',SectionController.getAllSections);
+    router.get('/admin/section/getbyid/:id',SectionController.getsectionbyid);
+    router.get('/admin/section/getbysectionid/:section_id',SectionController.getBysectionid);
+    router.get('/admin/section/getallparams/:offset/:limit',SectionController.getsectionbyparams);
+    router.post('/admin/section/edit',SectionController.editsectionbyid);
+    router.post('/admin/section/delete/:id',SectionController.deletesection);
+ });
+
+
+
 
  /* --------------------- //  ROUTE FOR MESSAGE END POINT -------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{

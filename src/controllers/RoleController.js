@@ -1,5 +1,6 @@
 const { request } = require("express");
 const {Role, ErrorLog, Activitylog} = require("~database/models");
+const { validationResult } = require("express-validator");
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
 const serveAdminid = require("~utilities/serveAdminId");
@@ -9,7 +10,19 @@ class RoleController{
     /* --------------------------- ADD ROLES END POINT -------------------------- */
     static async createRoles(req,res){
         try{
+
+            const errors = validationResult(req);
+  
+            if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors:true,
+                message: "All fields are required",
+                data: {}
+                });
+            }
+
             const roleid = crypto.randomBytes(16).toString("hex")
+
         var role = await Role.create({
             role_id:"ZWLROL"+ roleid,
             role_name:req.body.role_name,

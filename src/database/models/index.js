@@ -41,6 +41,7 @@ const Message = DB.messages = require("./message.model.js").Model(initialInstanc
 const AdminNotification = DB.admin_notifications = require("./admin_notification.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const User = DB.users = require("./user.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Company = DB.companies = require("./company.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Section = DB.sections = require("./section.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 
 
@@ -205,5 +206,6 @@ module.exports = {
   Category,
   SubCategory,
   Negotiation,
-  Input
+  Input,
+  Section
 };
