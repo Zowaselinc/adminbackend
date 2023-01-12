@@ -98,7 +98,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
 /* --------------------------- // Routes for roles -------------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
-    router.post('/admin/roles/add',RoleController.createRoles);
+    router.post('/admin/roles/add',RoleValidator.roleValidator, RoleController.createRoles);
     router.get('/admin/roles/getall',RoleController.getAllRoles);
     router.get('/admin/roles/getallparams/:offset/:limit',RoleController.getRolesbyparams);
     router.get('/admin/roles/getbyid/:id',RoleController.getRolesbyid);
@@ -134,6 +134,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/activitylog/getbyid/:id',ActivitylogController.getActivitylogbyid);
     router.get('/admin/activitylog/getbyadminid/:admin_id',ActivitylogController.getActivitylogbyAdminid);
     router.get('/admin/activitylog/getallparams/:offset/:limit',ActivitylogController.getActivitylogbyparams);
+    router.post('/admin/activitylog/delete',ActivitylogController.deleteActy);
 
  
  });

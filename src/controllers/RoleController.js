@@ -11,15 +11,15 @@ class RoleController{
     static async createRoles(req,res){
         try{
 
-            // const errors = validationResult(req);
+            const errors = validationResult(req);
   
-            // if (!errors.isEmpty()) {
-            // return res.status(400).json({
-            //     errors:true,
-            //     message: "All fields are required",
-            //     data: {}
-            //     });
-            // }
+            if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors:true,
+                message: "All fields are required",
+                data: {}
+                });
+            }
 
             const roleid = crypto.randomBytes(16).toString("hex")
 

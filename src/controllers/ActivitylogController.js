@@ -223,6 +223,43 @@ class ActivitylogController{
     }
     }
 
+
+
+    static async deleteActy(req, res){
+        try{
+    
+        var delActy = await Activitylog.destroy({where: {id:req.body.id}});
+    
+        
+    
+        if(delActy){
+            return res.status(200).json({
+                error : false,
+                message : "Activitylog deleted succesfully",
+            })
+        }else{
+            return res.status(200).json({
+                error : true,
+                message : "Failed to delete Activitylog",
+            })
+        }
+    }catch(e){
+            var  logError = await ErrorLog.create({
+            error_name: "Error on deleting activitylog",
+            error_description: e.toString(),
+            route: "/api/admin/activitylog/delete",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+            });
+          }
+    }
+    }
+    
+
 }
 
 module.exports = ActivitylogController;
