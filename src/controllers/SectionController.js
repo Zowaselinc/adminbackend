@@ -48,7 +48,7 @@ class SectionController{
                    
                 });
                         
-                          /* ----------------------------------  ACTIVITY LOG --------------------------------- */
+          /* ----------------------------------  ACTIVITY LOG --------------------------------- */
 
                           await Activitylog.create({
                             admin_id:adminId ,
@@ -56,7 +56,7 @@ class SectionController{
                             page_route:'/api/admin/section/add',
                             action:'Added new section'
                         });
-                         /* ----------------------------------  ACTIVITY LOG --------------------------------- */
+        /* ----------------------------------  ACTIVITY LOG --------------------------------- */
 
                         if(section){
                             return res.status(200).json({
@@ -74,10 +74,10 @@ class SectionController{
                 }
             }
 
-        }catch(e){
+        }catch(error){
             var logError = await ErrorLog.create({
                 error_name: "Error on creating section",
-                error_description: e.toString(),
+                error_description: error.toString(),
                 route: "/api/admin/section/add",
                 error_code: "500"
             });

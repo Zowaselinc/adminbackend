@@ -224,7 +224,7 @@ class ActivitylogController{
     }
 
 
-
+/* ---------- MULTIPLE DELETION  OF ACTIVITYLOG FROM THE DATA BASE ---------- */
     static async deleteActy(req, res){
         try{
     
@@ -258,7 +258,7 @@ class ActivitylogController{
           }
     }
     }
-    
+    /* ---------- MULTIPLE DELETION  OF ACTIVITYLOG FROM THE DATA BASE ---------- */
 
 }
 

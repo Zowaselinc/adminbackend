@@ -13,6 +13,74 @@ class SubCategoryController{
     }
 
 
+   /* ---------------------------- * ADD SUBCATEGORY * ---------------------------- */
+   static async add(req , res){
+
+    // return res.status(200).json({
+    //     message : "Add Category"
+    // });
+
+    const errors = validationResult(req);
+
+    try{
+        
+        if(!errors.isEmpty()){
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        
+        // console.log(errors.isEmpty());
+        let randomid = crypto.randomBytes(8).toString('hex');
+
+        const { count, rows } = await SubCategory.findAndCountAll({ 
+            where: { category_id: req.body.category_id, name:req.body.subcategory_name } 
+        });
+
+        // console.log(count, "Count");
+        // console.log(rows, "Rows");
+
+        if(count > 0){
+            return res.status(200).json({
+                "error": true,
+                "message": "Subcategory already exist"
+            })
+        }else{
+            var subcategory = await SubCategory.create({
+                category_id: req.body.category_id,
+                subcategory_name: req.body.subcategory_name,
+                type: "crop"
+                
+            })
+            
+            return res.status(200).json({
+                "error": false,
+                "message": "Subcategory created successfully",
+                "subcategory": subcategory
+            })
+        }
+        
+    }catch(e){
+        var logError = await ErrorLog.create({
+            error_name: "Error on adding a subcategory",
+            error_description: e.toString(),
+            route: "/api/crop/subcategory/add",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment'
+            })
+        } 
+    }
+
+    
+}
+/* ---------------------------- * ADD SUBCATEGORY * ---------------------------- */
+
+
+
+
 
 
 

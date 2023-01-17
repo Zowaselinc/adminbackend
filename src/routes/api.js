@@ -221,15 +221,27 @@ Router.middleware(['isAuthenticated']).group((router)=>{
   /* ---------------------- //  ROUTE FOR ORDER END POINT --------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
 
-    router.post('/admin/crop/order/add', OrderValidator.cropAddOrderValidators, OrderController.createNewOrderOld);
     // router.get('/admin/crop/order/getbyorderid/:orderid', OrderValidator.cropGetOrderByIdValidators, OrderController.getByOrderId);
-    router.get('/admin/crop/order/getbybuyer/:buyer_id/:buyer_type', OrderController.getByBuyer);
-    router.get('/admin/crop/order/getbynegotiationid/:negotiation_id', OrderController.getByNegotiationId);
-    router.get('/admin/crop/order/getall    ', OrderController.getByNegotiationId);
-    router.get('/admin/crop/order/getbypaymentstatus/:payment_status', OrderController.getByPaymentStatus);
+    // router.post('/admin/crop/order/add', OrderValidator.cropAddOrderValidators, OrderController.createNewOrderOld);
+    // router.post('/admin/crop/order/addnew', OrderValidator.cropAddOrderValidators, OrderController.createNewOrder);
+    // router.get('/admin/crop/order/getbyorderid/:order_hash', OrderController.getByOrderHash);
+    // router.get('/admin/crop/order/getbybuyer/:buyer_id/:buyer_type', OrderController.getByBuyer);
+    // router.get('/admin/crop/order/getbynegotiationid/:negotiation_id', OrderController.getByNegotiationId);
+    // router.get('/admin/crop/order/getall', OrderController.getByNegotiationId);
+    // router.get('/admin/crop/order/getbypaymentstatus/:payment_status', OrderController.getByPaymentStatus);
+    // // Tracking Details
+    // router.post('/admin/crop/trackingdetails/updatebyorderid', OrderController.updateTrackingDetailsByOrderId);
+    router.post('/admin/crop/order/add', OrderValidator.createOrderValidator, OrderController.createNewOrder);
+    router.get('/admin/order/:order', OrderController.getByOrderHash);
+    router.get('/admin/crop/order/getbybuyer/:buyerid/:buyertype', OrderController.getByBuyer);
+    router.get('/admin/crop/order/getbynegotiationid/:negotiationid', OrderController.getByNegotiationId);
+    router.get('/admin/crop/order/getbypaymentstatus/:paymentstatus', OrderController.getByPaymentStatus);
     // Tracking Details
-    router.post('/admin/crop/trackingdetails/updatebyorderid', OrderController.updateTrackingDetailsByOrderId);
-
+    router.post('/admin/order/:order/trackingdetails', OrderValidator.updateTrackingDetailsValidators, OrderController.updateTrackingDetailsByOrderId);
+    // Waybill Details
+    router.post('/admin/order/:order/waybilldetails', OrderValidator.updateWaybillDetailsValidators, OrderController.updateWaybillDetailsByOrderId);
+    // Goodreceiptnote Details
+    router.post('/admin/order/:order/goodreceiptnote', OrderValidator.updateGoodReceiptDetailsValidators, OrderController.updateWaybillDetailsByOrderId);
  
  });
 
@@ -276,9 +288,9 @@ Router.group((router) => {
 
     /* -------------------------------- Category -------------------------------- */
     router.get('/admin/category/:type/getall', CategoryController.getAllCategories);
-    router.get('/admin/category/:type/getall/:offset/:limit', CategoryController.getAllByLimit);
-    router.get('/admin/category/:id', CategoryController.getById);
-    // router.post('/crop/category/add', CategoryValidator.addCategoryValidator, CategoryController.add);
+    router.get('/admin/category/:type/params/:offset/:limit', CategoryController.getAllByLimit);
+    router.get('/admin/category/getbyid/:id', CategoryController.getById);
+    router.post('/admin/category/add', CategoryController.createCategory);
     // router.post('/crop/category/editbyid', CategoryValidator.addCategoryValidator, CategoryController.editbyid);
     // router.post('/crop/category/deletebyid', CategoryController.deletebyid);
 
@@ -286,7 +298,7 @@ Router.group((router) => {
 
     router.get('/admin/subcategory/getbycategory/:categoryId', SubCategoryController.getByCategory);
     router.get('/admin/subcategory/getbyid/:id', SubCategoryController.getById);
-    // router.post('/crop/subcategory/add', SubCategoryValidator.addSubCategoryValidator, SubCategoryController.add);
+    router.post('/admin/subcategory/add', SubCategoryValidator.addSubCategoryValidator, SubCategoryController.add);
     // router.post('/crop/subcategory/editbyid', SubCategoryValidator.addSubCategoryValidator, SubCategoryController.editbyid);
     // router.post('/crop/subcategory/deletebyid', SubCategoryController.deletebyid);
 

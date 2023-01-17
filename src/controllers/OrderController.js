@@ -175,7 +175,7 @@ class OrderController{
                 order_hash: "ORD"+randomid,
                 buyer_id: req.body.buyer_id,
                 buyer_type: req.body.buyer_type,
-                negotiation_id: negotiation_id,
+                negotiation_id:req.body.negotiation_id,
                 payment_option: req.body.payment_option,
                 payment_status: req.body.payment_status,
                 product: JSON.stringify(theproduct),
@@ -240,7 +240,7 @@ class OrderController{
                 order_hash: "ORD"+randomid,
                 buyer_id: req.body.buyer_id,
                 buyer_type: req.body.buyer_type,
-                negotiation_id: negotiation_id,
+                negotiation_id:req.body.negotiation_id,
                 payment_option: req.body.payment_option,
                 payment_status: req.body.payment_status,
                 product: JSON.stringify(theproduct),
@@ -258,9 +258,9 @@ class OrderController{
             })
         }catch(e){
             var logError = await ErrorLog.create({
-                error_name: "Error on creating an order",
+                error_name: "Error on creating new order",
                 error_description: e.toString(),
-                route: "/api/crop/order/add",
+                route: "/api/crop/order/addnew",
                 error_code: "500"
             });
             return res.status(500).json({
@@ -347,7 +347,7 @@ class OrderController{
             var logError = await ErrorLog.create({
                 error_name: "Error on getting all orders by buyerid",
                 error_description: e.toString(),
-                route: `/api/crop/order/getbyorder/${req.params.buyerid}/${req.params.buyertype}`,
+                route: `/api/crop/order/getbybuyer/${req.params.buyerid}/${req.params.buyertype}`,
                 error_code: "500"
             });
             if(logError){

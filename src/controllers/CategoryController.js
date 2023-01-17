@@ -4,6 +4,7 @@ const { Category, ErrorLog, SubCategory, Crop, Input } = require('~database/mode
 const crypto = require('crypto');
 const { count } = require('console');
 const { Sequelize } = require('sequelize');
+const serveAdminid = require("~utilities/serveAdminId");
 
 class CategoryController{
 
@@ -13,6 +14,80 @@ class CategoryController{
             message : "Hello Category"
         });
     }
+
+    /* ----------------------- CREATE CATEGORY END POINT ----------------------- */
+    static async createCategory(req, res){
+        try{
+           
+           
+            var confirmCategory = await Category.findOne(
+                {
+                    where: {
+                        name:req.body.name
+                    }
+                }
+            );
+
+            if(confirmCategory){
+                return res.status(200).json({
+                    error : true,
+                    message : "Category Name already exist"
+
+                });
+            }else{
+               
+                var category = await Category.create({
+                   name:req.body.name,
+                   type: "crop"
+                   
+                });
+                        
+                          /* ----------------------------------  ACTIVITY LOG --------------------------------- */
+                        //   var adminId = await  serveAdminid.getTheId(req);
+                        //   await Activitylog.create({
+                        //     admin_id:adminId ,
+                        //     section_accessed:'Adding new category',
+                        //     page_route:'/api/admin/crop/category/add',
+                        //     action:'Added new category'
+                        // });
+                         /* ----------------------------------  ACTIVITY LOG --------------------------------- */
+
+                        if(category){
+                            return res.status(200).json({
+                                error : false,
+                                 message : "Category created succesfully"
+
+                             });
+                        }else{
+                            return res.status(200).json({
+                                error : true,
+                                message : "Failed to create category"
+            
+                            });
+    
+                }
+            }
+
+        }catch(error){
+            var logError = await ErrorLog.create({
+                error_name: "Error on creating category",
+                error_description: error.toString(),
+                route: "/api/admin/crop/category/add",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment',
+                    
+                })
+
+            }
+
+        }
+    }
+    /* -------------------------------------------------------------------------- */
+
 
 
     /* --------------------------- GET ALL CATEGORIES --------------------------- */

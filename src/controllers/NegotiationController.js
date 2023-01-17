@@ -409,8 +409,8 @@ class NegotiationController {
             }
 
             var offer = await Negotiation.findOne({
-                where : req.body.id,
-                includes : [
+                where : {id : req.body.id},
+                include : [
                     IncludeSpecification
                 ]
             });
@@ -428,25 +428,36 @@ class NegotiationController {
                 const conversation = await Conversation.findByPk(offer.conversation_id);
 
 
-                const product = await Crop.findOne({
+                const products = await Crop.findAll({
                     where: { id: conversation.crop_id },
                     include: CropIncludes
                 });
 
-                var order = await Order.create({
-                    order_hash: "ORD" + randomId,
-                    buyer_id: offer.type == "corporate" ? offer.sender_id : offer.receiver_id,
-                    buyer_type: "corporate",
-                    negotiation_id: offer.id,
-                    total : eval(offer.specification.qty) * eval(offer.specification.price),
-                    currency : product.currency,
-                    payment_status: "UNPAID",
-                    product: JSON.stringify(product),
-                })
+                // var tracking_details = {
+                //     pickup_location : products[0].warehouse_address,
+                //     transit : [],
+
+                //     //To be removed later
+                //     delivery_location : "No 20 Lesely Drive"
+                // };;
+
+                // var order = await Order.create({
+                //     order_hash: "ORD" + randomId,
+                //     buyer_id: offer.type == "corporate" ? offer.sender_id : offer.receiver_id,
+                //     buyer_type: "corporate",
+                //     negotiation_id: offer.id,
+                //     total : eval(offer.specification.qty) * eval(offer.specification.price),
+                //     currency : products[0].currency,
+                //     payment_status: "UNPAID",
+                //     tracking_details : JSON.stringify(tracking_details),
+                //     products: JSON.stringify(products),
+                // })
+
                 return res.status(200).json({
                     error: false,
                     message: "Negotiation offer accepted successfully",
-                    data: { offer : offer, product : product }
+                    // data: { offer : offer, order : order }
+                    data: { offer : offer, products: products }
                 })
 
             } else {
