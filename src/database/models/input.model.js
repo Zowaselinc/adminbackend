@@ -7,11 +7,11 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.INTEGER(11),
             allowNull : false
         },
-        category : {
+        category_id : {
             type: Sequelize.STRING,
             allowNull : false
         },
-        sub_category : {
+        subcategory_id : {
             type: Sequelize.STRING,
             allowNull : false
         },
@@ -84,12 +84,12 @@ let Schema = (Sequelize,mode) => {
 
 const Model = (sequelize, instance, Sequelize) => {
     // Define initial for DB sync
-    sequelize.define("input", Schema(Sequelize,1),{ timestamps: false });
+    sequelize.define("inputs", Schema(Sequelize,1),{ timestamps: false });
     // Bypass initial instance to cater for timestamps
-    const Input = instance.define("input", Schema(Sequelize,2),{ 
+    const Inputs = instance.define("inputs", Schema(Sequelize,2),{ 
         timestamps: false,
     });
-    return Input;
+    return Inputs;
 }
 
 module.exports = { Schema , Model};

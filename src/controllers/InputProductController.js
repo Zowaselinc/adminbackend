@@ -56,7 +56,7 @@ class InputProducts{
                
                 var input = await Input.create({
                     user_id: req.body.user_id,
-                    category: req.body.category,
+                    category_id: req.body.category_id,
                     sub_category: req.body.sub_category,
                     crop_focus: req.body.crop_focus,
                     packaging: req.body.packaging,
@@ -219,7 +219,7 @@ class InputProducts{
         try{
             var allInputs = await Input.findAll({
                 where: {
-                    category: req.params.category
+                    category_id:req.params.category_id
                 }
             });
             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
@@ -228,7 +228,7 @@ class InputProducts{
             await Activitylog.create({
                 admin_id:adminId ,
                 section_accessed:'View all input category',
-                page_route:'/api/admin/input/getallbycategory/:category',
+                page_route:'/api/admin/input/getallbycategory/:category_id',
                 action:'Viewing all inputs in the list'
             });
             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */

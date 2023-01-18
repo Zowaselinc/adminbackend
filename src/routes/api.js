@@ -251,7 +251,7 @@ Router.middleware(['isAuthenticated']).group((router) => {
     router.post('/admin/input/add', InputsValidator.createInputValidator,Input.createInput);
     router.get('/admin/input/getallbyuserid/:user_id', Input.getallInputsByUser);
     router.get('/admin/input/getall', Input.getallInputs);
-    router.get('/admin/input/getallbycategory/:category', Input.getallInputsByCategory);
+    router.get('/admin/input/getallbycategoryid/:category_id', Input.getallInputsByCategory);
     router.get('/admin/input/getallbymanufacturer/:manufacturer', Input.getallInputsByManufacturer);
     router.get('/admin/input/getallbypackaging/:packaging', Input.getallInputsByPackaging);
 });
@@ -312,6 +312,7 @@ router.post('/admin/crop/negotiation/add', NegotiationValidator.addNegotiationVa
 // router.post('/crop/negotiation/admin/add', NegotiationValidator.addNegotiationValidator, NegotiationController.addmsgbyadmin);
 router.get('/admin/crop/:cropId/negotiation/getbyuserid/:userid', NegotiationController.getbyuserid);
 router.get('/admin/crop/negotiation/:userid', NegotiationController.getListByUser);
+router.get('/admin/crop/negotiation/getall', NegotiationController.getallNegotiation);
 router.post('/admin/crop/negotiation/sendoffer', NegotiationController.sendNegotiationOffer);
 router.post('/admin/crop/negotiation/accept', NegotiationValidator.negotiation, NegotiationController.acceptNegotiation);
 router.post('/admin/crop/negotiation/decline',NegotiationValidator.negotiation, NegotiationController.declineNegotiation);

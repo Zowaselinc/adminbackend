@@ -433,31 +433,31 @@ class NegotiationController {
                     include: CropIncludes
                 });
 
-                // var tracking_details = {
-                //     pickup_location : products[0].warehouse_address,
-                //     transit : [],
+                var tracking_details = {
+                    pickup_location : products[0].warehouse_address,
+                    transit : [],
 
-                //     //To be removed later
-                //     delivery_location : "No 20 Lesely Drive"
-                // };;
+                    //To be removed later
+                    delivery_location : "No 20 Lesely Drive"
+                };;
 
-                // var order = await Order.create({
-                //     order_hash: "ORD" + randomId,
-                //     buyer_id: offer.type == "corporate" ? offer.sender_id : offer.receiver_id,
-                //     buyer_type: "corporate",
-                //     negotiation_id: offer.id,
-                //     total : eval(offer.specification.qty) * eval(offer.specification.price),
-                //     currency : products[0].currency,
-                //     payment_status: "UNPAID",
-                //     tracking_details : JSON.stringify(tracking_details),
-                //     products: JSON.stringify(products),
-                // })
+                var order = await Order.create({
+                    order_hash: "ORD" + randomId,
+                    buyer_id: offer.type == "corporate" ? offer.sender_id : offer.receiver_id,
+                    buyer_type: "corporate",
+                    negotiation_id: offer.id,
+                    total : eval(offer.specification.qty) * eval(offer.specification.price),
+                    currency : products[0].currency,
+                    payment_status: "UNPAID",
+                    tracking_details : JSON.stringify(tracking_details),
+                    products: JSON.stringify(products),
+                })
 
                 return res.status(200).json({
                     error: false,
                     message: "Negotiation offer accepted successfully",
-                    // data: { offer : offer, order : order }
-                    data: { offer : offer, products: products }
+                    data: { offer : offer, order : order },
+                    // data: { offer : offer, products: products }
                 })
 
             } else {
@@ -835,6 +835,56 @@ class NegotiationController {
     }
     /* ----------- GET ALL ACCEPTED AND DECLINED NEGOTIATIONS SUMMARY ----------- */
 
+
+
+
+    /* ------------------------ GET ALL NEGOTIATIONS END POINT ------------------------ */
+    static async getallNegotiation(req, res){
+          
+        try{
+
+        var getallgegotiations = await Negotiation.findAll({req});
+        //    /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        //    var adminId = await  serveAdminid.getTheId(req);
+        //    await Activitylog.create({
+        //        admin_id:adminId ,
+        //        section_accessed:'View All Admin',
+        //        page_route:'/api/admin/getall',
+        //        action:'Viewing all administrators in the list'
+        //    });
+        //     /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        if(getallgegotiations){
+            return res.status(200).json({
+                error : false,
+                message: "All Negotiations acquired successfully",
+                data : getallgegotiations
+            });
+
+        }else{
+            return res.status(200).json({
+                error : true,
+                message: "Unable fetch Negotiations",
+            });
+
+        }
+
+    }catch(e){
+        var logError = await ErrorLog.create({
+            error_name: "Error on getting all Negotiations",
+            error_description: e.toString(),
+            route: "/api/admin/negotiation/getall",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+                
+            })
+
+        }
+    }
+    }
 
 
 }
