@@ -1,31 +1,33 @@
+
 const generateTimestamps = require("./timestamps");
 
 let Schema = (Sequelize,mode) => {
+
     return {
-        category_id : {
-            type: Sequelize.STRING,
-            allowNull : false
+        colour_id: {
+            type: Sequelize.INTEGER(11),
+            allownull: false
+
         },
         name : {
             type: Sequelize.STRING,
-            unique : true,
-            allowNull : false
+            unique: true,
+            allownull: false
+
         },
-        type : {
-            type: Sequelize.STRING,
-            allowNull : false
-        },
+       
         ...generateTimestamps(Sequelize,mode)
     }
 }
+
 const Model = (sequelize, instance, Sequelize) => {
     // Define initial for DB sync
-    sequelize.define("subcategory", Schema(Sequelize,1),{ timestamps: false });
+    sequelize.define("colours", Schema(Sequelize,1),{ timestamps: false });
     // Bypass initial instance to cater for timestamps
-    const SubCategory = instance.define("subcategory", Schema(Sequelize,2),{ 
+    const Colour = instance.define("colours", Schema(Sequelize,2),{ 
         timestamps: false,
     });
-    return SubCategory;
+    return Colour;
 }
 
 module.exports = { Schema , Model};

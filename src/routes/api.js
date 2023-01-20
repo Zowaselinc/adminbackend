@@ -25,6 +25,7 @@ const CategoryController= require('~controllers/CategoryController');
 const SubCategoryController= require('~controllers/SubcategoryController');
 const NegotiationController= require('~controllers/NegotiationController');
 const SectionController= require('~controllers/SectionController');
+const ColourController= require('~controllers/ColourController');
 
 
 
@@ -52,6 +53,7 @@ const SubCategoryValidator = require('./validators/SubCategoryValidator');
 const NegotiationValidator = require('./validators/NegotiationValidator');
 const SectionValidator = require('./validators/SectionValidator');
 const RoleValidator = require('./validators/RoleValidator');
+const ColourValidator = require('./validators/ColourValidator');
 /* -------------------------------------------------------------------------- */
 /*                              // ALL VALIDATORS                             */
 /* -------------------------------------------------------------------------- */
@@ -233,6 +235,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     // router.post('/admin/crop/trackingdetails/updatebyorderid', OrderController.updateTrackingDetailsByOrderId);
     router.post('/admin/crop/order/add', OrderValidator.createOrderValidator, OrderController.createNewOrder);
     router.get('/admin/order/:order', OrderController.getByOrderHash);
+    router.get('/admin/order/getall', OrderController.getallOrder);
     router.get('/admin/crop/order/getbybuyer/:buyerid/:buyertype', OrderController.getByBuyer);
     router.get('/admin/crop/order/getbynegotiationid/:negotiationid', OrderController.getByNegotiationId);
     router.get('/admin/crop/order/getbypaymentstatus/:paymentstatus', OrderController.getByPaymentStatus);
@@ -290,17 +293,28 @@ Router.group((router) => {
     router.get('/admin/category/:type/getall', CategoryController.getAllCategories);
     router.get('/admin/category/:type/params/:offset/:limit', CategoryController.getAllByLimit);
     router.get('/admin/category/getbyid/:id', CategoryController.getById);
-    router.post('/admin/category/add', CategoryController.createCategory);
-    // router.post('/crop/category/editbyid', CategoryValidator.addCategoryValidator, CategoryController.editbyid);
-    // router.post('/crop/category/deletebyid', CategoryController.deletebyid);
+    router.post('/admin/category/add', CategoryValidator.addCategoryValidator, CategoryController.createCategory);
+    router.post('/admin/category/edit', CategoryController.editCategory);
+    router.post('/admin/category/delete/:id', CategoryController.deleteCategory);
 
     /* ------------------------------- SubCategory ------------------------------ */
 
     router.get('/admin/subcategory/getbycategory/:categoryId', SubCategoryController.getByCategory);
     router.get('/admin/subcategory/getbyid/:id', SubCategoryController.getById);
-    router.post('/admin/subcategory/add', SubCategoryValidator.addSubCategoryValidator, SubCategoryController.add);
-    // router.post('/crop/subcategory/editbyid', SubCategoryValidator.addSubCategoryValidator, SubCategoryController.editbyid);
-    // router.post('/crop/subcategory/deletebyid', SubCategoryController.deletebyid);
+    router.post('/admin/subcategory/add', SubCategoryValidator.addSubCategoryValidator, SubCategoryController.createSubcategory);
+    router.post('/admin/subcategory/edit',SubCategoryController.editSubcategory);
+    router.post('/admin/subcategory/delete/:id', SubCategoryController.deleteSubCategory);
+
+
+
+    /* ---------------------------- COLOURS END POINT --------------------------- */
+    router.get('/admin/colour/getall/', ColourController.getAllColours);
+    router.get('/admin/colour/getbyid/:id', ColourController.getColourbyid);
+    router.get('/admin/colour/params/:offset/:limit', ColourController.getColourbyparams);
+    router.get('/admin/colour/getbycolourid/:colour_id', ColourController.getColourbycolourid);
+    router.post('/admin/colour/add', ColourValidator.addColourValidator, ColourController.createColour);
+    router.post('/admin/colour/edit',ColourController.editColour);
+    router.post('/admin/colour/delete/:id', ColourController.deleteColour);
 
 
 });

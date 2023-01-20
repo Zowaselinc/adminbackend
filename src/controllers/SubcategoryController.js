@@ -13,70 +13,76 @@ class SubCategoryController{
     }
 
 
-   /* ---------------------------- * ADD SUBCATEGORY * ---------------------------- */
-   static async add(req , res){
+    /* ---------------------------- * ADD SUBCATEGORY * ---------------------------- */
+    static async createSubcategory(req , res){
 
-    // return res.status(200).json({
-    //     message : "Add Category"
-    // });
+        // return res.status(200).json({
+        //     message : "Add Category"
+        // });
 
-    const errors = validationResult(req);
+        const errors = validationResult(req);
 
-    try{
-        
-        if(!errors.isEmpty()){
-            return res.status(400).json({ errors: errors.array() });
-        }
-
-        
-        // console.log(errors.isEmpty());
-        let randomid = crypto.randomBytes(8).toString('hex');
-
-        const { count, rows } = await SubCategory.findAndCountAll({ 
-            where: { category_id: req.body.category_id, name:req.body.subcategory_name } 
-        });
-
-        // console.log(count, "Count");
-        // console.log(rows, "Rows");
-
-        if(count > 0){
-            return res.status(200).json({
-                "error": true,
-                "message": "Subcategory already exist"
-            })
-        }else{
-            var subcategory = await SubCategory.create({
-                category_id: req.body.category_id,
-                subcategory_name: req.body.subcategory_name,
-                type: "crop"
-                
-            })
+        try{
             
-            return res.status(200).json({
-                "error": false,
-                "message": "Subcategory created successfully",
-                "subcategory": subcategory
-            })
-        }
-        
-    }catch(e){
-        var logError = await ErrorLog.create({
-            error_name: "Error on adding a subcategory",
-            error_description: e.toString(),
-            route: "/api/crop/subcategory/add",
-            error_code: "500"
-        });
-        if(logError){
-            return res.status(500).json({
-                error: true,
-                message: 'Unable to complete request at the moment'
-            })
-        } 
-    }
-
+            if(!errors.isEmpty()){
+                return res.status(400).json({ errors: errors.array() });
+            }
     
-}
-/* ---------------------------- * ADD SUBCATEGORY * ---------------------------- */
+
+            const checkSubCategory = await SubCategory.findOne({ 
+                where: { category_id: req.body.category_id, name:req.body.subcategory_name } 
+            });
+
+
+            if(checkSubCategory){
+                return res.status(200).json({
+                    "error": true,
+                    "message": "Subcategory already exist"
+                })
+            }else{
+                var subcategory = await SubCategory.create({
+                    category_id: req.body.category_id,
+                    name: req.body.subcategory_name,
+                    type: "crop"
+                });
+                
+                if(subcategory){
+
+                    return res.status(200).json({
+                        "error": false,
+                        "message": "Subcategory created successfully",
+                       
+                    });
+                }else{
+                    return res.status(200).json({
+                        error : true,
+                        message : "Failed to create sub_category"
+    
+                    });
+                }
+            }
+            
+        }catch(e){
+            var logError = await ErrorLog.create({
+                error_name: "Error on adding a subcategory",
+                error_description: e.toString(),
+                route: "/api/crop/subcategory/add",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment'
+                })
+            } 
+        }
+
+        
+    }
+    /* ---------------------------- * ADD SUBCATEGORY * ---------------------------- */
+
+
+
 
 
 
@@ -235,6 +241,99 @@ class SubCategoryController{
         }
 
     }
+    /* ----------------------------------- END ---------------------------------- */
+
+     /* --------------------------- EDIT CATEGORY BY ID -------------------------- */
+     static async editSubcategory(req, res){
+        try{
+            const errors = validationResult(req);
+  
+            if (!errors.isEmpty()) {
+            return res.status(400).json({
+                errors:true,
+                message: "All fields are required",
+                data: {}
+                });
+            }
+
+        var editsubcategory = await SubCategory.update({
+            category_id: req.body.category_id,
+            name: req.body.subcategory_name,
+
+        }, { where : {id : req.body.id } });
+
+        if(editsubcategory){
+            return res.status(200).json({
+                error : false,
+                message : "Sub_category edited succesfully",
+                data : editsubcategory
+            })
+        }else{
+            return res.status(200).json({
+                error : false,
+                message : "Failed to edit sub_category",
+                
+            })
+        }
+       
+    }catch(e){
+        var logError = await ErrorLog.create({
+            error_name: "Error on editting sub_category by id",
+            error_description: e.toString(),
+            route: "/api/admin/subcategory/edit",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+                
+            })
+
+        }
+    }
+    }
+    /* ----------------------------------- END ---------------------------------- */
+
+    /* ------------------ DELETE SUB_CATEGORY BY ID ------------------ */
+
+
+    static async deleteSubCategory(req, res){
+        try{
+
+       var delSubcategory = await SubCategory.destroy({ where : {id:req.params.id}});
+            if(delSubcategory){
+                return res.status(200).json({
+                    error : false,
+                    message : "Sub-category deleted succesfully",
+                })
+            }else{
+            return res.status(200).json({
+                error : true,
+                message : "Failed to delete Sub-category",
+            })
+        }
+
+    }catch(e){
+        var logError = await ErrorLog.create({
+            error_name: "Error on deleting Sub-category by id",
+            error_description: e.toString(),
+            route: "/api/admin/subcategory/delete/:id",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+            })
+
+        }
+    }
+    }
+
+
+    /* ------------------ DELETE SUB_CATEGORY BY ID ------------------ */
+
 
 }
 

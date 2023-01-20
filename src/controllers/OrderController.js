@@ -273,6 +273,43 @@ class OrderController{
     }
     /* ---------------------------- * CREATE NEW ORDER * ---------------------------- */
 
+/* -------------------------- GET ALL ORDER ------------------------- */
+static async getallOrder(req , res){
+
+    const errors = validationResult(req);
+
+    try{
+        var findallorder = await Order.findAll({req})
+
+        if(findallorder){
+            return res.status(200).json({
+                error : false,
+                message : "Order retrieved successfully",
+                data : findallorder
+            })
+        }else{
+            return res.status(400).json({
+                error : true,
+                message : "No order found",
+               
+            })
+        }
+    }catch(e){
+        var logError = await ErrorLog.create({
+            error_name: "Error on getting all orders",
+            error_description: e.toString(),
+            route: "api/admin/order/getall",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment'
+            })
+        } 
+    }
+}
+/* -------------------------- GET ALL ORDER ------------------------- */
 
 
     /* -------------------------- GET ORDER BY ORDER_ID ------------------------- */

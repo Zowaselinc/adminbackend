@@ -95,7 +95,7 @@ class RoleController{
                 return res.status(200).json({
                     error:true,
                     message: "Failed to acquire roles",
-                    data: allroles
+                    
                 });
             }
 
@@ -137,7 +137,7 @@ static async getRolesbyparams(req,res){
           await Activitylog.create({
             admin_id:adminId ,
             section_accessed:'View administrative roles by offset and limit',
-            page_route:'/api/admin/roles/getallparams',
+            page_route:'/api/admin/roles/getallparams/:offset/:limit',
             action:'Viewing sets of administrative roles in the list '
         });
          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
@@ -213,7 +213,7 @@ static async getRolesbyid(req,res){
 
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on getting roles by params",
+            error_name: "Error on getting roles by id",
             error_description: e.toString(),
             route: "/api/admin/roles/getbyid/:id",
             error_code: "500"

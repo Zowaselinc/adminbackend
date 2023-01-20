@@ -453,6 +453,8 @@ class AdminController{
       });
        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
+      
+
        var delAdminid = await Admin.destroy({ where : {admin_id : req.params.admin_id}});
 
         if(delAdminid){
