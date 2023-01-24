@@ -287,7 +287,7 @@ router.post('/admin/crop/croprequest/editbyid', CropRequestController.editbyid);
 
 
 
-Router.group((router) => {
+Router.middleware(['isAuthenticated']).group((router) => {
 
     /* -------------------------------- Category -------------------------------- */
     router.get('/admin/category/:type/getall', CategoryController.getAllCategories);
