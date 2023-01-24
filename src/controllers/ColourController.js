@@ -3,6 +3,7 @@ const { request } = require("express");
 const {Colour, ErrorLog, Activitylog} = require("~database/models");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
+const crypto = require('crypto');
 const serveAdminid = require("~utilities/serveAdminId");
 
 class ColourController{
@@ -33,9 +34,10 @@ class ColourController{
                     message : "Colour name already exist"
                 })
             }else{
+                // const colourid = crypto.randomBytes(8).toString("hex")
                 
                 var colour = await Colour.create({
-                    colour_id:req.body.colour_id,
+                    // colour_id:colourid,
                     name:req.body.colour_name,
                     
                 });
@@ -296,7 +298,7 @@ static async editColour(req,res){
     try{
 
         var editcolour = await Colour.update({
-            colour_id:req.body.colour_id,
+            // colour_id:req.body.colour_id,
             name:req.body.colour_name
         },{where: {id:req.body.id}});
 

@@ -4,11 +4,11 @@ const generateTimestamps = require("./timestamps");
 let Schema = (Sequelize,mode) => {
 
     return {
-        colour_id: {
-            type: Sequelize.INTEGER(11),
-            allownull: false
+        // colour_id: {
+        //     type: Sequelize.STRING,
+        //     allownull: false
 
-        },
+        // },
         name : {
             type: Sequelize.STRING,
             unique: true,
