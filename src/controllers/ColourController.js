@@ -88,7 +88,7 @@ class ColourController{
         try{
 
             var allcolours = await Colour.findAll();
-              /* ---------------------------------- ACTIVITY LOG --------------------------------- */
+ /* ---------------------------------- ACTIVITY LOG --------------------------------- */
         var adminId = await  serveAdminid.getTheId(req);
 
         await Activitylog.create({
@@ -97,7 +97,7 @@ class ColourController{
           page_route:'/api/admin/colour/getall',
           action:'Viewing all colours in the list'
       });
-       /* ---------------------------------- ACTIVITY LOG --------------------------------- */
+ /* ---------------------------------- ACTIVITY LOG --------------------------------- */
 
             if(allcolours){
                 return res.status(200).json({
@@ -110,12 +110,9 @@ class ColourController{
                 return res.status(200).json({
                     error:true,
                     message: "Failed to acquire colours",
-                    
+ 
                 });
             }
-
-            
-
         }catch(e){
             var logError = await ErrorLog.create({
                 error_name: "Error on getting all colours",
@@ -167,7 +164,6 @@ static async getColourbyparams(req,res){
             return res.status(200).json({
                 error:true,
                 message: "Failed to acquire colours",
-              
             })
         }
 

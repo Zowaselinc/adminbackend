@@ -4,6 +4,7 @@ const { Category, ErrorLog, SubCategory, Crop, Input } = require('~database/mode
 const crypto = require('crypto');
 const { count } = require('console');
 const { Sequelize } = require('sequelize');
+const jwt = require("jsonwebtoken");
 const serveAdminid = require("~utilities/serveAdminId");
 
 class CategoryController{
@@ -38,7 +39,7 @@ class CategoryController{
                
                 var category = await Category.create({
                    name:req.body.name,
-                   type: "crop"
+                   type:req.body.type
                    
                 });
                         
