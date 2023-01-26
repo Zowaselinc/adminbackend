@@ -11,10 +11,10 @@ let Schema = (Sequelize,mode) => {
             unique : true,
             allowNull : false
         },
-        type : {
-            type: Sequelize.STRING,
-            allowNull : false
-        },
+        // type : {
+        //     type: Sequelize.STRING,
+        //     allowNull : false
+        // },
         ...generateTimestamps(Sequelize,mode)
     }
 }

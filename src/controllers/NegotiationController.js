@@ -839,51 +839,43 @@ class NegotiationController {
 
 
     /* ------------------------ GET ALL NEGOTIATIONS END POINT ------------------------ */
-    static async getallNegotiation(req, res){
-          
-        try{
+    static async getallnegotiation(req, res){
+        res.send("going")  
+        // try{
 
-        var getallgegotiations = await Negotiation.findAll({req});
-        //    /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-        //    var adminId = await  serveAdminid.getTheId(req);
-        //    await Activitylog.create({
-        //        admin_id:adminId ,
-        //        section_accessed:'View All Admin',
-        //        page_route:'/api/admin/getall',
-        //        action:'Viewing all administrators in the list'
-        //    });
-        //     /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-        if(getallgegotiations){
-            return res.status(200).json({
-                error : false,
-                message: "All Negotiations acquired successfully",
-                data : getallgegotiations
-            });
+        //     var getallnegotiations = await Negotiation.findAll({req});
+        
+        //     if(getallnegotiations){
+        //         return res.status(200).json({
+        //             error : false,
+        //             message: "All Negotiations acquired successfully",
+        //             data : getallnegotiations
+        //         });
 
-        }else{
-            return res.status(200).json({
-                error : true,
-                message: "Unable fetch Negotiations",
-            });
+        //     }else{
+        //         return res.status(200).json({
+        //             error : true,
+        //             message: "Unable fetch Negotiations",
+        //         });
 
-        }
+        //     }
 
-    }catch(e){
-        var logError = await ErrorLog.create({
-            error_name: "Error on getting all Negotiations",
-            error_description: e.toString(),
-            route: "/api/admin/negotiation/getall",
-            error_code: "500"
-        });
-        if(logError){
-            return res.status(500).json({
-                error: true,
-                message: 'Unable to complete request at the moment',
-                
-            })
+        // }catch(e){
+        //     var logError = await ErrorLog.create({
+        //         error_name: "Error on getting all Negotiations",
+        //         error_description: e.toString(),
+        //         route: "/api/admin/negotiation/getall",
+        //         error_code: "500"
+        //     });
+        //     if(logError){
+        //         return res.status(500).json({
+        //             error: true,
+        //             message: 'Unable to complete request at the moment',
+                    
+        //         })
 
-        }
-    }
+        //     }
+        // }
     }
 
 

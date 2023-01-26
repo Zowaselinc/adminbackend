@@ -43,7 +43,7 @@ class SubCategoryController{
                 var subcategory = await SubCategory.create({
                     category_id: req.body.category_id,
                     name: req.body.subcategory_name,
-                    type: req.body.type
+                    // type: req.body.type
                 });
                 
                 if(subcategory){

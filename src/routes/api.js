@@ -326,7 +326,7 @@ router.post('/admin/crop/negotiation/add', NegotiationValidator.addNegotiationVa
 // router.post('/crop/negotiation/admin/add', NegotiationValidator.addNegotiationValidator, NegotiationController.addmsgbyadmin);
 router.get('/admin/crop/:cropId/negotiation/getbyuserid/:userid', NegotiationController.getbyuserid);
 router.get('/admin/crop/negotiation/:userid', NegotiationController.getListByUser);
-router.get('/admin/crop/negotiation/getall', NegotiationController.getallNegotiation);
+router.get('/admin/crop/negotiation/getall', NegotiationController.getallnegotiation);
 router.post('/admin/crop/negotiation/sendoffer', NegotiationController.sendNegotiationOffer);
 router.post('/admin/crop/negotiation/accept', NegotiationValidator.negotiation, NegotiationController.acceptNegotiation);
 router.post('/admin/crop/negotiation/decline',NegotiationValidator.negotiation, NegotiationController.declineNegotiation);
