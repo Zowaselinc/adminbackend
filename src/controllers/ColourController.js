@@ -240,54 +240,54 @@ static async getColourbyid(req,res){
 
 
 /* -------------------------- GET COLOUR BY COLOUR ID -------------------------- */
-static async getColourbycolourid(req,res){
-    try{
+// static async getColourbycolourid(req,res){
+//     try{
        
-        var thecolour = await Colour.findOne({where: {colour_id:req.params.colour_id}});
+//         var thecolour = await Colour.findOne({where: {colour_id:req.params.colour_id}});
          /* ---------------------------------- ACTIVITY LOG --------------------------------- */
-         var adminId = await  serveAdminid.getTheId(req);
+    //      var adminId = await  serveAdminid.getTheId(req);
 
-         await Activitylog.create({
-           admin_id:adminId ,
-           section_accessed:'View colour by colourid',
-           page_route:'/api/admin/colour/getbycolourid/:colour_id',
-           action:'Viewing  Colours in the list '
-       });
+    //      await Activitylog.create({
+    //        admin_id:adminId ,
+    //        section_accessed:'View colour by colourid',
+    //        page_route:'/api/admin/colour/getbycolourid/:colour_id',
+    //        action:'Viewing  Colours in the list '
+    //    });
         /* ---------------------------------- ACTIVITY LOG --------------------------------- */
 
-        if(thecolour == null){
-            return res.status(200).json({
-                error:true,
-                message: 'Invalid colour id'
-            })
+//         if(thecolour == null){
+//             return res.status(200).json({
+//                 error:true,
+//                 message: 'Invalid colour id'
+//             })
 
-        }else if(thecolour){
-            return res.status(200).json({
-                error:false,
-                message: "Colour acquired successfully",
-                data: thecolour
-            });
-        }else{
-            return res.status(200).json({
-                error:true,
-                message: "Failed to acquire colour",
-            });
-        }
-    }catch(e){
-        var logError = await ErrorLog.create({
-            error_name: "Error on getting colour by colour",
-            error_description: e.toString(),
-            route: "/api/admin/colour/getbyid/:colour_id",
-            error_code: "500"
-        });
-        if(logError){
-            return res.status(500).json({
-                error: true,
-                message: 'Unable to complete request at the moment',
-            });
-          } 
-    }
-}
+//         }else if(thecolour){
+//             return res.status(200).json({
+//                 error:false,
+//                 message: "Colour acquired successfully",
+//                 data: thecolour
+//             });
+//         }else{
+//             return res.status(200).json({
+//                 error:true,
+//                 message: "Failed to acquire colour",
+//             });
+//         }
+//     }catch(e){
+//         var logError = await ErrorLog.create({
+//             error_name: "Error on getting colour by colour",
+//             error_description: e.toString(),
+//             route: "/api/admin/colour/getbyid/:colour_id",
+//             error_code: "500"
+//         });
+//         if(logError){
+//             return res.status(500).json({
+//                 error: true,
+//                 message: 'Unable to complete request at the moment',
+//             });
+//           } 
+//     }
+// }
 
 /* ---------------------------- EDIT  COLOUR ---------------------------- */
 static async editColour(req,res){

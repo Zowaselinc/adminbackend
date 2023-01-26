@@ -311,7 +311,7 @@ Router.middleware(['isAuthenticated']).group((router) => {
     router.get('/admin/colour/getall/', ColourController.getAllColours);
     router.get('/admin/colour/getbyid/:id', ColourController.getColourbyid);
     router.get('/admin/colour/params/:offset/:limit', ColourController.getColourbyparams);
-    router.get('/admin/colour/getbycolourid/:colour_id', ColourController.getColourbycolourid);
+    // router.get('/admin/colour/getbycolourid/:colour_id', ColourController.getColourbycolourid);
     router.post('/admin/colour/add', ColourValidator.addColourValidator, ColourController.createColour);
     router.post('/admin/colour/edit',ColourController.editColour);
     router.post('/admin/colour/delete/:id', ColourController.deleteColour);
@@ -334,6 +334,7 @@ router.post('/admin/crop/negotiation/close',NegotiationValidator.negotiation, Ne
 router.get('/admin/crop/negotiation/grabtransactionby/:status/:userid', NegotiationController.getNegotiationTransactionSummary);
 router.get('/admin/crop/negotiation/getallsummary', NegotiationController.getAllNegotiationTransactionSummary);
 });
+
 module.exports = Router;
 
 
