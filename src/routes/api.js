@@ -325,8 +325,8 @@ Router.middleware(['isAuthenticated']).group((router) => {
 router.post('/admin/crop/negotiation/add', NegotiationValidator.addNegotiationValidator, NegotiationController.add);
 // router.post('/crop/negotiation/admin/add', NegotiationValidator.addNegotiationValidator, NegotiationController.addmsgbyadmin);
 router.get('/admin/crop/:cropId/negotiation/getbyuserid/:userid', NegotiationController.getbyuserid);
-router.get('/admin/crop/negotiation/:userid', NegotiationController.getListByUser);
-router.get('/admin/crop/negotiation/getall', NegotiationController.getallnegotiation);
+// router.get('/admin/crop/negotiation/:userid', NegotiationController.getListByUser);
+router.get('/admin/crop/negotiation/getallNegotiations', NegotiationController.gethhh);
 router.post('/admin/crop/negotiation/sendoffer', NegotiationController.sendNegotiationOffer);
 router.post('/admin/crop/negotiation/accept', NegotiationValidator.negotiation, NegotiationController.acceptNegotiation);
 router.post('/admin/crop/negotiation/decline',NegotiationValidator.negotiation, NegotiationController.declineNegotiation);

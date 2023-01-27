@@ -27,6 +27,7 @@ class RoleController{
             role_id:"ZWLROL"+ roleid,
             role_name:req.body.role_name,
             role_description:req.body.role_description
+            
         });
           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
           var adminId = await  serveAdminid.getTheId(req);

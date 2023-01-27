@@ -166,68 +166,68 @@ class NegotiationController {
 
     /* ------------------ GET ALL NEGOTIATION LIST BY USER ID ----------------- */
 
-    static async getListByUser(req, res) {
+    // static async getListByUser(req, res) {
 
-        try {
-            const userId = req.params.userid;
+    //     try {
+    //         const userId = req.params.userid;
 
-            if (userId !== "" || userId !== null || userId !== undefined) {
+    //         if (userId !== "" || userId !== null || userId !== undefined) {
 
-                var conversations = await Conversation.findAll({
-                    where: {
-                        [Op.or]: [
-                            { user_one: userId },
-                            { user_two: userId }
-                        ],
-                        type: "negotiation",
-                    },
-                    include: [
-                        IncludeCrop,
-                        { model: User, as: "initiator", required: true },
-                        { model: User, as: "participant", required: true},
-                        IncludeNegotiations
-                    ],
-                });
+    //             var conversations = await Conversation.findAll({
+    //                 where: {
+    //                     [Op.or]: [
+    //                         { user_one: userId },
+    //                         { user_two: userId }
+    //                     ],
+    //                     type: "negotiation",
+    //                 },
+    //                 include: [
+    //                     IncludeCrop,
+    //                     { model: User, as: "initiator", required: true },
+    //                     { model: User, as: "participant", required: true},
+    //                     IncludeNegotiations
+    //                 ],
+    //             });
 
-                if (conversations) {
+    //             if (conversations) {
 
-                    return res.status(200).json({
-                        error: false,
-                        message: "Conversations retrieved successfully",
-                        data: conversations
-                    })
+    //                 return res.status(200).json({
+    //                     error: false,
+    //                     message: "Conversations retrieved successfully...",
+    //                     data: conversations
+    //                 })
 
-                } else {
+    //             } else {
 
-                    return res.status(400).json({
-                        error: true,
-                        message: "No negotiations made by this user",
-                        data: []
-                    })
+    //                 return res.status(400).json({
+    //                     error: true,
+    //                     message: "No negotiations made by this user",
+    //                     data: []
+    //                 })
 
-                }
-            } else {
-                return res.status(400).json({
-                    error: true,
-                    message: "Invalid user ID",
-                    data: []
-                })
-            }
-        } catch (e) {
-            var logError = await ErrorLog.create({
-                error_name: "Error on getting negotiation",
-                error_description: e.toString(),
-                route: "/api/crop/negotiation/getlist/:userid",
-                error_code: "500"
-            });
-            if (logError) {
-                return res.status(500).json({
-                    error: true,
-                    message: 'Unable to complete request at the moment'
-                })
-            }
-        }
-    }
+    //             }
+    //         } else {
+    //             return res.status(400).json({
+    //                 error: true,
+    //                 message: "Invalid user ID",
+    //                 data: []
+    //             })
+    //         }
+    //     } catch (e) {
+    //         var logError = await ErrorLog.create({
+    //             error_name: "Error on getting negotiation",
+    //             error_description: e.toString(),
+    //             route: "/api/crop/negotiation/getlist/:userid",
+    //             error_code: "500"
+    //         });
+    //         if (logError) {
+    //             return res.status(500).json({
+    //                 error: true,
+    //                 message: 'Unable to complete request at the moment'
+    //             })
+    //         }
+    //     }
+    // }
     /* --------------------------- GET ALL NEGOTIATION BY USERID --------------------------- */
 
 
@@ -839,43 +839,43 @@ class NegotiationController {
 
 
     /* ------------------------ GET ALL NEGOTIATIONS END POINT ------------------------ */
-    static async getallnegotiation(req, res){
-        res.send("going")  
-        // try{
+    static async gethhh(req, res){
+        // res.send("going")  
+        try{
 
-        //     var getallnegotiations = await Negotiation.findAll({req});
+            var getallnegotiations = await Negotiation.findAll({req});
         
-        //     if(getallnegotiations){
-        //         return res.status(200).json({
-        //             error : false,
-        //             message: "All Negotiations acquired successfully",
-        //             data : getallnegotiations
-        //         });
+            if(getallnegotiations){
+                return res.status(200).json({
+                    error : false,
+                    message: "All Negotiations acquired successfully",
+                    data : getallnegotiations
+                });
 
-        //     }else{
-        //         return res.status(200).json({
-        //             error : true,
-        //             message: "Unable fetch Negotiations",
-        //         });
+            }else{
+                return res.status(200).json({
+                    error : true,
+                    message: "Unable fetch Negotiations",
+                });
 
-        //     }
+            }
 
-        // }catch(e){
-        //     var logError = await ErrorLog.create({
-        //         error_name: "Error on getting all Negotiations",
-        //         error_description: e.toString(),
-        //         route: "/api/admin/negotiation/getall",
-        //         error_code: "500"
-        //     });
-        //     if(logError){
-        //         return res.status(500).json({
-        //             error: true,
-        //             message: 'Unable to complete request at the moment',
+        }catch(e){
+            var logError = await ErrorLog.create({
+                error_name: "Error on getting all Negotiations",
+                error_description: e.toString(),
+                route: "/api/admin/negotiation/getall",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment',
                     
-        //         })
+                })
 
-        //     }
-        // }
+            }
+        }
     }
 
 
