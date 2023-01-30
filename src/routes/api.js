@@ -26,6 +26,7 @@ const SubCategoryController= require('~controllers/SubcategoryController');
 const NegotiationController= require('~controllers/NegotiationController');
 const SectionController= require('~controllers/SectionController');
 const ColourController= require('~controllers/ColourController');
+const Assign_negotiationController= require('~controllers/Assign_negotiationController');
 
 
 
@@ -333,6 +334,16 @@ router.post('/admin/crop/negotiation/decline',NegotiationValidator.negotiation, 
 router.post('/admin/crop/negotiation/close',NegotiationValidator.negotiation, NegotiationController.closeNegotiation);
 router.get('/admin/crop/negotiation/grabtransactionby/:status/:userid', NegotiationController.getNegotiationTransactionSummary);
 router.get('/admin/crop/negotiation/getallsummary', NegotiationController.getAllNegotiationTransactionSummary);
+
+
+  /* ---------------------------- ASSIGNED NEGOTIATION TO ADMIN END POINT --------------------------- */
+  router.get('/admin/assignnegotiation/getall/',Assign_negotiationController.getAllAssignedNegotiations);
+  router.get('/admin/assignnegotiation/getbyid/:id', Assign_negotiationController.getassignNegotiationbyid);
+  router.post('/admin/assignnegotiation/add',Assign_negotiationController.assignNegotiationtoAdmin);
+  router.post('/admin/assignnegotiation/edit',Assign_negotiationController.editAssignNegotiation);
+  router.post('/admin/assignnegotiation/delete/:id',Assign_negotiationController.deleteAssNegotiation);
+
+
 });
 
 module.exports = Router;

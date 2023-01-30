@@ -66,6 +66,7 @@ const Negotiation = DB.negotiation = require("./negotiation.model").Model(initia
 const Input = DB.input = require("./input.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Conversation = DB.conversation = require("./conversation.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Colour = DB.colour = require("./colour.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Assignnegotiation = DB.assign_negotiation= require("./assign_negotiation.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -224,5 +225,6 @@ module.exports = {
   Negotiation,
   Input,
   Section,
-  Colour
+  Colour,
+  Assignnegotiation
 };

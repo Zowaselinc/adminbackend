@@ -14,8 +14,11 @@ let Schema = (Sequelize,mode) => {
         },
         role_description : {
             type: Sequelize.TEXT
-
         },
+        section : {
+            type: Sequelize.STRING
+        },
+
         ...generateTimestamps(Sequelize,mode)
     }
 }

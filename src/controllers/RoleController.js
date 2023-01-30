@@ -26,7 +26,9 @@ class RoleController{
         var role = await Role.create({
             role_id:"ZWLROL"+ roleid,
             role_name:req.body.role_name,
-            role_description:req.body.role_description
+            role_description:req.body.role_description,
+            section:req.body.section
+
             
         });
           /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
@@ -285,7 +287,8 @@ static async editRole(req,res){
 
         var editRoles = await Role.update({
             role_name:req.body.role_name,
-            role_description:req.body.role_description
+            role_description:req.body.role_description,
+            section:req.body.section
         },{where: {id:req.body.id}});
 
          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */

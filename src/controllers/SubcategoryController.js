@@ -43,7 +43,7 @@ class SubCategoryController{
                 var subcategory = await SubCategory.create({
                     category_id: req.body.category_id,
                     name: req.body.subcategory_name,
-                    // type: req.body.type
+                    type: req.body.type
                 });
                 
                 if(subcategory){
@@ -259,6 +259,7 @@ class SubCategoryController{
         var editsubcategory = await SubCategory.update({
             category_id: req.body.category_id,
             name: req.body.subcategory_name,
+            type: req.body.type
 
         }, { where : {id : req.body.id } });
 
