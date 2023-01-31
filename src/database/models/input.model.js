@@ -15,6 +15,10 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.STRING,
             allowNull : false
         },
+        title : {
+            type: Sequelize.STRING,
+            allowNull : false
+        },
         crop_focus : {
             type: Sequelize.STRING(350),
             allowNull : false
@@ -39,9 +43,7 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.STRING,
             allowNull : false
         },
-        images : {
-            type: Sequelize.STRING(350)
-        },
+       
         price : {
             type: Sequelize.INTEGER(11),
             allowNull : false
@@ -77,6 +79,13 @@ let Schema = (Sequelize,mode) => {
         video : {
             type: Sequelize.STRING,
             allowNull : false
+        },
+        stock : {
+            type: Sequelize.STRING,
+            allowNull : false
+        },
+        images : {
+            type: Sequelize.STRING(350)
         },
         ...generateTimestamps(Sequelize,mode)
     }

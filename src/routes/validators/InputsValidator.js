@@ -4,8 +4,9 @@ module.exports = {
 
     createInputValidator: [
         body('user_id').isString().not().isEmpty(),
-        body('category').isString().not().isEmpty(),
-        body('sub_category').isString().not().isEmpty(),
+        body('category_id').isString().not().isEmpty(),
+        body('subcategory_id').isString().not().isEmpty(),
+        body('title').isString().not().isEmpty(),
         body('crop_focus').isString().not().isEmpty(),
         body('packaging').isString().not().isEmpty(),
         body('description').isString().not().isEmpty(),
@@ -20,7 +21,7 @@ module.exports = {
         body('expiry_date').isString().not().isEmpty(),
         body('manufacture_country').isString().not().isEmpty(),
         body('state').isString().not().isEmpty(),
-        body('video').isString().not().isEmpty()
+        body('stock').isString().not().isEmpty()
     ]
 
 }

@@ -327,7 +327,7 @@ router.post('/admin/crop/negotiation/add', NegotiationValidator.addNegotiationVa
 // router.post('/crop/negotiation/admin/add', NegotiationValidator.addNegotiationValidator, NegotiationController.addmsgbyadmin);
 router.get('/admin/crop/:cropId/negotiation/getbyuserid/:userid', NegotiationController.getbyuserid);
 // router.get('/admin/crop/negotiation/:userid', NegotiationController.getListByUser);
-router.get('/admin/crop/negotiation/getallNegotiations', NegotiationController.gethhh);
+router.get('/admin/crop/negotiation/getallNegotiations', NegotiationController.getall);
 router.post('/admin/crop/negotiation/sendoffer', NegotiationController.sendNegotiationOffer);
 router.post('/admin/crop/negotiation/accept', NegotiationValidator.negotiation, NegotiationController.acceptNegotiation);
 router.post('/admin/crop/negotiation/decline',NegotiationValidator.negotiation, NegotiationController.declineNegotiation);
@@ -339,6 +339,8 @@ router.get('/admin/crop/negotiation/getallsummary', NegotiationController.getAll
   /* ---------------------------- ASSIGNED NEGOTIATION TO ADMIN END POINT --------------------------- */
   router.get('/admin/assignnegotiation/getall/',Assign_negotiationController.getAllAssignedNegotiations);
   router.get('/admin/assignnegotiation/getbyid/:id', Assign_negotiationController.getassignNegotiationbyid);
+  router.get('/admin/assignnegotiation/getbynegotiationid/:negotiationid', Assign_negotiationController.getbyNegotiationid);
+  router.get('/admin/assignnegotiation/getbyadminassigned/:adminassigned', Assign_negotiationController.getbyAdminassigned);
   router.post('/admin/assignnegotiation/add',Assign_negotiationController.assignNegotiationtoAdmin);
   router.post('/admin/assignnegotiation/edit',Assign_negotiationController.editAssignNegotiation);
   router.post('/admin/assignnegotiation/delete/:id',Assign_negotiationController.deleteAssNegotiation);

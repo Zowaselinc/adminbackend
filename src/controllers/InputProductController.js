@@ -57,14 +57,14 @@ class InputProducts{
                 var input = await Input.create({
                     user_id: req.body.user_id,
                     category_id: req.body.category_id,
-                    sub_category: req.body.sub_category,
+                    subcategory_id: req.body.subcategory_id,
+                    title: req.body.title,
                     crop_focus: req.body.crop_focus,
                     packaging: req.body.packaging,
                     description: req.body.description,
                     usage_instruction: req.body.usage_instruction,
                     kg: req.body.kg,
                     liters: req.body.liters,
-                    images: my_object.toString(),
                     price: req.body.price,
                     currency: req.body.currency,
                     manufacture_name: req.body.manufacture_name,
@@ -73,7 +73,9 @@ class InputProducts{
                     expiry_date: req.body.expiry_date,
                     manufacture_country: req.body.manufacture_country,
                     state: req.body.state,
-                    video: req.body.video
+                    video: req.body.video,
+                    stock:req.body.stock,
+                    images: my_object.toString(),
                 })
                 
                   /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */

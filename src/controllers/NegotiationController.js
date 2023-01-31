@@ -165,7 +165,7 @@ class NegotiationController {
 
 
 /* ------------------------ GET ALL NEGOTIATIONS END POINT ------------------------ */
-static async gethhh(req, res){
+static async getall(req, res){
         
     try{
 

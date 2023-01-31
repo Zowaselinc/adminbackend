@@ -1,7 +1,7 @@
 //Import validation result
 const { validationResult } = require('express-validator');
 const crypto = require('crypto');
-const { Crop, CropSpecification, CropRequest, ErrorLog, Activitylog, Category, User, Auction } = require('~database/models');
+const { Crop, CropSpecification, CropRequest, ErrorLog, Activitylog, Category, User, Auction, SubCategory } = require('~database/models');
 // const { uploads } = require('~cropimageupload');
 const serveAdminid = require("~utilities/serveAdminId");
 
@@ -198,6 +198,16 @@ class CropController{
             if (!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
+
+            const { count, rows } = await Crop.findAndCountAll({ where: { type: "wanted" } });
+
+            if(count<1){
+                return res.status(200).json({
+                    error : true,
+                    message : "No crop wanted found",
+                    data : []
+                })
+            }else{
     
             var findWantedCrops = await Crop.findAndCountAll({ 
                 include: [{
@@ -211,6 +221,10 @@ class CropController{
                 {
                     model : Category,
                     as : "category"
+                },
+                {
+                    model : SubCategory,
+                    as : "subcategory"
                 },
                 {
                     model : User,
@@ -228,7 +242,7 @@ class CropController{
                 message : "Crops wanted grabbed successfully",
                 data : findWantedCrops
             })
-            
+        }
         }catch(e){
             var logError = await ErrorLog.create({
                 error_name: "Error on fetching crop wanted",
@@ -253,6 +267,18 @@ class CropController{
     static async getByCropAuctions(req , res){
 
         try{
+
+            const { count, rows } = await Crop.findAndCountAll({ where: { type: "auction" } });
+
+            if(count<1){
+                return res.status(200).json({
+                    error : true,
+                    message : "No crop auction found",
+                    
+                })
+            }else{
+
+           
             var findCropAuctions = await Crop.findAndCountAll({ 
                 include: [{
                     model: CropSpecification,
@@ -261,6 +287,10 @@ class CropController{
                 {
                     model : Category,
                     as : "category"
+                },
+                {
+                    model : SubCategory,
+                    as : "subcategory"
                 },
                 {
                     model : User,
@@ -283,7 +313,7 @@ class CropController{
                 message : "Crops auctions grabbed successfully",
                 data : findCropAuctions
             })
-            
+        }
         }catch(error){
             var logError = await ErrorLog.create({
                 error_name: "Error on fetching crop wanted",
@@ -317,7 +347,7 @@ class CropController{
                 return res.status(200).json({
                     error : true,
                     message : "No crop offer found",
-                    data : []
+                    
                 })
             }else{
                 var findCropOffers = await Crop.findAndCountAll({ 
@@ -329,6 +359,10 @@ class CropController{
                     {
                         model : Category,
                         as : "category"
+                    },
+                    {
+                        model : SubCategory,
+                        as : "subcategory"
                     },
                     {
                         model : User,
@@ -386,6 +420,10 @@ class CropController{
                         as : 'category'
                     },
                     {
+                        model : SubCategory,
+                        as : "subcategory"
+                    },
+                    {
                         model: CropRequest,
                         as: 'crop_request',
                         order: [['id', 'DESC']],
@@ -409,7 +447,7 @@ class CropController{
                 return res.status(400).json({
                     error : true,
                     message : "No such crop found",
-                    data : []
+                    
                 })
             }
         }catch(e){

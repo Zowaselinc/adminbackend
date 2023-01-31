@@ -24,7 +24,7 @@ class Assign_negotiationController{
         }else{
             var assignNegotiation = Assignnegotiation.create({
                 negotiationid:req.body.negotiation_id,
-                adminassigned:req.body.adminsigned
+                adminassigned:req.body.adminassigned
             });
 
             if(assignNegotiation){
@@ -128,7 +128,7 @@ class Assign_negotiationController{
         var logError = await ErrorLog.create({
             error_name: "Error on getting assign negotiation by id",
             error_description: error.toString(),
-            route: "/api/admin/assignnegotiation/getbyid",
+            route: "/api/admin/assignnegotiation/getbyid/:id",
             error_code: "500"
         });
         if(logError){
@@ -139,6 +139,99 @@ class Assign_negotiationController{
           } 
         }
       }
+    //   end 
+
+
+      /* ------------------ GET ASSIGNED NEGOTIATION BY NEGOTIATION ID ------------------ */
+
+   static async getbyNegotiationid(req,res){
+    try{
+       
+        var getbyNegotiationid = await Assignnegotiation.findOne({where: {negotiationid:req.params.negotiationid}});
+
+        
+        if(getbyNegotiationid == null){
+            return res.status(200).json({
+                error:true,
+                message: 'Invalid id'
+            })
+
+        }else if(getbyNegotiationid){
+            return res.status(200).json({
+                error:false,
+                message: "Assigned negotiation acquired successfully",
+                data: getbyNegotiationid
+            })
+        }else{
+            return res.status(200).json({
+                error:true,
+                message: "Failed to acquire assigned negotiation",
+               
+            });
+        }
+
+       
+
+    }catch(error){
+        var logError = await ErrorLog.create({
+            error_name: "Error on getting assign negotiation by negotiation id",
+            error_description: error.toString(),
+            route: "/api/admin/assignnegotiation/getbynegotiationd/:negotiationid",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+            });
+          } 
+        }
+      }
+
+
+      /* -------------- GET BY ASSIGNED NEGOTIATION BY ADMINASSIGNED -------------- */
+
+      static async getbyAdminassigned(req,res){
+        try{
+           
+            var getbyadminAssigned = await Assignnegotiation.findAll({where: {adminassigned:req.params.adminassigned}});
+
+            if(getbyadminAssigned == null){
+                return res.status(200).json({
+                    error:true,
+                    message: 'Invalid id'
+                })
+    
+            }else if(getbyadminAssigned){
+                return res.status(200).json({
+                    error:false,
+                    message: "Assigned negotiation acquired successfully",
+                    data: getbyadminAssigned
+                })
+            }else{
+                return res.status(200).json({
+                    error:true,
+                    message: "Failed to acquire assigned negotiation",
+ 
+                });
+            }
+
+        }catch(error){
+            var logError = await ErrorLog.create({
+                error_name: "Error on getting assign negotiation by adminassigned id",
+                error_description: error.toString(),
+                route: "/api/admin/assignnegotiation/getbyadminassigned/:adminassigned",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment',
+                });
+              } 
+            }
+          }
+
 
       /* ---------------------------- EDIT  ASSIGNED NEGOTION BY ID ---------------------------- */
 static async editAssignNegotiation(req,res){
