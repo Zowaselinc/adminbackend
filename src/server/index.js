@@ -8,7 +8,7 @@ const Routes = require('~routes');
 const {DB} = require("~database/models");
 
 const cors = require('cors');
-
+const scheduledFunctions = require("~utilities/CronJobs");
 class Server{
 
     static boot(port=3400){
@@ -21,6 +21,9 @@ class Server{
         // Register App Routes
         Routes(App).register();
         
+    // ADD CALL to execute your function(s)
+    scheduledFunctions.initScheduledJobs();
+
 
         //Sync Database Models
         //{ force: true }

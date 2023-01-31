@@ -8,7 +8,8 @@
     "preinstall": "which link-module-alias && link-module-alias clean || echo",
     "postinstall": "link-module-alias",
     "serve": "node index",
-    "start": "node index"
+    "start": "node index",
+    "dev": "link-module-alias && nodemon index"
   },
   "_moduleAliases": {
     "~database": "src/database",
@@ -25,6 +26,7 @@
   "dependencies": {
     "amqplib": "^0.10.3",
     "bcryptjs": "^2.4.3",
+    "connect-timeout": "^1.9.0",
     "cors": "^2.8.5",
     "dotenv": "^9.0.2",
     "express": "^4.18.2",
@@ -33,9 +35,10 @@
     "express-validator": "^6.14.2",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
+    "memory-cache": "^0.2.0",
     "mysql2": "^2.3.3",
-    "mysql2-extended": "^1.1.3",
-    "node-cron": "^3.0.1",
+    "mysql2-extended": "^1.3.5",
+    "node-cron": "^3.0.2",
     "nodemailer": "^6.8.0",
     "nodemon": "^2.0.20",
     "sequelize": "^6.25.3"

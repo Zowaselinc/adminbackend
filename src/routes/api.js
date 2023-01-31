@@ -27,6 +27,7 @@ const NegotiationController= require('~controllers/NegotiationController');
 const SectionController= require('~controllers/SectionController');
 const ColourController= require('~controllers/ColourController');
 const Assign_negotiationController= require('~controllers/Assign_negotiationController');
+const ConversationController= require('~controllers/ConversationController');
 
 
 
@@ -326,7 +327,7 @@ Router.middleware(['isAuthenticated']).group((router) => {
 router.post('/admin/crop/negotiation/add', NegotiationValidator.addNegotiationValidator, NegotiationController.add);
 // router.post('/crop/negotiation/admin/add', NegotiationValidator.addNegotiationValidator, NegotiationController.addmsgbyadmin);
 router.get('/admin/crop/:cropId/negotiation/getbyuserid/:userid', NegotiationController.getbyuserid);
-// router.get('/admin/crop/negotiation/:userid', NegotiationController.getListByUser);
+
 router.get('/admin/crop/negotiation/getallNegotiations', NegotiationController.getall);
 router.post('/admin/crop/negotiation/sendoffer', NegotiationController.sendNegotiationOffer);
 router.post('/admin/crop/negotiation/accept', NegotiationValidator.negotiation, NegotiationController.acceptNegotiation);
@@ -334,6 +335,16 @@ router.post('/admin/crop/negotiation/decline',NegotiationValidator.negotiation, 
 router.post('/admin/crop/negotiation/close',NegotiationValidator.negotiation, NegotiationController.closeNegotiation);
 router.get('/admin/crop/negotiation/grabtransactionby/:status/:userid', NegotiationController.getNegotiationTransactionSummary);
 router.get('/admin/crop/negotiation/getallsummary', NegotiationController.getAllNegotiationTransactionSummary);
+
+
+
+/* --------------------------- CONVERSATION ROUTE --------------------------- */
+// router.get('/admin/crop/conversation/:userid', NegotiationController.getListByUser);
+router.get('/admin/crop/conversation/getall/:offset/:limit', NegotiationController.getAllConversation);
+
+
+
+
 
 
   /* ---------------------------- ASSIGNED NEGOTIATION TO ADMIN END POINT --------------------------- */

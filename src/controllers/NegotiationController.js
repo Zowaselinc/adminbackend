@@ -7,7 +7,7 @@ const { Op } = require('sequelize');
 const { request } = require('http');
 const ConversationController = require('./ConversationController');
 const { IncludeNegotiations, IncludeCrop, CropIncludes, IncludeSpecification } = require('~database/helpers/modelncludes');
-
+var cache = require('memory-cache');
 class NegotiationController {
 
     static async hello(req, res) {
@@ -172,6 +172,7 @@ static async getall(req, res){
         var getallnegotiations = await Negotiation.findAll({req});
     
         if(getallnegotiations){
+
             return res.status(200).json({
                 error : false,
                 message: "All Negotiations acquired successfully",
@@ -207,71 +208,156 @@ static async getall(req, res){
 
 
 
+/* -------------------------- GET ALL CONVERSATIONS ------------------------- */
 
-    /* ------------------ GET ALL NEGOTIATION LIST BY USER ID ----------------- */
 
-    static async getListByUser(req, res) {
+static async getAllConversation(req, res){
+        
+    try{
 
-        try {
-            const userId = req.params.userid;
+        const limit = Number(req.params.limit);
+         const offset = Number(req.params.offset);
+       
+        var getallconversation = await  Conversation.findAll({
+            limit:limit,
+            offset:offset
+        });
 
-            if (userId !== "" || userId !== null || userId !== undefined) {
+        // var getallconversation = await Conversation.findAll({req});
+    
+        if(getallconversation){
 
-                var conversations = await Conversation.findAll({
-                    where: {
-                        [Op.or]: [
-                            { user_one: userId },
-                            { user_two: userId }
-                        ],
-                        type: "negotiation",
-                    },
-                    include: [
-                        IncludeCrop,
-                        { model: User, as: "initiator", required: true },
-                        { model: User, as: "participant", required: true},
-                        IncludeNegotiations
-                    ],
-                });
 
-                if (conversations) {
+            let conversationlist = [];
 
-                    return res.status(200).json({
-                        error: false,
-                        message: "Conversations retrieved successfully...",
-                        data: conversations
-                    })
 
-                } else {
+            await Promise.all( getallconversation.map(async (element) => {
+                let users = JSON.parse(cache.get("users"));
+                let crops = JSON.parse(cache.get("crops"));
+                /* ------------------------ Get individual user data ------------------------ */
+                let userone = users.filter(x => x.id == element.dataValues.user_one)[0];
 
-                    return res.status(400).json({
-                        error: true,
-                        message: "No negotiations made by this user",
-                        data: []
-                    })
+                let usertwo = users.filter(x => x.id == element.dataValues.user_two)[0];
+                let crop = crops.filter(x => x.id == element.dataValues.crop_id)[0];
+              
 
-                }
-            } else {
-                return res.status(400).json({
-                    error: true,
-                    message: "Invalid user ID",
-                    data: []
-                })
-            }
-        } catch (e) {
-            var logError = await ErrorLog.create({
-                error_name: "Error on getting negotiation",
-                error_description: e.toString(),
-                route: "/api/crop/negotiation/getlist/:userid",
-                error_code: "500"
+                 let conversationobject = {
+                    "conversationid":element.dataValues.id,
+                    "userone": userone,
+                    "usertwo": usertwo,
+                    "crop": crop,
+                    "type": "negotiation"
+                 }
+                 conversationlist.push(conversationobject);
+            }))
+
+            
+
+
+
+
+
+
+
+
+            return res.status(200).json({
+                error : false,
+                message: "All onversations acquired successfully",
+                data : conversationlist
             });
-            if (logError) {
-                return res.status(500).json({
-                    error: true,
-                    message: 'Unable to complete request at the moment'
-                })
-            }
+
+        }else{
+            return res.status(200).json({
+                error : true,
+                message: "Unable fetch Conversation",
+            });
+
+        }
+
+    }catch(e){
+        var logError = await ErrorLog.create({
+            error_name: "Error on getting all Conversation",
+            error_description: e.toString(),
+            route: "/api/admin/crop/conversation/getall",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+                
+            })
+
         }
     }
+}
+
+
+
+    /* ------------------ GET ALL Conversation LIST BY USER ID ----------------- */
+
+    // static async getListByUser(req, res) {
+
+    //     try {
+    //         const userId = req.params.userid;
+
+    //         if (userId !== "" || userId !== null || userId !== undefined) {
+
+    //             var conversations = await Conversation.findAll({
+    //                 where: {
+    //                     [Op.or]: [
+    //                         { user_one: userId },
+    //                         { user_two: userId }
+    //                     ],
+    //                     type: "negotiation",
+    //                 },
+    //                 include: [
+    //                     IncludeCrop,
+    //                     { model: User, as: "initiator", required: true },
+    //                     { model: User, as: "participant", required: true},
+    //                     IncludeNegotiations
+    //                 ],
+    //             });
+
+    //             if (conversations) {
+
+    //                 return res.status(200).json({
+    //                     error: false,
+    //                     message: "Conversations retrieved successfully...",
+    //                     data: conversations
+    //                 })
+
+    //             } else {
+
+    //                 return res.status(400).json({
+    //                     error: true,
+    //                     message: "No negotiations made by this user",
+    //                     data: []
+    //                 })
+
+    //             }
+    //         } else {
+    //             return res.status(400).json({
+    //                 error: true,
+    //                 message: "Invalid user ID",
+    //                 data: []
+    //             })
+    //         }
+    //     } catch (e) {
+    //         var logError = await ErrorLog.create({
+    //             error_name: "Error on getting negotiation",
+    //             error_description: e.toString(),
+    //             route: "/api/crop/negotiation/getlist/:userid",
+    //             error_code: "500"
+    //         });
+    //         if (logError) {
+    //             return res.status(500).json({
+    //                 error: true,
+    //                 message: 'Unable to complete request at the moment'
+    //             })
+    //         }
+    //     }
+    // }
     /* --------------------------- GET ALL NEGOTIATION BY USERID --------------------------- */
 
 
