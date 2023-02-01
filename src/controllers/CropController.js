@@ -296,10 +296,11 @@ class CropController{
                     model : User,
                     as : 'user',
                 },
-                {
-                    model : Auction,
-                    as : "auction"
-                }],
+                // {
+                //     model : Auction,
+                //     as : "auction"
+                // }
+            ],
                 
                 where: { type: "auction" },
                 order: [['id', 'DESC']]

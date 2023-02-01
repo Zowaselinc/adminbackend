@@ -112,6 +112,31 @@ Crop.hasOne(Auction,{
   as : "auction"
 })
 
+
+
+User.hasMany(Input, {
+  foreignKey: "user_id",
+  as: "inputs"
+})
+Input.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user"
+});
+
+Input.belongsTo(Category, {
+  foreignKey: "category_id",
+  as: "category"
+});
+
+Input.belongsTo(SubCategory, {
+  foreignKey: "subcategory_id",
+  as: "subcategory"
+});
+
+
+
+
+
 CropSpecification.belongsTo(Crop, {
   foreignKey: 'model_id',
   as: 'crop'

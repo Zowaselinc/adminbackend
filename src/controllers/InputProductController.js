@@ -1,5 +1,5 @@
 const { request } = require("express");
-const { Input, ErrorLog, Activitylog } = require("~database/models");
+const { Input, ErrorLog, Activitylog, Category, SubCategory, User } = require("~database/models");
 const { validationResult } = require("express-validator");
 const crypto = require("crypto");
 // const jwt = require("jsonwebtoken");
@@ -126,7 +126,21 @@ class InputProducts{
             var alluserinputs = await Input.findAll({
                 where: {
                     user_id: req.params.user_id
+                },
+                include:[{
+                    model: Category,
+                    as : "category"
+
+                },
+                {
+                    model : SubCategory,
+                    as : "subcategory"
+                },
+                {
+                    model : User,
+                    as : "user"
                 }
+            ],
             });
              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
              var adminId = await  serveAdminid.getTheId(req);
@@ -151,7 +165,7 @@ class InputProducts{
                 return res.status(200).json({
                     error : false,
                     message: "User does not have an input product",
-                    data : []
+                   
                 })
 
             }
@@ -173,7 +187,23 @@ class InputProducts{
 /* ----------------------------- get all inputs ----------------------------- */
     static async getallInputs(req , res){
         try{
-            var alluserinputs = await Input.findAll();
+            var alluserinputs = await Input.findAll({
+                include:[{
+                    model: Category,
+                    as : "category"
+
+                },
+                {
+                    model : SubCategory,
+                    as : "subcategory"
+                },
+                {
+                    model : User,
+                    as : "user"
+                }
+            ],
+            });
+            
             /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
             var adminId = await  serveAdminid.getTheId(req);
 
@@ -198,7 +228,7 @@ class InputProducts{
                 return res.status(200).json({
                     error : false,
                     message: "No input products found",
-                    data : []
+                    
                 })
 
             }
