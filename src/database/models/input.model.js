@@ -15,7 +15,7 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.STRING,
             allowNull : false
         },
-        title : {
+        product_type : {
             type: Sequelize.STRING,
             allowNull : false
         },
@@ -31,11 +31,19 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.TEXT,
             allowNull : false
         },
+        stock : {
+            type: Sequelize.STRING,
+            allowNull : false
+        },
         usage_instruction : {
             type: Sequelize.TEXT,
             allowNull : false
         },
-        kg : {
+        kilograms : {
+            type: Sequelize.STRING,
+            allowNull : false
+        },
+        grams : {
             type: Sequelize.STRING,
             allowNull : false
         },
@@ -80,10 +88,7 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.STRING,
             allowNull : false
         },
-        stock : {
-            type: Sequelize.STRING,
-            allowNull : false
-        },
+       
         images : {
             type: Sequelize.STRING(350)
         },
