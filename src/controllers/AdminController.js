@@ -204,7 +204,7 @@ class AdminController{
         if(adminid == null){
             return res.status(200).json({
                 error:true,
-                message: 'id not found'
+                message: 'invalid admin id'
             })
         }else{
             return res.status(200).json({
