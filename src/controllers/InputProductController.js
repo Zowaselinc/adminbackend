@@ -127,7 +127,9 @@ class InputProducts{
                 where: {
                     user_id: req.params.user_id
                 },
-                include:[{
+                include:[
+                    
+                    {
                     model: Category,
                     as : "category"
 
@@ -188,7 +190,9 @@ class InputProducts{
     static async getallInputs(req , res){
         try{
             var alluserinputs = await Input.findAll({
-                include:[{
+                include:[
+                    
+                    {
                     model: Category,
                     as : "category"
 

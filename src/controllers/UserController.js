@@ -215,20 +215,33 @@ class UserController{
             
         });
     }
-    /* ------------------------- // get all users stats ------------------------- */
+    /* ------------------------- // GET ALL USERS STATS ------------------------- */
     static async getUserStats(req ,res){
         try{
 
-    //    uers stats 
+    /* ---------------------------- //   USERS STATS ---------------------------- */
+
+    // all verified users 
         var verifiedUsers = await User.findAll({where:{is_verified:'1'}});
         var verifiedMerchants = await User.findAll({where:{is_verified:'1', type: 'merchant'}});
         var verifiedCorporate = await User.findAll({where:{is_verified:'1', type: 'corporate'}});
+        var verifiedPartner = await User.findAll({where:{is_verified:'1', type: 'partner'}});
+        var verifiedAgent = await User.findAll({where:{is_verified:'1', type: 'agent'}});
+
+        // all active uses 
         var activeUsers = await User.findAll({where:{active:'1'}});
+        var activeMerchants = await User.findAll({where:{active:'1', type: 'merchant'}});
+        var activeCorporate = await User.findAll({where:{active:'1', type: 'corporate'}});
+        var activePartner = await User.findAll({where:{active:'1', type: 'partner'}});
+        var activeAgent = await User.findAll({where:{active:'1', type: 'agent'}});
+
+        // total users 
         var totalUsers = await User.findAll();
         var totalMerchant = await User.findAll({where :{type:'merchant'}});
         var totalCorporate = await User.findAll({where :{type:'corporate'}});
-        var activeMerchants = await User.findAll({where:{active:'1', type: 'merchant'}});
-        var activeCorporate = await User.findAll({where:{active:'1', type: 'corporate'}});
+        var totalPartner = await User.findAll({where :{type:'partner'}});
+        var totalAgent = await User.findAll({where :{type:'agent'}});
+        
 
         // fetch all users stats 
         return res.status(200).json({
@@ -238,12 +251,18 @@ class UserController{
                 "Totalusers":totalUsers.length,
                 "TotalMerchant":totalMerchant.length,
                 "TotalCorporate":totalCorporate.length,
+                "TotalPartners":totalPartner.length,
+                "TotalAgent":totalAgent.length,
                 "VerifiedUsers":verifiedUsers.length,
                 "VerifiedMerchants":verifiedMerchants.length,
                 "VerifiedCorporate":verifiedCorporate.length,
+                "VerifiedPartner":verifiedPartner.length,
+                "VerifiedAgent":verifiedAgent.length,
                 "ActiveUsers":activeUsers.length,
-                "ActiveMerchants":activeMerchants.length,    
-                "ActiveCorporate":activeCorporate.length     
+                "ActiveMerchants":activeMerchants.length,
+                "ActiveCorporate":activeCorporate.length,
+                "ActivePartner":activePartner.length,
+                "ActiveAgent":activeAgent.length
             }]
         })
          }catch(error){
