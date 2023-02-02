@@ -1,6 +1,6 @@
 const { request } = require("express");
 const { validationResult } = require("express-validator");
-const { Admin, ErrorLog , Activitylog} = require("~database/models");
+const { Admin, ErrorLog , Activitylog, Role} = require("~database/models");
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
@@ -110,7 +110,7 @@ class AdminController{
                 }else{
                     return res.status(200).json({
                         error : true,
-                        message: "Unable fetch admin",
+                        message: "Unable to fetch admin",
                     });
 
                 }
@@ -189,8 +189,18 @@ class AdminController{
     /* --------------------- GET ADMIN BY ADMIN ID ENDPOINT --------------------- */
     static async getadminbyid(req,res){
         try{
-
+        
         var adminid = await Admin.findOne({where: {id : req.params.id}});
+            var role = adminid.dataValues.role;
+            var getRole = await Role.findOne({where:{role_id:role}})
+            delete getRole.dataValues.created_at;
+            delete getRole.dataValues.updated_at;
+            // delete getRole.dataValues.id;
+
+
+            var theadmin= adminid.dataValues;
+            theadmin.role= getRole.dataValues;
+
         if(adminid == null){
             return res.status(200).json({
                 error:true,
@@ -200,7 +210,8 @@ class AdminController{
             return res.status(200).json({
                 error: false,
                 message: 'Admin acquired successfully',
-                data: adminid
+                data: theadmin
+                
             })
         }
     }catch(e){

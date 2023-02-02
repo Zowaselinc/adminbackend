@@ -165,7 +165,7 @@ class InputProducts{
             }else{
 
                 return res.status(200).json({
-                    error : false,
+                    error : true,
                     message: "User does not have an input product",
                    
                 })
