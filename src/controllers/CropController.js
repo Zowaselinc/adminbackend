@@ -303,7 +303,8 @@ class CropController{
             ],
                 
                 where: { type: "auction" },
-                order: [['id', 'DESC']]
+                order: [['id', 'DESC']],
+                // group: ["id"]
             });
 
         
@@ -342,7 +343,9 @@ class CropController{
 
         try{
             
-            const { count, rows } = await Crop.findAndCountAll({ where: { type: "offer" } });
+            const { count, rows } = await Crop.findAll({ where: { type: "offer" } });
+
+            // var cropOffer = await Crop.findAll({where:{type: "offer"}});
 
             if(count<1){
                 return res.status(200).json({
@@ -351,7 +354,7 @@ class CropController{
                     
                 })
             }else{
-                var findCropOffers = await Crop.findAndCountAll({ 
+                var findCropOffers = await Crop.findAll({ 
                     include: [{
                         model: CropSpecification,
                         as: 'specification',
@@ -370,7 +373,8 @@ class CropController{
                         as : 'user',
                     }],
                     where: { type: "offer" },
-                    order: [['id', 'DESC']]
+                    order: [['id', 'DESC']],
+                    group: ["id"]
                 });
     
             
