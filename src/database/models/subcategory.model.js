@@ -13,7 +13,7 @@ let Schema = (Sequelize,mode) => {
         },
         type : {
             type: Sequelize.STRING,
-            allowNull : false
+        
         },
         ...generateTimestamps(Sequelize,mode)
     }
