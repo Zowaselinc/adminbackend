@@ -194,6 +194,8 @@ Negotiation.hasOne(Order, {
   as : "order"
 });
 
+
+
 Conversation.hasMany(Negotiation, {
   foreignKey : "conversation_id",
   as : "negotiations"

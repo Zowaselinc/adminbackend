@@ -256,6 +256,7 @@ Router.middleware(['isAuthenticated']).group((router) => {
     router.post('/admin/input/add', InputsValidator.createInputValidator,Input.createInput);
     router.get('/admin/input/getallbyuserid/:user_id', Input.getallInputsByUser);
     router.get('/admin/input/getall', Input.getallInputs);
+    router.get('/admin/input/getbyid/:id', Input.getInputsById);
     router.get('/admin/input/getallbycategoryid/:category_id', Input.getallInputsByCategory);
     router.get('/admin/input/getallbymanufacturer/:manufacturer', Input.getallInputsByManufacturer);
     router.get('/admin/input/getallbypackaging/:packaging', Input.getallInputsByPackaging);

@@ -186,6 +186,79 @@ class InputProducts{
             }  
         }
     }
+
+
+     /* -------------------------- get input by id ------------------------- */
+     static async getInputsById(req , res){
+        try{
+            var inputid = await Input.findAll({
+                where: {
+                    id:req.params.id
+                },
+
+                include:[
+                    
+                    {
+                    model: Category,
+                    as : "category"
+
+                },
+                {
+                    model : SubCategory,
+                    as : "subcategory"
+                },
+                {
+                    model : User,
+                    as : "user"
+                }
+            ],
+            
+            });
+
+            
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            var adminId = await  serveAdminid.getTheId(req);
+
+            await Activitylog.create({
+                admin_id:adminId ,
+                section_accessed:'View input by id',
+                page_route:'/api/admin/input/getbyid/:id',
+                action:'Viewing one input'
+            });
+            /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            if(inputid.length > 0){
+
+                return res.status(200).json({
+                    error : false,
+                    message: "Input fetched successfully",
+                    data : inputid
+                })
+
+            }else{
+
+                return res.status(200).json({
+                    error : false,
+                    message: "No input products found ",
+                    data : []
+                })
+
+            }
+        }catch(e){
+            var logError = await ErrorLog.create({
+                error_name: "Error on getting input by id",
+                error_description: e.toString(),
+                route: "/api/input/getbyid/:id",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment'
+                })
+            }  
+        }
+    }
+
 /* ----------------------------- get all inputs ----------------------------- */
     static async getallInputs(req , res){
         try{

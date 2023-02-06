@@ -18,7 +18,7 @@ class NegotiationController {
     }
 
 
-    /* ---------------------------- * USER ADD NEGOTIATION MESSAGE * ---------------------------- */
+    /* ---------------------------- * USER ADD NEGOTIATION/CONVERSATION MESSAGE * ---------------------------- */
     static async add(req, res) {
 
         // return res.status(200).json({
@@ -103,9 +103,9 @@ class NegotiationController {
         const cropId = req.params.cropId;
 
         try {
+            
 
             if (userId !== "" || userId !== null || userId !== undefined) {
-
 
                 var conversation = await Conversation.findOne({
                     where: {
@@ -116,12 +116,14 @@ class NegotiationController {
                         crop_id: cropId
                     },
                     include: [
+                        IncludeCrop, 
                         IncludeNegotiations
+                        
                     ]
                 })
 
-
                 if (conversation) {
+                    
                     return res.status(200).json({
                         error: false,
                         message: "Negotiations and messages retrieved successfully",
@@ -135,8 +137,9 @@ class NegotiationController {
                         message: "No negotiations made by this user",
                         data: []
                     })
-
+                    
                 }
+                
             } else {
                 return res.status(400).json({
                     error: true,
@@ -159,7 +162,7 @@ class NegotiationController {
             }
         }
     }
-    /* --------------------------- GET ALL NEGOTIATION BY USERID --------------------------- */
+    /* --------END--------- */
 
 
 
@@ -170,8 +173,13 @@ static async getall(req, res){
     try{
 
         var getallnegotiations = await Negotiation.findAll({req});
+
+        
     
         if(getallnegotiations){
+
+
+
 
             return res.status(200).json({
                 error : false,
@@ -254,7 +262,7 @@ static async getAllConversation(req, res){
             
             return res.status(200).json({
                 error : false,
-                message: "All onversations acquired successfully",
+                message: "All Conversations acquired successfully",
                 data : conversationlist
             });
 
