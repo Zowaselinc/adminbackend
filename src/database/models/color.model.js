@@ -22,12 +22,12 @@ let Schema = (Sequelize,mode) => {
 
 const Model = (sequelize, instance, Sequelize) => {
     // Define initial for DB sync
-    sequelize.define("colours", Schema(Sequelize,1),{ timestamps: false });
+    sequelize.define("colors", Schema(Sequelize,1),{ timestamps: false });
     // Bypass initial instance to cater for timestamps
-    const Colour = instance.define("colours", Schema(Sequelize,2),{ 
+    const Color = instance.define("colors", Schema(Sequelize,2),{ 
         timestamps: false,
     });
-    return Colour;
+    return Color;
 }
 
 module.exports = { Schema , Model};

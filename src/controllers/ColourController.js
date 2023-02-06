@@ -1,6 +1,6 @@
 
 const { request } = require("express");
-const {Colour, ErrorLog, Activitylog} = require("~database/models");
+const {Color, ErrorLog, Activitylog} = require("~database/models");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const crypto = require('crypto');
@@ -22,7 +22,7 @@ class ColourController{
                 });
             }
 
-            var confirmColour = await Colour.findOne({
+            var confirmColour = await Color.findOne({
                 where:{
                     name:req.body.colour_name
                 }
@@ -36,7 +36,7 @@ class ColourController{
             }else{
                 // const colourid = crypto.randomBytes(8).toString("hex")
                 
-                var colour = await Colour.create({
+                var colour = await Color.create({
                     // colour_id:colourid,
                     name:req.body.colour_name,
                     
@@ -87,7 +87,7 @@ class ColourController{
     static async getAllColours(req,res){
         try{
 
-            var allcolours = await Colour.findAll();
+            var allcolours = await Color.findAll();
  /* ---------------------------------- ACTIVITY LOG --------------------------------- */
         var adminId = await  serveAdminid.getTheId(req);
 
@@ -138,7 +138,7 @@ static async getColourbyparams(req,res){
 
         const limit = Number(req.params.limit);
         const offset = Number(req.params.offset);
-        var colourparams = await Colour.findAll({
+        var colourparams = await Color.findAll({
             limit:limit,
             offset:offset
         });
@@ -187,7 +187,7 @@ static async getColourbyparams(req,res){
 static async getColourbyid(req,res){
     try{
        
-        var colourid = await Colour.findOne({where: {id:req.params.id}});
+        var colourid = await Color.findOne({where: {id:req.params.id}});
 
          /* ---------------------------------- ACTIVITY LOG --------------------------------- */
          var adminId = await  serveAdminid.getTheId(req);
@@ -293,7 +293,7 @@ static async getColourbyid(req,res){
 static async editColour(req,res){
     try{
 
-        var editcolour = await Colour.update({
+        var editcolour = await Color.update({
             // colour_id:req.body.colour_id,
             name:req.body.colour_name
         },{where: {id:req.body.id}});
@@ -342,7 +342,7 @@ static async editColour(req,res){
 static async deleteColour(req, res){
     try{
 
-    var delcolour = await Colour.destroy({where: {id:req.params.id}});
+    var delcolour = await Color.destroy({where: {id:req.params.id}});
 
      /* ----------------------------------  ACTIVITY LOG --------------------------------- */
      var adminId = await  serveAdminid.getTheId(req);
