@@ -1,10 +1,11 @@
 
 const { request } = require("express");
-const {Assignnegotiation, ErrorLog, Activitylog} = require("~database/models");
+const {Assignnegotiation, ErrorLog, Activitylog, Negotiation, Admin} = require("~database/models");
 // const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const serveAdminid = require("~utilities/serveAdminId");
-
+const { IncludeAssignAdmin } = require("~database/helpers/modelncludes");
+var cache = require('memory-cache');
 class Assign_negotiationController{
 
 /* ----------------- CREAT OR ASSIGN NEGOTIATION TO AN ADMIN ---------------- */
@@ -12,18 +13,18 @@ class Assign_negotiationController{
     try{
 
         // check and confirm that negotiation id does not repeat itself 
-       var checkNegotiationid = await Assignnegotiation.findOne({
-            where:{negotiationid:req.body.negotiation_id}
+       var checkConversation = await Assignnegotiation.findOne({
+            where:{conversationid:req.body.conversation_id}
         });
 
-        if(checkNegotiationid){
+        if(checkConversation){
             return res.status(200).json({
                 error:true,
-                message: "Negotiation id already exist"
+                message: "Conversation id already exist"
             })
         }else{
             var assignNegotiation = Assignnegotiation.create({
-                negotiationid:req.body.negotiation_id,
+                conversationid:req.body.conversation_id,
                 adminassigned:req.body.adminassigned
             });
 
@@ -59,16 +60,43 @@ class Assign_negotiationController{
    
    }
 
+
+  
+
    /* ----------------- GET ALL NEGOTIATIONS ASSIGNED TO ADMIN ----------------- */
    static async getAllAssignedNegotiations(req, res){
     try{
+        let alladmins = JSON.parse(cache.get("admins"));
+        let conversations =JSON.parse(cache.get("conversations"));
+        // console.log(cache.get("admins"));
+        //create empty array
+        let assignedadmins =[];
+        //get all assignments
         var allAssignNegotiation = await Assignnegotiation.findAll();
+      //looop through and find the admin by id
+        allAssignNegotiation.forEach(element => {
+              
+            let theadmin = element.dataValues; 
 
-        if(allAssignNegotiation){
+            //filter the admin who has that id
+           let theadminassigned = alladmins.filter(x => x.admin_id==theadmin.adminassigned);
+           let aconversation = conversations.filter(x => x.conversationid== theadmin.conversationid);
+
+           //store the admin assigneds full details
+           theadmin.administrator =theadminassigned;
+           theadmin.conversation = aconversation;
+           //store the push 
+            assignedadmins.push(theadmin);
+        });
+
+
+
+
+        if(assignedadmins){
             return res.status(200).json({
                 error:false,
                 message:"Assigned negotiations retrived",
-                data: allAssignNegotiation
+                data: assignedadmins
             });
         }else{
             return res.status(200).json({
@@ -78,6 +106,7 @@ class Assign_negotiationController{
         }
 
     }catch(error){
+        console.log(error);
         var logError = await ErrorLog.create({
             error_name: "Error on getting all assigned negotiations",
             error_description: error.toString(),

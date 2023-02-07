@@ -349,7 +349,7 @@ router.get('/admin/crop/conversation/getall/:offset/:limit', NegotiationControll
 
 
   /* ---------------------------- ASSIGNED NEGOTIATION TO ADMIN END POINT --------------------------- */
-  router.get('/admin/assignnegotiation/getall/',Assign_negotiationController.getAllAssignedNegotiations);
+  router.get('/admin/assignnegotiation/getall',Assign_negotiationController.getAllAssignedNegotiations);
   router.get('/admin/assignnegotiation/getbyid/:id', Assign_negotiationController.getassignNegotiationbyid);
   router.get('/admin/assignnegotiation/getbynegotiationid/:negotiationid', Assign_negotiationController.getbyNegotiationid);
   router.get('/admin/assignnegotiation/getbyadminassigned/:adminassigned', Assign_negotiationController.getbyAdminassigned);

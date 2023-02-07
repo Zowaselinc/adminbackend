@@ -2,7 +2,7 @@ const generateTimestamps = require("./timestamps");
 
 let Schema = (Sequelize,mode) => {
     return {
-       negotiationid : {
+       conversationid : {
             type: Sequelize.STRING,
             unique : true,
             allowNull : false

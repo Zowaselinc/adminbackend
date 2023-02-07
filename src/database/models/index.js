@@ -134,17 +134,6 @@ Input.belongsTo(SubCategory, {
 });
 
 
-/* --------------------- association for admin and roles -------------------- */
-
-Admin.hasMany(Role, {
-  foreignKey: "role_id",
-  as: "roles"
-})
-Role.belongsTo(Admin, {
-  foreignKey: "role_name",
-  as: "admins"
-});
-// end 
 
 CropSpecification.belongsTo(Crop, {
   foreignKey: 'model_id',

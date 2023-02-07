@@ -116,7 +116,7 @@ class NegotiationController {
                         crop_id: cropId
                     },
                     include: [
-                        IncludeCrop, 
+                        
                         IncludeNegotiations
                         
                     ]
