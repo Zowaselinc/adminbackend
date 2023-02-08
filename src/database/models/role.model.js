@@ -5,18 +5,22 @@ let Schema = (Sequelize,mode) => {
 
     return {
         role_id: {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false
 
         },
         role_name : {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull : false
 
         },
         role_description : {
-            type: Sequelize.TEXT
+            type: Sequelize.TEXT,
+            allowNull : false
         },
         section : {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull : false
         },
 
         ...generateTimestamps(Sequelize,mode)
@@ -25,9 +29,9 @@ let Schema = (Sequelize,mode) => {
 
 const Model = (sequelize, instance, Sequelize) => {
     // Define initial for DB sync
-    sequelize.define("roles", Schema(Sequelize,1),{ timestamps: false });
+    sequelize.define("role", Schema(Sequelize,1),{ timestamps: false });
     // Bypass initial instance to cater for timestamps
-    const Role = instance.define("roles", Schema(Sequelize,2),{ 
+    const Role = instance.define("role", Schema(Sequelize,2),{ 
         timestamps: false,
     });
     return Role;
