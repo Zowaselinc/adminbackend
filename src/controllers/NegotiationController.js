@@ -2,7 +2,7 @@
 //Import validation result
 const { validationResult } = require('express-validator');
 const crypto = require('crypto');
-const { Negotiation, ErrorLog, CropSpecification, Crop, Conversation, User, Category, Order, CropRequest } = require('~database/models');
+const { Negotiation, ErrorLog, CropSpecification, Crop, Conversation, User, Category, Order, CropRequest, SubCategory } = require('~database/models');
 const { Op } = require('sequelize');
 const { request } = require('http');
 const ConversationController = require('./ConversationController');
@@ -96,72 +96,74 @@ class NegotiationController {
 
 
 
-    /* --------------------------- GET ALL NEGOTIATION BY USERID --------------------------- */
-    static async getbyuserid(req, res) {
+    /* --------------------------- GET ALL NEGOTIATION BY CROPID AND  USERID --------------------------- */
+    // static async getbyuserid(req, res) {
 
-        const userId = req.params.userid;
-        const cropId = req.params.cropId;
+    //     const userId = req.params.userid;
+    //     const cropId = req.params.cropId;
 
-        try {
+    //     try {
             
 
-            if (userId !== "" || userId !== null || userId !== undefined) {
+    //         if (userId !== "" || userId !== null || userId !== undefined) {
+               
+    //             var conversation = await Conversation.findOne({
+    //                 where: {
+    //                     [Op.or]: [
+    //                         { user_one: userId },
+    //                         { user_two: userId }
+    //                     ],
+    //                     crop_id: cropId,
+                       
+    //                 },
+    //                 include: [
+    //                         IncludeCrop,
+    //                         { model: User, as: "initiator", required: true },
+    //                         { model: User, as: "participant", required: true},
+    //                         IncludeNegotiations
+    //                     ],
+    //             })
 
-                var conversation = await Conversation.findOne({
-                    where: {
-                        [Op.or]: [
-                            { user_one: userId },
-                            { user_two: userId }
-                        ],
-                        crop_id: cropId
-                    },
-                    include: [
-                        
-                        IncludeNegotiations
-                        
-                    ]
-                })
-
-                if (conversation) {
+    //             if (conversation) {
                     
-                    return res.status(200).json({
-                        error: false,
-                        message: "Negotiations and messages retrieved successfully",
-                        data: conversation.negotiations
-                    })
+    //                 return res.status(200).json({
+    //                     error: false,
+    //                     message: "Negotiations and messages retrieved successfully",
+    //                     data: conversation.negotiations
+    //                 })
 
-                } else {
+    //             } else {
 
-                    return res.status(400).json({
-                        error: true,
-                        message: "No negotiations made by this user",
-                        data: []
-                    })
+    //                 return res.status(400).json({
+    //                     error: true,
+    //                     message: "No negotiations made by this user",
+    //                     data: []
+    //                 })
                     
-                }
+    //             }
                 
-            } else {
-                return res.status(400).json({
-                    error: true,
-                    message: "Invalid user ID",
-                    data: []
-                })
-            }
-        } catch (e) {
-            var logError = await ErrorLog.create({
-                error_name: "Error on getting negotiation",
-                error_description: e.toString(),
-                route: `/api/crop/${cropId}/negotiation/getbyuserid/${userId}`,
-                error_code: "500"
-            });
-            if (logError) {
-                return res.status(500).json({
-                    error: true,
-                    message: 'Unable to complete request at the moment'
-                })
-            }
-        }
-    }
+    //         } else {
+    //             return res.status(400).json({
+    //                 error: true,
+    //                 message: "Invalid user ID",
+    //                 data: []
+    //             })
+    //         }
+    //     } catch (e) {
+    //         var logError = await ErrorLog.create({
+    //             error_name: "Error on getting negotiation",
+    //             error_description: e.toString(),
+    //             route: `/api/crop/${cropId}/negotiation/getbyuserid/${userId}`,
+    //             error_code: "500"
+    //         });
+    //         if (logError) {
+    //             return res.status(500).json({
+    //                 error: true,
+    //                 message: 'Unable to complete request at the moment'
+    //             })
+    //         }
+    //     }
+    // }
     /* --------END--------- */
 
 
@@ -296,68 +298,70 @@ static async getAllConversation(req, res){
 
     /* ------------------ GET ALL Conversation LIST BY USER ID ----------------- */
 
-    // static async getListByUser(req, res) {
+    static async getListByUser(req, res) {
 
-    //     try {
-    //         const userId = req.params.userid;
+        try {
+            const userId = req.params.user_id;
+            const cropId = req.params.crop_id;
 
-    //         if (userId !== "" || userId !== null || userId !== undefined) {
+            if (userId !== "" || userId !== null || userId !== undefined) {
 
-    //             var conversations = await Conversation.findAll({
-    //                 where: {
-    //                     [Op.or]: [
-    //                         { user_one: userId },
-    //                         { user_two: userId }
-    //                     ],
-    //                     type: "negotiation",
-    //                 },
-    //                 include: [
-    //                     IncludeCrop,
-    //                     { model: User, as: "initiator", required: true },
-    //                     { model: User, as: "participant", required: true},
-    //                     IncludeNegotiations
-    //                 ],
-    //             });
+                var conversations = await Conversation.findOne({
+                    where: {
+                        [Op.or]: [
+                            { user_one: userId },
+                            { user_two: userId }
+                        ],
+                        crop_id : cropId,
+                        type: "negotiation",
+                    },
+                    include: [
+                        IncludeCrop,
+                        // { model: User, as: "initiator", required: true },
+                        // { model: User, as: "participant", required: true},
+                        IncludeNegotiations
+                    ],
+                });
 
-    //             if (conversations) {
+                if (conversations) {
 
-    //                 return res.status(200).json({
-    //                     error: false,
-    //                     message: "Conversations retrieved successfully...",
-    //                     data: conversations
-    //                 })
+                    return res.status(200).json({
+                        error: false,
+                        message: "Conversations retrieved successfully...",
+                        data: conversations
+                    })
 
-    //             } else {
+                } else {
 
-    //                 return res.status(400).json({
-    //                     error: true,
-    //                     message: "No negotiations made by this user",
-    //                     data: []
-    //                 })
+                    return res.status(400).json({
+                        error: true,
+                        message: "No negotiations made by this user",
+                        data: []
+                    })
 
-    //             }
-    //         } else {
-    //             return res.status(400).json({
-    //                 error: true,
-    //                 message: "Invalid user ID",
-    //                 data: []
-    //             })
-    //         }
-    //     } catch (e) {
-    //         var logError = await ErrorLog.create({
-    //             error_name: "Error on getting negotiation",
-    //             error_description: e.toString(),
-    //             route: "/api/crop/negotiation/getlist/:userid",
-    //             error_code: "500"
-    //         });
-    //         if (logError) {
-    //             return res.status(500).json({
-    //                 error: true,
-    //                 message: 'Unable to complete request at the moment'
-    //             })
-    //         }
-    //     }
-    // }
+                }
+            } else {
+                return res.status(400).json({
+                    error: true,
+                    message: "Invalid user ID",
+                    data: []
+                })
+            }
+        } catch (e) {
+            var logError = await ErrorLog.create({
+                error_name: "Error on getting negotiation",
+                error_description: e.toString(),
+                route: "/api/crop/negotiation/getlist/:userid",
+                error_code: "500"
+            });
+            if (logError) {
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment'
+                })
+            }
+        }
+    }
     /* --------------------------- GET ALL NEGOTIATION BY USERID --------------------------- */
 
 

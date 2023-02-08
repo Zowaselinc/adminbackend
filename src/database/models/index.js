@@ -178,10 +178,14 @@ Negotiation.hasOne(CropSpecification, {
   as: "specification"
 });
 
+
+
 Negotiation.hasOne(Order, {
   foreignKey : "negotiation_id",
   as : "order"
 });
+
+
 
 
 

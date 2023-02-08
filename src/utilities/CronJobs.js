@@ -13,7 +13,10 @@ exports.initScheduledJobs = () => {
       let categories = await mydb.select("categories");
       let subcategories = await mydb.select("subcategories");
       
+      
       let conversations = await mydb.select("conversations");
+    
+
         await cache.put("users", JSON.stringify(users));
         await cache.put("crops", JSON.stringify(crops));
         await cache.put("admins",JSON.stringify(admins));
@@ -32,11 +35,6 @@ exports.initScheduledJobs = () => {
             singlecrop.subcategory = subcategory;
             allcrops.push(singlecrop);
         });
-
-
-
-
-
 
         await Promise.all( conversations.map(async (element) => {
           let users = JSON.parse(cache.get("users"));
@@ -57,7 +55,23 @@ exports.initScheduledJobs = () => {
 
             await cache.put("conversations",JSON.stringify(conversationlist));
        
+            
+
+
+
+
+
+
+
+
+
+
         });
+
+
+
+
+        
 
   scheduledJobFunction.start();
 }
