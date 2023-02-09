@@ -20,7 +20,7 @@ exports.initScheduledJobs = () => {
         await cache.put("users", JSON.stringify(users));
         await cache.put("crops", JSON.stringify(crops));
         await cache.put("admins",JSON.stringify(admins));
-        let conversationlist=[];
+        let conversationlist=[]; 
 
 
 
@@ -54,19 +54,14 @@ exports.initScheduledJobs = () => {
             }));
 
             await cache.put("conversations",JSON.stringify(conversationlist));
+
+            // ********************************************************************************************
        
             
-
-
-
-
-
-
-
-
-
-
         });
+
+
+        
 
 
 

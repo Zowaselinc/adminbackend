@@ -91,7 +91,85 @@ class NegotiationController {
     }
     /* ---------------------------- * USER ADD NEGOTIATION MESSAGE * ---------------------------- */
 
+      /* -------------------------- ADD AMIN NEGOTIATION -------------------------- */
 
+      
+       /* ---------------------------- * USER ADD NEGOTIATION/CONVERSATION MESSAGE * ---------------------------- */
+    static async addAminMsg(req, res) {
+
+    
+
+        try {
+
+           
+
+            // var conversation = await Conversation.findOne({
+            //     where: {
+            //         [Op.or]: [
+            //             { user_one: req.body.sender_id, user_two: req.body.receiver_id },
+            //             { user_two: req.body.sender_id, user_one: req.body.receiver_id },
+            //         ],
+            //         type: "negotiation",
+            //         crop_id: req.body.crop_id
+            //     }
+            // });
+
+            // if (!conversation) {
+            //     conversation = await Conversation.create({
+            //         user_one: req.body.sender_id,
+            //         user_two: req.body.receiver_id,
+            //         type: "text",
+            //         crop_id: req.body.crop_id
+            //     });
+            //     req.body.conversation_id = conversation.id;
+            // } else {
+            //     req.body.conversation_id = conversation.id;
+            // }
+
+
+            // console.log(errors.isEmpty());
+           
+            var adminnegotiation = await Negotiation.create({
+                conversation_id:req.body.conversation_id,
+                type: req.body.type,
+                message : req.body.message,
+                messagetype : req.body.messagetype,
+                admin_id : req.body.admin_id
+
+            });
+            if(adminnegotiation){
+
+                return res.status(200).json({
+                    "error": false,
+                    "message": "Message sent",
+                    "data": adminnegotiation
+                })
+            }else{
+                return res.status(200).json({
+                    "error": true,
+                    "message": "Message  not sent!",
+                    
+                })
+            }
+
+        } catch (error) {
+            var logError = await ErrorLog.create({
+                error_name: "Error on sending negotiation message",
+                error_description: error.toString(),
+                route: "/api/admin/crop/negotiation/sendmessage",
+                error_code: "500"
+            });
+            if (logError) {
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment'
+                })
+            }
+        }
+
+
+    }
+// END 
 
 
 
@@ -225,57 +303,12 @@ static async getAllConversation(req, res){
         
     try{
 
-        const limit = Number(req.params.limit);
-         const offset = Number(req.params.offset);
-       
-        var getallconversation = await  Conversation.findAll({
-            limit:limit,
-            offset:offset
-        });
-
-        // var getallconversation = await Conversation.findAll({req});
-    
-        if(getallconversation){
-
-
-            let conversationlist = [];
-
-
-            await Promise.all( getallconversation.map(async (element) => {
-                let users = JSON.parse(cache.get("users"));
-                let crops = JSON.parse(cache.get("crops"));
-                /* ------------------------ Get individual user data ------------------------ */
-                let userone = users.filter(x => x.id == element.dataValues.user_one)[0];
-
-                let usertwo = users.filter(x => x.id == element.dataValues.user_two)[0];
-                let crop = crops.filter(x => x.id == element.dataValues.crop_id)[0];
-              
-
-                 let conversationobject = {
-                    "conversationid":element.dataValues.id,
-                    "userone": userone,
-                    "usertwo": usertwo,
-                    "crop": crop,
-                    "type": "negotiation"
-                 }
-                 conversationlist.push(conversationobject);
-            }))
-
-            
-            return res.status(200).json({
-                error : false,
-                message: "All Conversations acquired successfully",
-                data : conversationlist
-            });
-
-        }else{
-            return res.status(200).json({
-                error : true,
-                message: "Unable fetch Conversation",
-            });
-
-        }
-
+          let conversations = cache.get("conversations");
+          return res.status(200).json({
+            error: false,
+            message: 'Conversation List Acquired Successfully',
+            data: JSON.parse(conversations)
+        })
     }catch(e){
         var logError = await ErrorLog.create({
             error_name: "Error on getting all Conversation",

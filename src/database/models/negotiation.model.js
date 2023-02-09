@@ -8,11 +8,11 @@ let Schema = (Sequelize,mode) => {
         },
         sender_id : {
             type: Sequelize.INTEGER(11),
-            allowNull : false
+            allowNull : true
         },
         receiver_id : {
             type: Sequelize.INTEGER(11),
-            allowNull : false
+            allowNull : true
         },
         type : {
             type: Sequelize.STRING,
