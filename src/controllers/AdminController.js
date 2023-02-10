@@ -192,15 +192,15 @@ class AdminController{
         try{
         
         var adminid = await Admin.findOne({where: {id : req.params.id}});
-            var role = adminid.dataValues.role;
-            var getRole = await Role.findOne({where:{role_id:role}})
-            delete getRole.dataValues.created_at;
-            delete getRole.dataValues.updated_at;
+            // var role = adminid.dataValues.role;
+            // var getRole = await Role.findOne({where:{role_id:role}})
+            // delete getRole.dataValues.created_at;
+            // delete getRole.dataValues.updated_at;
             // delete getRole.dataValues.id;
 
 
-            var theadmin= adminid.dataValues;
-            theadmin.role= getRole.dataValues;
+            // var theadmin= adminid.dataValues;
+            // theadmin.role= getRole.dataValues;
 
         if(adminid == null){
             return res.status(200).json({
@@ -211,7 +211,7 @@ class AdminController{
             return res.status(200).json({
                 error: false,
                 message: 'Admin acquired successfully',
-                data: theadmin
+                data: adminid
                 
             })
         }
