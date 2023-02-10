@@ -27,6 +27,17 @@ class AdminController{
             const adminid = crypto.randomBytes(16).toString("hex");
             const recoveryPhrase = crypto.randomBytes(16).toString("hex");
 
+            var checkEmail = await Admin.findOne({
+                where:{email:req.body.email}
+            });
+
+            if(checkEmail){
+                return res.status(200).json({
+                    error: true,
+                    message: "Email already exist"
+                })
+
+            }else{
             var admin = await Admin.create({
                 admin_id :"ZWLADM"+adminid,
                 first_name : req.body.first_name,
@@ -64,6 +75,7 @@ class AdminController{
                  });
 
             }
+        }
 
         }catch(e){
             var logError = await ErrorLog.create({
@@ -349,7 +361,7 @@ class AdminController{
             last_name : req.body.last_name,
             email : req.body.email,
             phone : req.body.phone,
-            role: req.body.role,
+            role_name: req.body.role_name,
         }, { where : { admin_id : req.body.admin_id } });
 
 
