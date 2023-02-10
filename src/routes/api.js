@@ -344,10 +344,11 @@ router.get('/admin/crop/negotiation/getallsummary', NegotiationController.getAll
 
 /* --------------------------- CONVERSATION ROUTE --------------------------- */
 // router.get('/admin/crop/conversation/:userid', NegotiationController.getListByUser);
-router.get('/admin/crop/conversation/getall/:offset/:limit', NegotiationController.getAllConversation);
+router.get('/admin/crop/conversation/getall', NegotiationController.getAllConversation);
+router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationController.getConversationbyParams);
 
 
-
+                        // ****************************************
 
 
 

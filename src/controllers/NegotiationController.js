@@ -326,8 +326,56 @@ static async getAllConversation(req, res){
         }
     }
 }
+// END 
 
+/* ------------------ GET CONVERSATION BY OFFSET AND LIMIT ------------------ */
 
+static async getConversationbyParams(req, res){
+        
+    try{
+
+        const limit = Number(req.params.limit);
+        const offset = Number(req.params.offset);
+
+          let conversations = cache.get("conversations");
+          var conversation = await Conversation.findAll({
+            limit:limit,
+            offset:offset
+
+          });
+          if(conversations){
+
+              return res.status(200).json({
+                error: false,
+                message: 'Conversation List Acquired Successfully',
+                data: JSON.parse(conversations)
+            })
+          }else{
+             return res.status(200).json({
+                error: true,
+                message: 'Conversation List Acquired Successfully',
+                
+            })
+
+          };
+   
+    }catch(e){
+        var logError = await ErrorLog.create({
+            error_name: "Error on getting all Conversation",
+            error_description: e.toString(),
+            route: "/api/admin/crop/conversation/getall",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+                
+            })
+
+        }
+    }
+}
 
     /* ------------------ GET ALL Conversation LIST BY USER ID ----------------- */
 

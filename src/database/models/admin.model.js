@@ -23,7 +23,10 @@ let Schema = (Sequelize,mode) => {
         phone : {
             type : Sequelize.STRING
         },
-        role : {
+        role_id : {
+            type : Sequelize.STRING
+        },
+        role_name : {
             type : Sequelize.STRING
         },
         recovery_phrase : {

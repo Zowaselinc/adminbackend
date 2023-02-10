@@ -8,7 +8,8 @@ module.exports = {
         body('email').isString().isEmail().not().isEmpty(),
         body('password').isString().not().isEmpty(),
         body('phone').isString().not().isEmpty(),
-        body('role').isString().not().isEmpty()
+        body('role_id').isString().not().isEmpty(),
+        body('role_name').isString().not().isEmpty(),
     ],
 
 

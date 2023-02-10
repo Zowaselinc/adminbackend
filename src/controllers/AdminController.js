@@ -34,7 +34,8 @@ class AdminController{
                 email : req.body.email.trim(),
                 password : encrypted.trim(),
                 phone : req.body.phone,
-                role: req.body.role,
+                role_id: req.body.role_id,
+                role_name: req.body.role_name,
                 recovery_phrase:recoveryPhrase
             });
                     
