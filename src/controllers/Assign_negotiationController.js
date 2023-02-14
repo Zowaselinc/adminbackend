@@ -223,19 +223,41 @@ class Assign_negotiationController{
       static async getbyAdminassigned(req,res){
         try{
            
-            var getbyadminAssigned = await Assignnegotiation.findAll({where: {adminassigned:req.params.adminassigned}});
+            // var getbyadminAssigned = await Assignnegotiation.findAll({where: {adminassigned:req.params.adminassigned}});
+            let alltheAdmin = JSON.parse(cache.get("admins"));
+            let conversations = JSON.parse(cache.get("conversations"));
+                // console.log(cache.get("admins"))
+                // create an empty array 
+            let theassignedAdmin = [];
+            // get individual assignment by admin id 
+            var getAssignedNegotiationbyid = await Assignnegotiation.findAll({where:{adminassigned:req.params.adminassigned}});
+            getAssignedNegotiationbyid.forEach(element =>{
+                let theAdmin = element.dataValues;
 
-            if(getbyadminAssigned == null){
+                // filter the admin who has that id 
+                let theadminAssigned = alltheAdmin.filter(x => x.admin_id==theAdmin.adminassigned);
+                let oneConversation = conversations.filter(x => x.conversationid==theAdmin.conversationid);
+
+                // store the admin assigned full details 
+                theAdmin.admindetails = theadminAssigned;
+                theAdmin.conversation = oneConversation;
+                // store the push 
+                theassignedAdmin.push(theAdmin);
+            }); 
+
+
+            if(getAssignedNegotiationbyid == null){
+                
                 return res.status(200).json({
                     error:true,
                     message: 'Invalid id'
                 })
     
-            }else if(getbyadminAssigned){
+            }else if(theassignedAdmin){
                 return res.status(200).json({
                     error:false,
                     message: "Assigned negotiation acquired successfully",
-                    data: getbyadminAssigned
+                    data: theassignedAdmin
                 })
             }else{
                 return res.status(200).json({
