@@ -17,7 +17,8 @@ module.exports = {
         body('first_name').isString().not().isEmpty(),
         body('last_name' ).isString().not().isEmpty(),
         body('phone').isString().not().isEmpty(),
-        body('role_name').isString().not().isEmpty()
+        body('role_name').isString().not().isEmpty(),
+        body('role_id').isString().not().isEmpty()
     ],
 
     loginAdminValidator : [
