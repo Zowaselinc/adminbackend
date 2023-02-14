@@ -4,21 +4,26 @@ let Schema = (Sequelize,mode) => {
 
     return {
         admin_id : {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false
 
         },
         first_name : {
-            type: Sequelize.STRING
+            type: Sequelize.STRING,
+            allowNull: false
         },
         last_name : {
-            type : Sequelize.STRING
+            type : Sequelize.STRING,
+            allowNull: false
         },
         email : {
             type : Sequelize.STRING,
-            allowNull : false
+            allowNull : false,
+            unique : true
         },
         password : {
-            type : Sequelize.STRING
+            type : Sequelize.STRING,
+            allowNull : false
         },
         phone : {
             type : Sequelize.STRING

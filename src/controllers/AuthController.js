@@ -57,6 +57,7 @@ class AuthController{
                     await mailer().to(req.body.email).from(process.env.MAIL_FROM)
                     .subject('Login Notification').template("emails/LoginNotify").send();
                      admin['password']="";
+                     
                     return res.status(200).json({
                         error : false,
                         token : token,
@@ -122,7 +123,7 @@ class AuthController{
                 recovery_phrase:recoveryPhrase
             });
 
-  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        /* ---------------------------------- LOGIN ACTIVITY LOG --------------------------------- */
                      
                       await Activitylog.create({
                         admin_id:adminId ,
@@ -130,7 +131,7 @@ class AuthController{
                         page_route:'/api/admin/register',
                         action:'Registering new administrator'
                     });
-                     /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        /* ---------------------------------- LOGIN ACTIVITY LOG --------------------------------- */
 
             if(regadmin){
                 return res.status(200).json({

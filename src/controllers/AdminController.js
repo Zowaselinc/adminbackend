@@ -359,7 +359,6 @@ class AdminController{
         var editAdmin = await Admin.update({
             first_name : req.body.first_name,
             last_name : req.body.last_name,
-            email : req.body.email,
             phone : req.body.phone,
             role_name: req.body.role_name,
         }, { where : { admin_id : req.body.admin_id } });
