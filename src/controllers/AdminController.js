@@ -103,7 +103,7 @@ class AdminController{
           
                 try{
 
-                var admins = await Admin.findAll({req});
+                var admins = await Admin.findAll();
                    /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                    var adminId = await  serveAdminid.getTheId(req);
                    await Activitylog.create({
@@ -360,6 +360,7 @@ class AdminController{
             first_name : req.body.first_name,
             last_name : req.body.last_name,
             phone : req.body.phone,
+            role_id:req.body.role_id,
             role_name: req.body.role_name,
         }, { where : { admin_id : req.body.admin_id } });
 
