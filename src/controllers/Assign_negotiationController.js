@@ -173,10 +173,10 @@ class Assign_negotiationController{
 
       /* ------------------ GET ASSIGNED NEGOTIATION BY NEGOTIATION ID ------------------ */
 
-   static async getbyNegotiationid(req,res){
+   static async getbyConversationId(req,res){
     try{
        
-        var getbyNegotiationid = await Assignnegotiation.findOne({where: {negotiationid:req.params.negotiationid}});
+        var getbyNegotiationid = await Assignnegotiation.findOne({where: {conversationid:req.params.conversationid}});
 
         
         if(getbyNegotiationid == null){
@@ -205,7 +205,7 @@ class Assign_negotiationController{
         var logError = await ErrorLog.create({
             error_name: "Error on getting assign negotiation by negotiation id",
             error_description: error.toString(),
-            route: "/api/admin/assignnegotiation/getbynegotiationd/:negotiationid",
+            route: "/api/admin/assignnegotiation/getbyconversationid/:conversationid",
             error_code: "500"
         });
         if(logError){

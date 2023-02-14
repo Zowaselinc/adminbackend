@@ -355,7 +355,7 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
   /* ---------------------------- ASSIGNED NEGOTIATION TO ADMIN END POINT --------------------------- */
   router.get('/admin/assignnegotiation/getall',Assign_negotiationController.getAllAssignedNegotiations);
   router.get('/admin/assignnegotiation/getbyid/:id', Assign_negotiationController.getassignNegotiationbyid);
-  router.get('/admin/assignnegotiation/getbynegotiationid/:negotiationid', Assign_negotiationController.getbyNegotiationid);
+  router.get('/admin/assignnegotiation/getbyconversationid/:conversationid', Assign_negotiationController.getbyConversationId);
   router.get('/admin/assignnegotiation/getbyadminassigned/:adminassigned', Assign_negotiationController.getbyAdminassigned);
   router.post('/admin/assignnegotiation/add',Assign_negotiationController.assignNegotiationtoAdmin);
   router.post('/admin/assignnegotiation/edit',Assign_negotiationController.editAssignNegotiation);
