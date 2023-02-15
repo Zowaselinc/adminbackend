@@ -403,7 +403,51 @@ class OrderController {
     }
     /* ---------------------------- * FULFIL CROP OFFER * ---------------------------- */
 
+    /* ----------------------------- get all orders ----------------------------- */
+    static async getAllOrder(req, res) {
 
+        // const errors = validationResult(req);
+
+        try {
+            var findAllOrder = await Order.findAll();
+
+            if (findAllOrder) {
+
+                // Get the productid from Order and use it to Crop_request
+                // let cropId = JSON.parse(findAllOrder.products)[0].id;
+                // let findCropRequest = await CropRequest.findOne({
+                //     where: { crop_id: cropId }
+                // });
+
+                return res.status(200).json({
+                    error: false,
+                    message: "Order retrieved successfully",
+                    data: findAllOrder,
+                    // crop_request: findCropRequest
+                })
+            } else {
+                return res.status(400).json({
+                    error: true,
+                    message: "No order found",
+                    
+                })
+            }
+        } catch (e) {
+            var logError = await ErrorLog.create({
+                error_name: "Error on getting all orders by ",
+                error_description: e.toString(),
+                route: '/api/crop/order/getall',
+                error_code: "500"
+            });
+            if (logError) {
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment'+e.toString()
+                })
+            }
+        }
+    }
+    // end 
 
 
     /* -------------------------- GET ORDER BY ORDER_ID ------------------------- */
@@ -470,7 +514,7 @@ class OrderController {
         const errors = validationResult(req);
 
         try {
-            var findOrder = await Order.findAll({ where: { buyer_id: req.params.id } });
+            var findOrder = await Order.findAll({ where: { buyer_id: req.params.buyer_id } });
             if (findOrder && findOrder.length) {
                 return res.status(200).json({
                     error: false,
@@ -511,7 +555,7 @@ class OrderController {
             var findOrder = await Order.findAll({
                 where: {
                     products: {
-                        [Op.like]: `%"user_id":${req.params.id}%`
+                        [Op.like]: `%"user_id":${req.params.seller_id}%`
                     }
                 }
             });

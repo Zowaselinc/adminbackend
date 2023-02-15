@@ -398,8 +398,8 @@ static async getConversationbyParams(req, res){
                     },
                     include: [
                         IncludeCrop,
-                        // { model: User, as: "initiator", required: true },
-                        // { model: User, as: "participant", required: true},
+                        { model: User, as: "initiator", required: true },
+                        { model: User, as: "participant", required: true},
                         IncludeNegotiations
                     ],
                 });

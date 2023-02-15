@@ -226,10 +226,11 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 Router.middleware(['isAuthenticated']).group((router)=>{
     /* ---------------------------------- Order --------------------------------- */
     router.post('/admin/crop/order/add', OrderValidators.createOrderValidator, OrderController.createNewOrder);
+    router.post('/admin/crop/order/getall', OrderController.getAllOrder);
     router.post('/admin/order/cart/create', OrderValidators.createCartOrderValidator, OrderController.createCartOrder);
     router.get('/admin/order/:order', OrderController.getByOrderHash);
-    router.get('/admin/order/getbybuyer/:buyerid/:buyertype', OrderController.getByBuyer);
-    router.get('/admin/order/getbyseller/:sellerid/:buyertype', OrderController.getByBuyer);
+    router.get('/admin/order/getbybuyer/:buyer_id/:buyertype', OrderController.getByBuyer);
+    router.get('/admin/order/getbyseller/:seller_id/:buyertype', OrderController.getBySeller);
     router.get('/admin/order/getbynegotiationid/:negotiationid', OrderController.getByNegotiationId);
     router.get('/admin/order/getbypaymentstatus/:paymentstatus', OrderController.getByPaymentStatus);
     // Tracking Details

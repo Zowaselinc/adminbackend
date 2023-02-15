@@ -15,6 +15,7 @@ exports.initScheduledJobs = () => {
       
       
       let conversations = await mydb.select("conversations");
+      let negotiations = await mydb.select("negotiations")
     
 
         await cache.put("users", JSON.stringify(users));
@@ -28,8 +29,8 @@ exports.initScheduledJobs = () => {
 
         crops.forEach(element => {
           let singlecrop = element;
-            let category =  categories.filter(x => x.id == element.category_id)[0];
-            let subcategory =  subcategories.filter(x => x.id == element.subcategory_id)[0];
+          let category =  categories.filter(x => x.id == element.category_id)[0];
+          let subcategory =  subcategories.filter(x => x.id == element.subcategory_id)[0];
             /* ------------------------- GET ALL THE SINGLE CROP ------------------------ */
             singlecrop.category =category;
             singlecrop.subcategory = subcategory;
