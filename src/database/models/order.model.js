@@ -14,6 +14,10 @@ let Schema = (Sequelize,mode) => {
             type : Sequelize.STRING,
             allowNull : false
         },
+        seller_id: {
+            type: Sequelize.STRING,
+            allowNull: true
+        },
         negotiation_id : {
             type: Sequelize.STRING,
             allowNull : true
@@ -32,6 +36,12 @@ let Schema = (Sequelize,mode) => {
         payment_status : {
             type : Sequelize.ENUM( "UNPAID", "PARTIALLY_PAID", "PAID" ),
             allowNull : false
+        },
+        amount_paid : {
+            type: Sequelize.STRING,
+        },
+        amount_due : {
+            type: Sequelize.STRING,
         },
         products : {
             type : Sequelize.TEXT,
@@ -63,5 +73,4 @@ const Model = (sequelize, instance, Sequelize) => {
     const Order = instance.define("orders", Schema(Sequelize,2),{ timestamps: false });
     return Order;
 }
-
 module.exports = { Schema , Model};

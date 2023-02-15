@@ -118,6 +118,17 @@ class ActivitylogController{
             limit:limit,
             offset:offset
         });
+
+        var paramsarray = [];
+        await Promise.all( activitylogparams.map(async (element) => {
+            var admininfo = await Admin.findOne({where: {admin_id : element.admin_id}});
+            //  admindata.password="";
+            // admindata.recovery_phrase="";
+            element.dataValues.theadmin= admininfo;
+            element._previousDataValues.theadmin= admininfo;
+            paramsarray.push(element);
+        }))
+
         if(activitylogparams){
             return res.status(200).json({
                 error: false,

@@ -59,10 +59,6 @@ module.exports = {
 
 
 
-
-
-
-
     InputOrderValidator: [
         body('user_id').isString().not().isEmpty(),
         body('delivery_address_id').isString().not().isEmpty(),
@@ -75,5 +71,9 @@ module.exports = {
     updateOrderValidator: [
         body('order_id').isString().not().isEmpty(),
         body('payment_status').isString().not().isEmpty()
-    ]
+    ],
+
+    createCartOrderValidator : [
+        body('delivery_details').not().isEmpty(),
+    ],
 }
