@@ -228,7 +228,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
   /* ---------------------- //  ROUTE FOR ORDER END POINT --------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
-    /* ---------------------------------- Order --------------------------------- */
+    
     router.post('/admin/order/add', OrderValidators.createOrderValidator, OrderController.createNewOrder);
     router.get('/admin/order/getall', OrderController.fetchOrder);
     router.post('/admin/order/cart/create', OrderValidators.createCartOrderValidator, OrderController.createCartOrder);
@@ -244,29 +244,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     // Goodreceiptnote Details
     router.post('/admin/order/:order/goodsreceiptnote', OrderValidators.updateGoodReceiptDetailsValidators, OrderController.updateGoodReceiptNoteByOrderId);
 
-    // router.get('/admin/crop/order/getbyorderid/:orderid', OrderValidator.cropGetOrderByIdValidators, OrderController.getByOrderId);
-    // router.post('/admin/crop/order/add', OrderValidator.cropAddOrderValidators, OrderController.createNewOrderOld);
-    // router.post('/admin/crop/order/addnew', OrderValidator.cropAddOrderValidators, OrderController.createNewOrder);
-    // router.get('/admin/crop/order/getbyorderid/:order_hash', OrderController.getByOrderHash);
-    // router.get('/admin/crop/order/getbybuyer/:buyer_id/:buyer_type', OrderController.getByBuyer);
-    // router.get('/admin/crop/order/getbynegotiationid/:negotiation_id', OrderController.getByNegotiationId);
-    // router.get('/admin/crop/order/getall', OrderController.getByNegotiationId);
-    // router.get('/admin/crop/order/getbypaymentstatus/:payment_status', OrderController.getByPaymentStatus);
-    // // Tracking Details
-    // router.post('/admin/crop/trackingdetails/updatebyorderid', OrderController.updateTrackingDetailsByOrderId);
-    // router.post('/admin/crop/order/add', OrderValidator.createOrderValidator, OrderController.createNewOrder);
-    // router.get('/admin/order/:order', OrderController.getByOrderHash);
-    // router.get('/admin/order/getall', OrderController.getallOrder);
-    // router.get('/admin/crop/order/getbybuyer/:buyerid/:buyertype', OrderController.getByBuyer);
-    // router.get('/admin/crop/order/getbynegotiationid/:negotiationid', OrderController.getByNegotiationId);
-    // router.get('/admin/crop/order/getbypaymentstatus/:paymentstatus', OrderController.getByPaymentStatus);
-    // Tracking Details
-    // router.post('/admin/order/:order/trackingdetails', OrderValidator.updateTrackingDetailsValidators, OrderController.updateTrackingDetailsByOrderId);
-    // Waybill Details
-    // router.post('/admin/order/:order/waybilldetails', OrderValidator.updateWaybillDetailsValidators, OrderController.updateWaybillDetailsByOrderId);
-    // Goodreceiptnote Details
-    // router.post('/admin/order/:order/goodreceiptnote', OrderValidator.updateGoodReceiptDetailsValidators, OrderController.updateWaybillDetailsByOrderId);
- 
+    
  });
 
 

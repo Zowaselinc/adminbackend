@@ -469,7 +469,15 @@ class OrderController {
         const errors = validationResult(req);
 
         try {
-            var findOrder = await Order.findAll({ where: { buyer_id: req.params.buyer_id } });
+            var findOrder = await Order.findAll({ where: { buyer_id: req.params.buyer_id },
+                include:[
+                    
+                        IncludeBuyer,
+                        IncludeSeller,
+                
+                ]
+            
+            });
             if (findOrder && findOrder.length) {
                 return res.status(200).json({
                     error: false,
@@ -512,7 +520,11 @@ class OrderController {
                     products: {
                         [Op.like]: `%"user_id":${req.params.seller_id}%`
                     }
-                }
+                },
+                include:[
+                    IncludeBuyer,
+                    IncludeSeller,
+                ]
             });
             if (findOrder && findOrder.length) {
                 return res.status(200).json({
@@ -553,7 +565,12 @@ class OrderController {
     static async getByNegotiationId(req, res) {
 
         try {
-            var findOrder = await Order.findOne({ where: { negotiation_id: req.params.negotiationid } });
+            var findOrder = await Order.findOne({ where: { negotiation_id: req.params.negotiationid },
+                include:[
+                    IncludeBuyer,
+                    IncludeSeller,
+                ]
+            });
             if (findOrder) {
                 return res.status(200).json({
                     error: false,
@@ -801,23 +818,6 @@ class OrderController {
         }
     }
     /* -------------------------- UPDATE GOOD RECEIPT NOTE BY ORDER_ID  ------------------------- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /* -------------------------------------------------------------------------- */
@@ -1088,7 +1088,12 @@ class OrderController {
         // const errors = validationResult(req);
 
         try {
-            var fetchAllOrders = await Order.findAll();
+            var fetchAllOrders = await Order.findAll({
+                include:[
+                    IncludeBuyer,
+                    IncludeSeller,
+                ]
+            });
 
             if (fetchAllOrders) {
 
