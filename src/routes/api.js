@@ -28,6 +28,8 @@ const SectionController= require('~controllers/SectionController');
 const ColourController= require('~controllers/ColourController');
 const Assign_negotiationController= require('~controllers/Assign_negotiationController');
 const ConversationController= require('~controllers/ConversationController');
+const PageController= require('~controllers/PageController');
+const BlockController= require('~controllers/BlockController');
 
 
 
@@ -56,6 +58,8 @@ const NegotiationValidator = require('./validators/NegotiationValidator');
 const SectionValidator = require('./validators/SectionValidator');
 const RoleValidator = require('./validators/RoleValidator');
 const ColourValidator = require('./validators/ColourValidator');
+const PageValidator = require('./validators/PageValidation');
+const BlockValidator = require('./validators/BlockValidator');
 /* -------------------------------------------------------------------------- */
 /*                              // ALL VALIDATORS                             */
 /* -------------------------------------------------------------------------- */
@@ -225,8 +229,8 @@ Router.middleware(['isAuthenticated']).group((router)=>{
   /* ---------------------- //  ROUTE FOR ORDER END POINT --------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
     /* ---------------------------------- Order --------------------------------- */
-    router.post('/admin/crop/order/add', OrderValidators.createOrderValidator, OrderController.createNewOrder);
-    router.post('/admin/crop/order/getall', OrderController.getAllOrder);
+    router.post('/admin/order/add', OrderValidators.createOrderValidator, OrderController.createNewOrder);
+    router.get('/admin/order/getall', OrderController.fetchOrder);
     router.post('/admin/order/cart/create', OrderValidators.createCartOrderValidator, OrderController.createCartOrder);
     router.get('/admin/order/:order', OrderController.getByOrderHash);
     router.get('/admin/order/getbybuyer/:buyer_id/:buyertype', OrderController.getByBuyer);
@@ -381,6 +385,29 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
 
 
 });
+    /* ------------------------- ROUTE FOR LANDING PAGE ------------------------- */
+    Router.middleware(['isAuthenticated']).group((router) => {
+       /* --------------------------- LANDING PAGE ROUTE --------------------------- */
+        router.post('/admin/page/add',PageValidator.pageValidator,PageController.createPage);
+        router.get('/admin/page/getall',PageController.getAllPages);
+        router.get('/admin/page/getbyparams/:offset/:limit',PageController.getPagebyparams);
+        router.get('/admin/page/getbyid/:id',PageController.getPagebyid);
+        router.get('/admin/page/getbypageid/:page_id',PageController.getPagebyPageid);
+        router.post('/admin/page/edit/',PageController.editPagebyid);
+        router.post('/admin/page/delete/:id',PageController.deletePagebyid);
+
+
+        /* -------------------------- LANDING BLOCK ROUTES -------------------------- */
+        router.post('/admin/block/add',BlockValidator.blockValidator,BlockController.createBlock);
+        router.get('/admin/block/getall',BlockController.getAllBlock);
+        router.get('/admin/block/getbyparams/:offset/:limit',BlockController.getBlockbyparams);
+        router.get('/admin/block/getbyid/:id',BlockController.getBlockbyid);
+        router.get('/admin/block/getbyblockid/:block_id',BlockController.getBlockbyblockid);
+        router.post('/admin/block/edit/',BlockController.editBlockbyid);
+        router.post('/admin/block/delete/:id',BlockController.deleteBlockbyid);
+        
+        
+    });
 
 module.exports = Router;
 

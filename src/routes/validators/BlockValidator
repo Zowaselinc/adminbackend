@@ -1,0 +1,14 @@
+
+const { body } = require('express-validator');
+
+module.exports = {
+
+    blockValidator: [
+        body('block_name').isString().not().isEmpty(),
+        body('block_description').isString().not().isEmpty(),
+        body('block_content').isString().not().isEmpty(),
+        body('page_id').isString().not().isEmpty(),
+        body('priority').isString().not().isEmpty(),
+    ]
+
+}
