@@ -69,6 +69,8 @@ const Color = DB.color = require("./color.model.js").Model(initialInstance, crea
 const Assignnegotiation = DB.assign_negotiation= require("./assign_negotiation.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Page = DB.page= require("./page.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Block= DB.block= require("./block.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const KnowledgebaseArticle = DB.block= require("./knowlegebase_article.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const KnowledgebasCategory = DB.block= require("./knowledgebase_category.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -225,7 +227,8 @@ Order.belongsTo(User, {
 Order.belongsTo(Negotiation,{
   foreignKey : "negotiation_id",
   as : "negotiation"
-})
+});
+
 
 module.exports = {
   DB,
@@ -263,5 +266,7 @@ module.exports = {
   Color,
   Assignnegotiation,
   Page,
-  Block
+  Block,
+  KnowledgebaseArticle,
+  KnowledgebasCategory
 };

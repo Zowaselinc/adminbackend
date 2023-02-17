@@ -345,7 +345,7 @@ class PageController{
     }
 
     
-    /* --------------------------- DELETE ADMIN BY ID --------------------------- */
+    /* --------------------------- DELETE PAGE BY ID --------------------------- */
     static async deletePagebyid(req, res){
         try{
 

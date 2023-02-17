@@ -2,7 +2,7 @@
 const jwt = require("jsonwebtoken");
 
 
-const { Pricing, Transaction, Order, ErrorLog, Negotiation, CropSpecification, Crop, CropRequest, Cart, Input } = require("~database/models");
+const { Pricing, Transaction, Order, ErrorLog, Negotiation, CropSpecification, Crop, CropRequest, Cart, Input, Category, SubCategory } = require("~database/models");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const Mailer = require('~services/mailer');
@@ -416,7 +416,8 @@ class OrderController {
                 include: [
                     IncludeBuyer,
                     IncludeSeller,
-                    IncludeNegotiation
+                    IncludeNegotiation,
+                    
                 ]
             });
 
@@ -427,12 +428,14 @@ class OrderController {
                 let findCropRequest = await CropRequest.findOne({
                     where: { crop_id: cropId }
                 });
+               
 
                 return res.status(200).json({
                     error: false,
                     message: "Order retrieved successfully",
                     data: findOrder,
-                    crop_request: findCropRequest
+                    crop_request: findCropRequest,
+                    
                 })
             } else {
                 return res.status(400).json({

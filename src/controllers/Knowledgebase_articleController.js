@@ -1,13 +1,15 @@
 const { request } = require("express");
 const { validationResult } = require("express-validator");
-const { Block, ErrorLog , Activitylog, } = require("~database/models");
+const { KnowledgebaseArticle, ErrorLog , Activitylog, } = require("~database/models");
 const crypto = require('crypto');
 const jwt = require("jsonwebtoken");
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjY5ODE5NTQwLCJleHAiOjE2Njk5OTIzNDB9.6nuXTimj8kSSxxq7PvP6cg9vkOuysZPEWjRay9_zXWs
 const serveAdminid = require("~utilities/serveAdminId");
-class BlockController{
-/* ----------------------- CREATE/ADD PAGE END POINT ----------------------- */
-    static async createBlock(req, res){
+
+
+class Knowledgebase_articleController{
+/* ----------------------- CREATE/ADD Article END POINT ----------------------- */
+    static async createArticle(req, res){
         try{
             var adminId = await  serveAdminid.getTheId(req);
 
@@ -23,40 +25,38 @@ class BlockController{
 
 
             
-            const blockid = crypto.randomBytes(16).toString("hex");
+            const articleid = crypto.randomBytes(16).toString("hex");
             
-            var block = await Block.create({
+            var article = await KnowledgebaseArticle.create({
 
-                block_id :"BLK"+blockid,
-                block_name : req.body.block_name.trim(),
-                block_description : req.body.block_description.trim(),
-                block_content : req.body.block_content.trim(),
-                page_id : req.body.page_id.trim(),
-                priority:req.body.priority.trim(),
+                article_id :"ATl" + articleid,
+                title : req.body.title.trim(),
+                body : req.body.body.trim(),
+                category_id : req.body.category_id.trim()
                
             });
                     
-                      /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+                      /* ---------------------------------- Article ACTIVITY LOG --------------------------------- */
                      
                       await Activitylog.create({
                         admin_id:adminId ,
-                        section_accessed:'Adding new block',
-                        page_route:'/api/admin/block/add',
-                        action:'Added new block'
+                        section_accessed:'Adding new Article',
+                        page_route:'/api/admin/article/add',
+                        action:'Added new Article'
                     });
-                     /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+                     /* ---------------------------------- Article ACTIVITY LOG --------------------------------- */
 
-            if(block){
+            if(article){
                 return res.status(200).json({
                     error : false,
-                     message : "Block created succesfully"
+                     message : "Article created succesfully"
 
                  });
  
             }else{
                 return res.status(200).json({
                     error : true,
-                     message : "Failed to create block"
+                     message : "Failed to create article"
   
                  });
 
@@ -65,9 +65,9 @@ class BlockController{
 
         }catch(e){
             var logError = await ErrorLog.create({
-                error_name: "Error on creating block",
+                error_name: "Error on creating article",
                 error_description: e.toString(),
-                route: "/api/admin/block/add",
+                route: "/api/admin/article/add",
                 error_code: "500"
             });
             if(logError){
@@ -84,41 +84,41 @@ class BlockController{
     /* -------------------------------------------------------------------------- */
 
 
-/* ------------------------ GET ALL BLOCK END POINT ------------------------ */
-            static async getAllBlock(req, res){
+/* ------------------------ GET ALL ARTICLE END POINT ------------------------ */
+            static async getAllArticle(req, res){
           
                 try{
 
-                var blocks = await Block.findAll();
-                   /* ---------------------------------- PAGE ACTIVITY LOG --------------------------------- */
+                var articles = await KnowledgebaseArticle.findAll();
+                   /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
                    var adminId = await  serveAdminid.getTheId(req);
                    await Activitylog.create({
                        admin_id:adminId ,
-                       section_accessed:'View All blocks',
-                       page_route:'/api/admin/block/getall',
-                       action:'Viewing all blocks in the list'
+                       section_accessed:'View All article',
+                       page_route:'/api/admin/article/getall',
+                       action:'Viewing all article in the list'
                    });
-                    /* ---------------------------------- PAGE ACTIVITY LOG --------------------------------- */
-                if(blocks){
+                    /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
+                if(articles){
                     return res.status(200).json({
                         error : false,
-                        message: "Blocks acquired successfully",
-                        data : blocks
+                        message: "Articles acquired successfully",
+                        data : articles
                     });
 
                 }else{
                     return res.status(200).json({
                         error : true,
-                        message: "Unable to fetch Blocks",
+                        message: "Unable to fetch Articles",
                     });
 
                 }
 
             }catch(e){
                 var logError = await ErrorLog.create({
-                    error_name: "Error on getting all Blocks",
+                    error_name: "Error on getting all articles",
                     error_description: e.toString(),
-                    route: "/api/admin/block/getall",
+                    route: "/api/admin/article/getall",
                     error_code: "500"
                 });
                 if(logError){
@@ -132,45 +132,45 @@ class BlockController{
             }
             }
 
-      /* --------------------------- GET page BY PARAMS -------------------------- */
-      static async getBlockbyparams(req,res){
+      /* --------------------------- GET ARTICLE BY PARAMS -------------------------- */
+      static async getArticlebyparams(req,res){
         try{
             const limit = Number(req.params.limit);
             const offset = Number(req.params.offset);
        
-        var blockparams = await Block.findAll({
+        var articleparams = await KnowledgebaseArticle.findAll({
             limit:limit,
             offset:offset
         });
-         /* ---------------------------------- page ACTIVITY LOG --------------------------------- */
+         /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
         var adminId = await  serveAdminid.getTheId(req);
 
         await Activitylog.create({
           admin_id:adminId ,
-          section_accessed:'View blocks by offset and limit',
-          page_route:'/api/admin/block/getallparams',
-          action:'Viewing sets of blocks in the list '
+          section_accessed:'View article by offset and limit',
+          page_route:'/api/admin/article/getallparams',
+          action:'Viewing sets of article in the list '
       });
-       /* ---------------------------------- PAGE ACTIVITY LOG --------------------------------- */
+       /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
 
-        if(blockparams){
+        if(articleparams){
             return res.status(200).json({
                 error: false,
-                message: 'Block acquired successfully',
-                data: blockparams
+                message: 'Articles acquired successfully',
+                data: articleparams
             })
         }else{
             return res.status(200).json({
                 error: true,
-                message: 'Failed to acquire block',
+                message: 'Failed to acquire articles',
                
             })
         }
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on getting all blocks by paprams",
+            error_name: "Error on getting all articles by paprams",
             error_description: e.toString(),
-            route: "/api/admin/block/getallparams/:offset/:limit",
+            route: "/api/admin/article/getallparams/:offset/:limit",
             error_code: "500"
         });
         if(logError){
@@ -185,40 +185,40 @@ class BlockController{
 
     }
 
-    /* --------------------- GET BLOCK BY ID ENDPOINT --------------------- */
-    static async getBlockbyid(req,res){
+    /* --------------------- GET ARTICLE BY ID ENDPOINT --------------------- */
+    static async getArticlebyid(req,res){
         try{
         
-        var blockid = await Block.findOne({where: {id : req.params.id}});
-            /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+        var articleid = await KnowledgebaseArticle.findOne({where: {id : req.params.id}});
+            /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
         var adminId = await  serveAdminid.getTheId(req);
 
         await Activitylog.create({
           admin_id:adminId ,
-          section_accessed:'View block by id',
-          page_route:'/api/admin/block/:id',
-          action:'Viewing block by id '
+          section_accessed:'View article by id',
+          page_route:'/api/admin/article/:id',
+          action:'Viewing article by id '
       });
-       /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+       /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
 
-        if(blockid == null){
+        if(articleid == null){
             return res.status(200).json({
                 error:true,
-                message: 'invalid block id'
+                message: 'invalid article id'
             })
         }else{
             return res.status(200).json({
                 error: false,
-                message: 'Block acquired successfully',
-                data: blockid
+                message: 'Article acquired successfully',
+                data: articleid
                 
             })
         }
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on getting block by id",
+            error_name: "Error on getting article by id",
             error_description: e.toString(),
-            route: "/api/admin/block/getbyid/:id",
+            route: "/api/admin/article/getbyid/:id",
             error_code: "500"
         });
         if(logError){
@@ -233,40 +233,40 @@ class BlockController{
     }
 
 
-    /* --------------------- GET BLOCK BY BLOCK ID ENDPOINT --------------------- */
-    static async getBlockbyblockid(req,res){
+    /* --------------------- GET ARTICLE BY ARTICLEID ENDPOINT --------------------- */
+    static async getArticlebyarticleid(req,res){
         try{
 
-        var theblockid = await Block.findOne({where: {block_id : req.params.block_id}});
+        var thearticleid = await KnowledgebaseArticle.findOne({where: {article_id : req.params.article_id}});
 
-      /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+      /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
         var adminId = await  serveAdminid.getTheId(req);
 
         await Activitylog.create({
           admin_id:adminId ,
-          section_accessed:'View block by block id',
-          page_route:'/api/admin/block/getbyblockid/:block_id',
-          action:'Viewing block by id '
+          section_accessed:'View article by article id',
+          page_route:'/api/admin/article/getbyarticleid/:article_id',
+          action:'Viewing article by id '
       });
-       /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+       /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
 
-        if(theblockid == null){
+        if(thearticleid == null){
             return res.status(200).json({
                 error:true,
-                message: 'Invalid block id'
+                message: 'Invalid article id'
             })
         }else{
             return res.status(200).json({
                 error: false,
-                message: 'block acquired successfully',
-                data: theblockid
+                message: 'article acquired successfully',
+                data: thearticleid
             })
         }
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on getting blockby blockid",
+            error_name: "Error on getting article by articleid",
             error_description: e.toString(),
-            route: "/api/admin/block/getbyblockid/:block_id",
+            route: "/api/admin/article/getbyarticleid/:article_id",
             error_code: "500"
         });
         if(logError){
@@ -283,8 +283,8 @@ class BlockController{
 
     
 
-    /* ---------------------- EDIT block BY ID END POINT ---------------------- */
-    static async editBlockbyid(req, res){
+    /* ---------------------- EDIT article BY ID END POINT ---------------------- */
+    static async editArticlebyid(req, res){
         try{
 
             // const errors = validationResult(req);
@@ -297,47 +297,45 @@ class BlockController{
             //     });
             // }
 
-        var editBlock = await Block.update({
-            block_name : req.body.block_name.trim(),
-            block_description : req.body.block_description.trim(),
-            block_content : req.body.block_content.trim(),
-            page_id : req.body.page_id.trim(),
-            priority:req.body.priority.trim(),
+        var editArticle = await KnowledgebaseArticle.update({
+            title : req.body.title.trim(),
+            body : req.body.body.trim(),
+            category_id : req.body.category_id.trim()
             
         }, { where : {id : req.body.id } });
 
 
-            /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+            /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
             var adminId = await  serveAdminid.getTheId(req);
 
             await Activitylog.create({
               admin_id:adminId ,
-              section_accessed:'Edit Block',
-              page_route:'/api/admin/block/edit',
-              action:'Updating block information '
+              section_accessed:'Edit Article',
+              page_route:'/api/admin/article/edit',
+              action:'Updating article information '
           });
-           /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+           /* ---------------------------------- article ACTIVITY LOG --------------------------------- */
     
 
 
-        if(editBlock){
+        if(editArticle){
             return res.status(200).json({
                 error : false,
-                message : "Block edited succesfully",
+                message : "Article edited succesfully",
                 
             })
         }else{
             return res.status(200).json({
                 error : true,
-                message : "Failed to edit block",
+                message : "Failed to edit article",
             })
         }
        
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on editting block by id",
+            error_name: "Error on editting article by id",
             error_description: e.toString(),
-            route: "/api/admin/block/edit",
+            route: "/api/admin/article/edit",
             error_code: "500"
         });
         if(logError){
@@ -352,40 +350,40 @@ class BlockController{
     }
 
     
-    /* --------------------------- DELETE BLOCK BY ID --------------------------- */
-    static async deleteBlockbyid(req, res){
+    /* --------------------------- DELETE ARTICLE BY ID --------------------------- */
+    static async deleteArticlebyid(req, res){
         try{
 
-        var delBlockid = await Block.destroy({ where : {id : req.params.id}});
+        var delArticleid = await KnowledgebaseArticle.destroy({ where : {id : req.params.id}});
 
-         /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+         /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
          var adminId = await  serveAdminid.getTheId(req);
 
          await Activitylog.create({
            admin_id:adminId ,
-           section_accessed:'Delete block',
-           page_route:'/api/admin/block/delete/:id',
-           action:'Deleting block information '
+           section_accessed:'Delete article',
+           page_route:'/api/admin/article/delete/:id',
+           action:'Deleting article information '
        });
-        /* ---------------------------------- BLOCK ACTIVITY LOG --------------------------------- */
+        /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
 
-        if(delBlockid == null){
+        if(delArticleid == null){
             return res.status(200).json({
                 error : true,
-                message : "Invalid block id",
+                message : "Invalid article id",
             })
         }else{
             return res.status(200).json({
                 error : false,
-                message : "Block deleted successfully",
+                message : "Article deleted successfully",
             })
         }
 
     }catch(e){
         var logError = await ErrorLog.create({
-            error_name: "Error on deleting Block by id",
+            error_name: "Error on deleting article by id",
             error_description: e.toString(),
-            route: "/api/admin/block/delete/:id",
+            route: "/api/admin/article/delete/:id",
             error_code: "500"
         });
         if(logError){
@@ -401,6 +399,6 @@ class BlockController{
 
 }
 
-module.exports = BlockController;
+module.exports = Knowledgebase_articleController;
 
     
