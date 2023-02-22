@@ -52,7 +52,10 @@ class Mailer{
     }
 
     async send(){
-        return await transporter.sendMail(this.Mail);
+
+        let send =await transporter.sendMail(this.Mail);
+        console.log(send);
+        return send;
     }
 
     
