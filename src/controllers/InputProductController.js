@@ -74,7 +74,6 @@ class InputProducts{
                     delivery_method: req.body.delivery_method,
                     expiry_date: req.body.expiry_date,
                     manufacture_country: req.body.manufacture_country,
-                    state: req.body.state,
                     video: req.body.video,
                     images: my_object.toString(),
                 })

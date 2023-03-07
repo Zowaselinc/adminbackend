@@ -22,7 +22,7 @@ module.exports = {
         body('delivery_method').isString().not().isEmpty(),
         body('expiry_date').isString().not().isEmpty(),
         body('manufacture_country').isString().not().isEmpty(),
-        body('state').isString().not().isEmpty()
+        
        
     ]
 

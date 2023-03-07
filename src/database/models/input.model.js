@@ -80,10 +80,6 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.STRING,
             allowNull : false
         },
-        state : {
-            type: Sequelize.STRING,
-            allowNull : false
-        },
         video : {
             type: Sequelize.STRING,
             allowNull : false
