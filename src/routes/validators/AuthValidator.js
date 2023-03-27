@@ -6,7 +6,10 @@ module.exports = {
     loginAdminValidator : [
         body('email').isString().isEmail(),
         body('password').isString()
-    ]
+    ],
+
+
+    
    
 
 }

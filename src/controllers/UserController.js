@@ -81,6 +81,7 @@ class UserController{
                 last_name : data.last_name,
                 phone : data.phone,
                 email : data.email,
+                dob : data.dob,
                 is_verified : 0,
                 status : 1,
                 password : encryptedPassword,
@@ -109,7 +110,10 @@ class UserController{
                 company_phone : data.company_phone,
                 company_email : data.company_email,
                 state : data.company_state,
-                rc_number : data.rc_number
+                country : data.country,
+                contact_person : data.contact_person,
+                rc_number : data.rc_number,
+                company_website : data.company_website,
             });
         }catch(e){
             company = {

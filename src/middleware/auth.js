@@ -13,6 +13,18 @@ class AuthMiddleware{
     }
 
 
+
+    isGuest(req, res) {
+        let headers = req.headers;
+        if (headers.authorization) {
+            // res.status(400);
+            // res.send('Not allowed');
+        }
+    }
+
+
+
+
   async  isAuthenticated (req,res){
         let headers = req.headers;
       

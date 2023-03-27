@@ -1,5 +1,3 @@
-
-
 const generateTimestamps = require("./timestamps");
 
 let Schema = (Sequelize,mode) => {
@@ -18,6 +16,10 @@ let Schema = (Sequelize,mode) => {
             type : Sequelize.STRING,
             allowNull : false,
             unique : true
+        },
+        dob : {
+            type: Sequelize.STRING,
+            allowNull : true
         },
         password : {
             type : Sequelize.STRING,
@@ -76,6 +78,7 @@ let Schema = (Sequelize,mode) => {
         is_approved : {
             type : Sequelize.INTEGER
         },
+        
         ...generateTimestamps(Sequelize,mode)
     }
 }

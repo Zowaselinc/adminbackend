@@ -32,6 +32,7 @@ const PageController= require('~controllers/PageController');
 const BlockController= require('~controllers/BlockController');
 const KnowledgebasCategory= require('~controllers/Knowledgebase_categoryController');
 const KnowledgebaseArticle= require('~controllers/Knowledgebase_articleController');
+const UserAuthController= require('~controllers/UserAuthController');
 
 
 
@@ -64,6 +65,12 @@ const PageValidator = require('./validators/PageValidation');
 const BlockValidator = require('./validators/BlockValidator');
 const KnowledgebaseArticleValidator = require('./validators/KnowledgebaseArticleValidator');
 const KnowlegebaseCategoryValidator = require('./validators/KnowledgebaseCategoryValidator');
+
+/* ------------------------------- Users VALIDATORS ------------------------------- */
+
+const { RegisterMerchantCorporateValidator, LoginValidator, 
+    RegisterPartnerValidator, RegisterAgentValidator, SendVerificationValidator, 
+    ConfirmVerificationValidator, ResetPasswordValidator, VerifyResetTokenValidator } = require('./validators/UserAuthValidators');
 /* -------------------------------------------------------------------------- */
 /*                              // ALL VALIDATORS                             */
 /* -------------------------------------------------------------------------- */
@@ -208,10 +215,16 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/notification/delete/:id',Admin_notificationController.deleteNotification);  
  });
 
-/* ---------------------- //  ROUTE FOR USERS END POINT --------------------- */
+/* ---------------------- //  REGISTER ALL USERS --------------------- */
+
+Router.middleware(['isGuest']).group((router)=>{
+    router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
+
+ });
+
 Router.middleware(['isAuthenticated']).group((router)=>{
 
-    router.post('/admin/users/regitermerchant',UserController.registerMerchant);  
+    
     router.get('/admin/users/getall',UserController.getAllUsers);  
     router.get('/admin/users/bytype/:type', UserController.getUsersByType);
     router.get('/admin/users/getbyid/:id', UserController.getUserById);

@@ -5,6 +5,7 @@ const AuthMiddleware = require("./auth");
 
 const AppMiddlewares = {
     'isValidAdmin' : AuthMiddleware.isValidAdmin,
+    'isGuest' : AuthMiddleware.isGuest,
     'isAuthenticated' : AuthMiddleware.isAuthenticated
 };
 

@@ -71,6 +71,8 @@ const Page = DB.page= require("./page.model.js").Model(initialInstance, createSe
 const Block= DB.block= require("./block.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const KnowledgebaseArticle = DB.block= require("./knowlegebase_article.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const KnowledgebasCategory = DB.block= require("./knowledgebase_category.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const KYC = DB.kyc= require("./kyc.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const KYB = DB.kyb= require("./kyb.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -230,6 +232,27 @@ Order.belongsTo(Negotiation,{
 });
 
 
+User.hasOne(Company,{
+  foreignKey : "user_id",
+  as : "company"
+});
+
+/* ----------------------------------- KYC ---------------------------------- */
+
+User.hasOne(KYC,{
+  foreignKey : "user_id",
+  as : "kyc"
+});
+
+
+/* ----------------------------------- KYB ---------------------------------- */
+
+User.hasOne(KYB,{
+  foreignKey : "user_id",
+  as : "kyb"
+});
+
+
 module.exports = {
   DB,
   Admin,
@@ -268,5 +291,7 @@ module.exports = {
   Page,
   Block,
   KnowledgebaseArticle,
-  KnowledgebasCategory
+  KnowledgebasCategory,
+  KYC,
+  KYB
 };
