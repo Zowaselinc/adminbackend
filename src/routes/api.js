@@ -33,6 +33,9 @@ const BlockController= require('~controllers/BlockController');
 const KnowledgebasCategory= require('~controllers/Knowledgebase_categoryController');
 const KnowledgebaseArticle= require('~controllers/Knowledgebase_articleController');
 const UserAuthController= require('~controllers/UserAuthController');
+const AccountController= require('~controllers/AccountController');
+const KYCController= require('~controllers/KYCController');
+const KYBController= require('~controllers/KYBController');
 
 
 
@@ -71,6 +74,10 @@ const KnowlegebaseCategoryValidator = require('./validators/KnowledgebaseCategor
 const { RegisterMerchantCorporateValidator, LoginValidator, 
     RegisterPartnerValidator, RegisterAgentValidator, SendVerificationValidator, 
     ConfirmVerificationValidator, ResetPasswordValidator, VerifyResetTokenValidator } = require('./validators/UserAuthValidators');
+
+
+    /* --------------------- account, kyc and kyb validator --------------------- */
+    const AccountValidator = require('./validators/AccountValidator');
 /* -------------------------------------------------------------------------- */
 /*                              // ALL VALIDATORS                             */
 /* -------------------------------------------------------------------------- */
@@ -229,6 +236,24 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/users/bytype/:type', UserController.getUsersByType);
     router.get('/admin/users/getbyid/:id', UserController.getUserById);
     router.get('/admin/users/getstats', UserController.getUserStats);
+
+    /* ---------------------------- account/ kyc and kyb apis --------------------------- */
+
+    router.post('/admin/users/account/update', AccountValidator.updateAccountValidator, AccountController.updateAccountDetails);
+
+    router.post('/admin/users/account/company/update', AccountValidator.updateCompanyValidator, AccountController.updateCompanyDetails);
+
+    router.post('/admin/users/account/changepassword', AccountValidator.changePasswordValidator, AccountController.changePassword);
+
+    router.get('/admin/users/account/kyctypes', KYCController.getDocumentTypes);
+
+    router.post('/admin/users/account/kycverification', AccountValidator.startKYC, KYCController.startKycVerification);
+
+    router.get("/admin/users/account/kycstatus", KYCController.retriveCheck);
+
+    router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
+
+    router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
  
  });
 
