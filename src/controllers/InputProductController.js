@@ -456,7 +456,7 @@ class InputProducts{
             }else{
 
                 return res.status(200).json({
-                    error : false,
+                    error : true,
                     message: "No input products found for this packaging",
                     data : []
                 })

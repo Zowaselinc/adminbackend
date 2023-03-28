@@ -249,24 +249,26 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
     router.get('/admin/users/account/kyctypes', KYCController.getDocumentTypes);
 
-    router.post('/admin/users/account/kycverification', AccountValidator.startKYC, KYCController.startKycVerification);
+    router.post('/admin/users/account/kycverification',  KYCController.verifykyc);
 
-    router.get("/admin/users/account/kycstatus", KYCController.retriveCheck);
+    // router.get("/admin/users/account/kycstatus", KYCController.retriveCheck);
 
-    router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
+    // router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
 
     router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
 
 
 
     /* ------------------------------ kyc docs apis ----------------------------- */
-    router.post('/admin/users/account/verifykycdocs', AccountValidator.kycDocs, KycDocsController.verifyKycDocs);
+    router.post('/admin/users/account/updatekycdocs', AccountValidator.kycDocs, KycDocsController.updateKycDocs);
     router.get('/admin/users/account/getall',  KycDocsController.getAllkycdocs);
     router.get('/admin/users/account/getbyid/:id',  KycDocsController.getkycdocsbyid);
     router.get('/admin/users/account/getbyUserid/:user_id',  KycDocsController.getkycdocsbyUserid);
     router.get('/admin/users/account/getbyidnumber/:id_number',  KycDocsController.getByidnumber);
     router.post('/admin/users/account/edit',  KycDocsController.editKyycDocs);
     router.post('/admin/users/account/delete/:id',  KycDocsController.deletekycdocs);
+    
+    router.post('/admin/users/account/updatekycstatus',  KYCController.updatekycStatus);
  
  });
 

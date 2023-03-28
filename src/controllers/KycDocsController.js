@@ -8,7 +8,7 @@ const { kycDocs } = require("~routes/validators/AccountValidator");
 
 class KycDocsController{
 
-    static async verifyKycDocs(req, res){
+    static async updateKycDocs(req, res){
         try{
 
             const errors = validationResult(req);
@@ -22,7 +22,7 @@ class KycDocsController{
             }
 
 
-            const verifykycDocs = await  Kycdocs.create({
+            const uploadkycDocs = await  Kycdocs.create({
                 user_id:req.body.user_id,
                 id_type: req.body.id_type,
                 id_front: req.body.id_front,
@@ -30,7 +30,7 @@ class KycDocsController{
                 id_number: req.body.id_number
             });
 
-            if(verifykycDocs){
+            if(uploadkycDocs){
                 return res.status(200).json({
                     error:false,
                     message: "User's kyc docs updated "
@@ -108,8 +108,10 @@ class KycDocsController{
                 
                 var getDocsbyid = await Kycdocs.findOne({where: {id : req.params.id}});
                     var user = getDocsbyid.dataValues.user_id;
-                    var getUser = await User.findOne({where:{id:user}})
-                   
+                    var getUser = await User.findOne({where:{id:user}});
+                    delete getUser.dataValues.created_at;
+                    delete getUser.dataValues.updated_at;
+
 
                     var theuser= getDocsbyid.dataValues;
                     theuser.user= getUser.dataValues;
@@ -153,6 +155,8 @@ class KycDocsController{
                 var getbyUserid = await Kycdocs.findOne({where: {user_id : req.params.user_id}});
                 var user = getbyUserid.dataValues.user_id;
                 var getUser = await User.findOne({where:{id:user}})
+                delete getUser.dataValues.created_at;
+                delete getUser.dataValues.updated_at;
                
 
                 var theuserid= getbyUserid.dataValues;
@@ -195,7 +199,9 @@ class KycDocsController{
                 
                 var getbyIdNumber = await Kycdocs.findOne({where: {id_number : req.params.id_number}});
                 var user = getbyIdNumber.dataValues.user_id;
-                var getUser = await User.findOne({where:{id:user}})
+                var getUser = await User.findOne({where:{id:user}});
+                delete getUser.dataValues.created_at;
+                delete getUser.dataValues.updated_at;
                
 
                 var userid= getbyIdNumber.dataValues;

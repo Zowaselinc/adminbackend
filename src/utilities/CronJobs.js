@@ -61,13 +61,5 @@ exports.initScheduledJobs = () => {
             
         });
 
-
-        
-
-
-
-
-        
-
   scheduledJobFunction.start();
 }
