@@ -344,6 +344,7 @@ class KYCController {
                 verified: 1
 
             });
+           
 
             if(kycVerification){
                 return res.status(200).json({

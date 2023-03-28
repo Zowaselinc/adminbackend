@@ -10,13 +10,13 @@ let Schema = (Sequelize, mode) => {
             type: Sequelize.STRING
         },
         cac: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(300),
         },
         financial_statement: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(300),
         },
         mou: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(300),
         },
         ...generateTimestamps(Sequelize, mode)
     }

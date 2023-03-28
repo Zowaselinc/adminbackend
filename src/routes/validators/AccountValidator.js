@@ -58,14 +58,10 @@ module.exports = {
 
     startKYB: [
         body('tax_id').not().isEmpty(),
-        body('name').not().isEmpty(),
-        body('address').not().isEmpty(),
-        body('state').not().isEmpty(),
-        body('country').not().isEmpty(),
-        body('contact_person').not().isEmpty(),
-        body('phone').not().isEmpty(),
-        body('website').not().isEmpty(),
-        body('email').not().isEmpty(),
+        body('cac').not().isEmpty(),
+        body('financial_statement').not().isEmpty(),
+        body('mou').not().isEmpty(),
+        
 
     ],
 
