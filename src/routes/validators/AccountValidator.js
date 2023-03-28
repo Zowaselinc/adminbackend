@@ -9,6 +9,8 @@ module.exports = {
         body('state').isString().notEmpty(),
         body('city').isString().notEmpty(),
         body('address').isString().notEmpty(),
+        body('dob').isString().notEmpty(),
+        body('gender').isString().notEmpty(),
     ],
 
     updateCompanyValidator: [
@@ -64,6 +66,15 @@ module.exports = {
         body('phone').not().isEmpty(),
         body('website').not().isEmpty(),
         body('email').not().isEmpty(),
+
+    ],
+
+    kycDocs: [
+        body('user_id').not().isEmpty(),
+        body('id_type').not().isEmpty(),
+        body('id_front').not().isEmpty(),
+        body('id_back').not().isEmpty(),
+        body('id_number').not().isEmpty(),
 
     ],
 

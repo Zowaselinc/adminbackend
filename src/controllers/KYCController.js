@@ -47,47 +47,48 @@ class KYCController {
                 var userData = req.global.user;
 
 
-                // let applicant = await OnfidoInstance.createNewApplicant({
-                //     ...{
-                //         first_name: userData.first_name,
-                //         last_name: userData.last_name,
-                //         email: userData.email,
-                //         dob: userData.dob,
-                //         country: userData.country
-                //     },
-                //     ...req.body
-                // });
+                let applicant = await OnfidoInstance.createNewApplicant({
+                    ...{
+                        first_name: userData.first_name,
+                        last_name: userData.last_name,
+                        email: userData.email,
+                        dob: userData.dob,
+                        country: userData.country
+                    },
+                    ...req.body
+                });
 
 
-                // if (applicant) {
+                if (applicant) {
 
-                //     //SAVES USER APPLICANT_ID
-                //     let userKyc;
-                //     try {
-                //         userKyc = await KYC.create({
-                //             user_id: userData.id,
-                //             applicant_id: applicant.id,
-                //             verified: 0,
-                //             bvn: EncryptConfig(body.bvn)
-                //         });
-                //     } catch (error) {
-                //         console.log(error)
-                //     }
+                    //SAVES USER APPLICANT_ID
+                    let userKyc;
+                    try {
+                        userKyc = await KYC.create({
+                            user_id: userData.id,
+                            applicant_id: applicant.id,
+                            verified: 0,
+                            bvn: EncryptConfig(body.bvn)
+                        });
+                    } catch (error) {
+                        console.log(error)
+                    }
 
 
-                // } else {
-                //     return res.status(400).json({
-                //         error: true,
-                //         message: "An Error Occurred",
-                //     });
-                // }
+                } else {
+                    return res.status(400).json({
+                        error: true,
+                        message: "An Error Occurred",
+                    });
+                }
 
                 //UPDATES USER RECORD
                 const user = await User.update({
                     first_name: body.first_name,
                     last_name: body.last_name,
                     phone_number: body.phone,
-                    dob: body.email,
+                    dob: body.dob,
+                    email: body.email,
                     country: body.country,
                     state: body.state,
                     gender: body.gender,

@@ -48,6 +48,8 @@ class AccountController {
                 state: req.body.state,
                 city: req.body.city,
                 country: req.body.country,
+                dob: req.body.dob,
+                gender: req.body.gender,
                 primary_address: req.body.address,
                 ...(profileImagePath ? { image: profileImagePath } : {})
             }, {

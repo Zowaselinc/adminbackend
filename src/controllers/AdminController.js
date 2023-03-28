@@ -77,10 +77,10 @@ class AdminController{
             }
         }
 
-        }catch(e){
+        }catch(err){
             var logError = await ErrorLog.create({
                 error_name: "Error on creating Admin",
-                error_description: e.toString(),
+                error_description: err.toString(),
                 route: "/api/admin/add",
                 error_code: "500"
             });
@@ -128,10 +128,10 @@ class AdminController{
 
                 }
 
-            }catch(e){
+            }catch(err){
                 var logError = await ErrorLog.create({
                     error_name: "Error on getting all Admin",
-                    error_description: e.toString(),
+                    error_description: err.toString(),
                     route: "/api/admin/getall",
                     error_code: "500"
                 });
@@ -180,10 +180,10 @@ class AdminController{
                
             })
         }
-    }catch(e){
+    }catch(err){
         var logError = await ErrorLog.create({
             error_name: "Error on getting all Admin by paprams",
-            error_description: e.toString(),
+            error_description: err.toString(),
             route: "/api/admin/getallparams/:offset/:limit",
             error_code: "500"
         });

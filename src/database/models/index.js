@@ -73,6 +73,7 @@ const KnowledgebaseArticle = DB.block= require("./knowlegebase_article.model.js"
 const KnowledgebasCategory = DB.block= require("./knowledgebase_category.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const KYC = DB.kyc= require("./kyc.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const KYB = DB.kyb= require("./kyb.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Kycdocs = DB.kycdocs= require("./kycdocs.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -253,6 +254,12 @@ User.hasOne(KYB,{
 });
 
 
+User.hasOne(Kycdocs,{
+  foreignKey : "user_id",
+  as : "kycdocs"
+});
+
+
 module.exports = {
   DB,
   Admin,
@@ -293,5 +300,6 @@ module.exports = {
   KnowledgebaseArticle,
   KnowledgebasCategory,
   KYC,
-  KYB
+  KYB,
+  Kycdocs
 };

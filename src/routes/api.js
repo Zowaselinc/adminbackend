@@ -36,6 +36,7 @@ const UserAuthController= require('~controllers/UserAuthController');
 const AccountController= require('~controllers/AccountController');
 const KYCController= require('~controllers/KYCController');
 const KYBController= require('~controllers/KYBController');
+const KycDocsController= require('~controllers/KycDocsController');
 
 
 
@@ -85,6 +86,7 @@ const { RegisterMerchantCorporateValidator, LoginValidator,
 
 /* --------------------------- // providerS --------------------------- */
 const RouteProvider = require('~providers/RouteProvider');
+
 
 const Router = RouteProvider.Router;
 /* --------------------------- // providerS --------------------------- */
@@ -254,8 +256,26 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
 
     router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
+
+
+
+    /* ------------------------------ kyc docs apis ----------------------------- */
+    router.post('/admin/users/account/verifykycdocs', AccountValidator.kycDocs, KycDocsController.verifyKycDocs);
+    router.get('/admin/users/account/getall',  KycDocsController.getAllkycdocs);
+    router.get('/admin/users/account/getbyid/:id',  KycDocsController.getkycdocsbyid);
+    router.get('/admin/users/account/getbyUserid/:user_id',  KycDocsController.getkycdocsbyUserid);
+    router.get('/admin/users/account/getbyidnumber/:id_number',  KycDocsController.getByidnumber);
+    router.post('/admin/users/account/edit',  KycDocsController.editKyycDocs);
+    router.post('/admin/users/account/delete/:id',  KycDocsController.deletekycdocs);
  
  });
+
+
+
+
+
+
+
 
 
  /* -------------------- //  ROUTE FOR COMPANIES END POINT ------------------- */
