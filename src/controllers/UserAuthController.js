@@ -379,10 +379,20 @@ class UserAuthController {
                 rc_number: data.rc_number,
                 company_website: data.company_website
             });
-        } catch (e) {
-            company = {
-                error: true,
-                message: e.toString()
+        } catch (err) {
+            var logError = await ErrorLog.create({
+                error_name: "Error on creating user",
+                error_description: error.toString(),
+                route: "/api/admin/user/account/add",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment' + " " + error.toString(),
+                    
+                })
+
             }
         }
 

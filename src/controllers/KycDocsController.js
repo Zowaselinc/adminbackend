@@ -116,16 +116,17 @@ class KycDocsController{
                     var theuser= getDocsbyid.dataValues;
                     theuser.user= getUser.dataValues;
 
-                if(getDocsbyid == null){
-                    return res.status(200).json({
-                        error:true,
-                        message: 'invalid  id'
-                    })
-                }else{
+                if(getDocsbyid){
                     return res.status(200).json({
                         error: false,
                         message: 'Kyc docs acquired successfully',
                         data: theuser
+                       
+                    })
+                }else{
+                    return res.status(200).json({
+                        error:true,
+                        message: 'Failed to acquire kyc docs'
                         
                     })
                 }

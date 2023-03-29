@@ -41,8 +41,7 @@ class KYBController {
                             message: "Could Not Upload Data",
                         });
                             }
-                    
-                    
+
                 } catch (error) {
                     var logError = await ErrorLog.create({
                         error_name: "Error updating usre's document",
