@@ -148,38 +148,25 @@ class UserAuthController {
                 });
             }));
     
-            // const token = jwt.sign(
-            //     { user_id: user.id },
-            //     process.env.TOKEN_KEY,
-            //     { expiresIn: "48h" }
-            // );
-    
-            // await UserAuthController.saveToken(user, token, req);
-    
-            // Mailer()
-            //     .to(data.email).from(process.env.MAIL_FROM)
-            //     .subject('Welcome').template('emails.WelcomeEmail').send();
-    
-            res.status(200).json({
+            return res.status(200).json({
                 error: false,
                 status: true,
-                // token: token,
                 user: user
             });
 
-        }catch(e){
+        }catch(err){
             var logError = await ErrorLog.create({
                 error_name: "Error on registering new user",
-                error_description: e.toString(),
+                error_description: err.toString(),
                 route: "/api/admin/users/register",
                 error_code: "500"
             });
             if(logError){
-                return res.status(500).json({
+                return {
                     error: true,
-                    message: 'Unable to complete request at the moment',
+                    message: 'Unable to complete request at the moment' + err.toString(),
                     
-                })
+                }
 
             }
         }
@@ -312,6 +299,7 @@ class UserAuthController {
 
     }
 
+/* ------------------------------ register user ----------------------------- */
     static async saveUser(data) {
         var user, userKycdocs, kycVerification;
         let encryptedPassword = await bcrypt.hash(data.password, 10);
@@ -327,7 +315,7 @@ class UserAuthController {
             if(checkUser){
                 user = {
                     error: true,
-                    message: `User with email or phone number already exist ${checkUser}`
+                    message: "User with email or phone number already exist" 
                 } 
             }else{
                 user = await User.create({
@@ -385,18 +373,18 @@ class UserAuthController {
                 error_code: "500"
             });
             if(logError){
-                return res.status(500).json({
+                return {
                     error: true,
                     message: 'Unable to complete request at the moment' + " " + err.toString(),
                     
-                })
+                }
 
             }
           
-            // user = {
-            //     error: true,
-            //     message: e.toString()
-            // }
+            user = {
+                error: true,
+                message: e.toString()
+            }
         }
 
         return user;
@@ -421,7 +409,7 @@ class UserAuthController {
                 rc_number: data.rc_number,
                 company_website: data.company_website
             });
-            if(company){
+            
                 userKyb = await KYB.create({
                     user_id:user.id,
                     tax_id: data.tax_id,
@@ -429,7 +417,7 @@ class UserAuthController {
                     financial_statement: data.financial_statement,
                     mou: data.mou
                 });
-            }
+            
         } catch (err) {
             var logError = await ErrorLog.create({
                 error_name: "Error on creating user",
@@ -438,11 +426,11 @@ class UserAuthController {
                 error_code: "500"
             });
             if(logError){
-                return res.status(500).json({
+                return {
                     error: true,
                     message: 'Unable to complete request at the moment' + " " + err.toString(),
                     
-                })
+                }
 
             }
         }
