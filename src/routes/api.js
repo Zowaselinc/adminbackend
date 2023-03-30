@@ -228,6 +228,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
 Router.middleware(['isGuest']).group((router)=>{
     router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
+    // router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
 
  });
 

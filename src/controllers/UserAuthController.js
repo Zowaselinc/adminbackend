@@ -1,10 +1,12 @@
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
-const { User, Company, AccessToken, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, Wallet, ErrorLog } = require("~database/models");
+const { User, Company, AccessToken, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, Wallet, ErrorLog, Kycdocs, KYC, KYB } = require("~database/models");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 // const Mailer = require('~services/mailer');
 const md5 = require('md5');
+const { EncryptConfig, DecryptConfig } = require("~utilities/encryption/encrypt");
 require('dotenv').config();
 
 
@@ -311,13 +313,13 @@ class UserAuthController {
     }
 
     static async saveUser(data) {
-        var user;
+        var user, userKycdocs, kycVerification;
         let encryptedPassword = await bcrypt.hash(data.password, 10);
 
         try {
             const checkUser = await User.findOne({where:{
                 [Op.or]: [
-                    {email:data.email},
+                    {email: data.email},
                     {phone: data.phone}
                 ],
             }});
@@ -325,7 +327,7 @@ class UserAuthController {
             if(checkUser){
                 user = {
                     error: true,
-                    message: `User with email or phone number already exists`
+                    message: `User with email or phone number already exist ${checkUser}`
                 } 
             }else{
                 user = await User.create({
@@ -337,10 +339,37 @@ class UserAuthController {
                     status: 1,
                     password: encryptedPassword,
                     type: data.user_type,
+                    // account_type: "individual",
                     account_type: data.has_company || data.company_email ? "company" : "individual",
                    
                 });
+
+                if(user){
+                    /* -------------------------------- kyc docs -------------------------------- */
+                    userKycdocs = await Kycdocs.create({
+                        user_id:user.id,
+                        id_type: data.id_type,
+                        id_front: data.id_front,
+                        id_back:data.id_back,
+                        id_number: data.id_number
     
+                    });
+    
+                    /* -----------------------------------  kyc ---------------------------------- */
+                    const applicantId = crypto.randomBytes(16).toString("hex");
+                    const checkeId = crypto.randomBytes(16).toString("hex");
+    
+                    kycVerification = await KYC.create({
+                        user_id: user.id,
+                        applicant_id: applicantId,
+                        check_id: checkeId,
+                        status: "completed",
+                        bvn:  EncryptConfig(data.bvn),
+                        verified: 1
+    
+                    });
+    
+                }
                 // Create user wallet
                 let wallet = await Wallet.create({
                     user_id: user.id,
@@ -348,13 +377,26 @@ class UserAuthController {
                 });
             }
             
+        } catch (err) {
+            var logError = await ErrorLog.create({
+                error_name: "Error on creating user",
+                error_description: err.toString(),
+                route: "/api/admin/user/account/add",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment' + " " + err.toString(),
+                    
+                })
 
-        } catch (e) {
-          
-            user = {
-                error: true,
-                message: e.toString()
             }
+          
+            // user = {
+            //     error: true,
+            //     message: e.toString()
+            // }
         }
 
         return user;
@@ -364,7 +406,7 @@ class UserAuthController {
 
 
     static async saveCompany(user, data) {
-        let company;
+        let company, userKyb;
 
         try {
             company = await Company.create({
@@ -379,17 +421,26 @@ class UserAuthController {
                 rc_number: data.rc_number,
                 company_website: data.company_website
             });
+            if(company){
+                userKyb = await KYB.create({
+                    user_id:user.id,
+                    tax_id: data.tax_id,
+                    cac: data.cac,
+                    financial_statement: data.financial_statement,
+                    mou: data.mou
+                });
+            }
         } catch (err) {
             var logError = await ErrorLog.create({
                 error_name: "Error on creating user",
-                error_description: error.toString(),
+                error_description: err.toString(),
                 route: "/api/admin/user/account/add",
                 error_code: "500"
             });
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment' + " " + error.toString(),
+                    message: 'Unable to complete request at the moment' + " " + err.toString(),
                     
                 })
 
