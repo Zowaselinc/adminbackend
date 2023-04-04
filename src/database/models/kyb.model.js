@@ -10,13 +10,19 @@ let Schema = (Sequelize, mode) => {
             type: Sequelize.STRING
         },
         cac: {
-            type: Sequelize.STRING(300),
+            type: Sequelize.STRING,
         },
         financial_statement: {
-            type: Sequelize.STRING(300),
+            type: Sequelize.STRING,
         },
         mou: {
-            type: Sequelize.STRING(300),
+            type: Sequelize.STRING,
+        },
+        check_id: {
+            type: Sequelize.STRING
+        },
+        status: {
+            type: Sequelize.ENUM("pending", "complete", "failed")
         },
         ...generateTimestamps(Sequelize, mode)
     }

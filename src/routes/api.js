@@ -226,50 +226,77 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
 /* ---------------------- //  REGISTER ALL USERS --------------------- */
 
-Router.middleware(['isGuest']).group((router)=>{
-    router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
-    // router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
+// Router.middleware(['isGuest']).group((router)=>{
+//     router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
+//     router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
 
- });
+// });
+/* ---------------------------- users / company details--------------------------- */
 
 Router.middleware(['isAuthenticated']).group((router)=>{
 
+    router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
     
-    router.get('/admin/users/getall',UserController.getAllUsers);  
+    router.get('/admin/users/getall',UserController.getAllUsers); 
+
     router.get('/admin/users/bytype/:type', UserController.getUsersByType);
+
     router.get('/admin/users/getbyid/:id', UserController.getUserById);
+
     router.get('/admin/users/getstats', UserController.getUserStats);
 
-    /* ---------------------------- account/ kyc and kyb apis --------------------------- */
-
+    /* ------------------------ update other user details ----------------------- */
     router.post('/admin/users/account/update', AccountValidator.updateAccountValidator, AccountController.updateAccountDetails);
 
+    /* --------------------------- add company details -------------------------- */
     router.post('/admin/users/account/company/update', AccountValidator.updateCompanyValidator, AccountController.updateCompanyDetails);
 
+    /* ----------------------------- change password ---------------------------- */
     router.post('/admin/users/account/changepassword', AccountValidator.changePasswordValidator, AccountController.changePassword);
 
+    /* ----------------------------------- kyb ---------------------------------- */
+    // router.get("/admin/users/account/kycstatus", KYCController.retriveCheck);
+    
+    // router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
+    
+    router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
+    
+    router.post('/admin/users/account/batchuser', UserAuthController.BatchUserUpload);
+
+    // router.get("admin//users/account/kybstatus", KYBController.retriveCheck);
+
+    // router.get("admin//users/account/kybdocument", KYBController.getDocument);
+    
+    /* ----------------------------------- kyc ---------------------------------- */
     router.get('/admin/users/account/kyctypes', KYCController.getDocumentTypes);
 
     router.post('/admin/users/account/kycverification',  KYCController.verifykyc);
 
-    // router.get("/admin/users/account/kycstatus", KYCController.retriveCheck);
-
+    //   router.get("/admin/users/account/kycstatus", KYCController.retriveCheck);
+    
     // router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
 
-    router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
-
-
-
-    /* ------------------------------ kyc docs apis ----------------------------- */
-    router.post('/admin/users/account/updatekycdocs', AccountValidator.kycDocs, KycDocsController.updateKycDocs);
-    router.get('/admin/users/account/getall',  KycDocsController.getAllkycdocs);
-    router.get('/admin/users/account/getbyid/:id',  KycDocsController.getkycdocsbyid);
-    router.get('/admin/users/account/getbyUserid/:user_id',  KycDocsController.getkycdocsbyUserid);
-    router.get('/admin/users/account/getbyidnumber/:id_number',  KycDocsController.getByidnumber);
-    router.post('/admin/users/account/edit',  KycDocsController.editKyycDocs);
-    router.post('/admin/users/account/delete/:id',  KycDocsController.deletekycdocs);
-    
+    /* ----------------------- kyc status and verification ---------------------- */
     router.post('/admin/users/account/updatekycstatus',  KYCController.updatekycStatus);
+    
+    /* ------------------------------ kycdocs apis ----------------------------- */
+    router.post('/admin/users/account/updatekycdocs', AccountValidator.kycDocs, KycDocsController.updateKycDocs);
+
+    router.get('/admin/users/account/getall',  KycDocsController.getAllkycdocs);
+
+    router.get('/admin/users/account/getbyid/:id',  KycDocsController.getkycdocsbyid);
+    
+    router.get('/admin/users/account/getbyUserid/:user_id',  KycDocsController.getkycdocsbyUserid);
+
+    router.get('/admin/users/account/getbyidnumber/:id_number',  KycDocsController.getByidnumber);
+
+    router.post('/admin/users/account/edit',  KycDocsController.editKyycDocs);
+
+    router.post('/admin/users/account/delete/:id',  KycDocsController.deletekycdocs);
+
+    
+    
+    
  
  });
 
