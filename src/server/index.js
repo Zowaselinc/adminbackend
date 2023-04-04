@@ -65,6 +65,10 @@ class Server{
         // App.listen(port, () => {
         //     console.log(`Admin app listening on port ${port}`)
         // })
+        http.use(cors({
+            origin: '*',
+            methods: ['GET','POST']
+        }));
         http.listen(port, () => {
             console.log(`Admin app listening on port ${port}`)
         })
