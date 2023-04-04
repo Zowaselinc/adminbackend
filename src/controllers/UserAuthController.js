@@ -758,7 +758,7 @@ class UserAuthController {
 
             }
         }
-        
+
     }
 
 
@@ -796,6 +796,8 @@ class UserAuthController {
         account_type: data.has_company || data.company_email ? "company" : "individual",
   
   });
+
+  
   if(user){
     /* -------------------------- upload and verify user kycdocs ------------------------- */
     const userKycdocs = await Kycdocs.create({

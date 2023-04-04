@@ -1,3 +1,6 @@
+const { mydb } = require("~utilities/backupdriver");
+
+
 const MeshSockets=(io)=>{
   
    /* --------------------------------------------- LISTEN FOR A CONNECTION -------------------------------------------- */
@@ -10,12 +13,19 @@ const MeshSockets=(io)=>{
     
     /* ------------------------ EVERYTHING THAT COMES FROM THE FRONT END IS RECEIVED INSIDE HERE ------------------------ */
     socket.on("batchupload",function(data){
-        console.log(data);
+       
+        
+
+
+        /* --------------------------------------------- SEND BACK WHAT HE SENT --------------------------------------------- */
+        
+        
+        socket.emit("batchresponse",data);
 
     })
      /* ------------------------ EVERYTHING THAT COMES FROM THE FRONT END IS RECEIVED INSIDE HERE ------------------------ */
    
-
+  
 
 
 

@@ -6,7 +6,13 @@ const App = express();
 
      /* ---------------------------------------------------- STEP ONE ---------------------------------------------------- */
 /* ------------- CREATE A SEPARATE NODE HTTP SERVER DIFFERENT FROM EXPRESS AND ATTACH App aboce into it ------------- */
-const http = require ('http').Server(App)
+const http = require ('http',{
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+      }
+
+}).Server(App)
 
 
 /* ---------------------------------------------------- STEP TWO ---------------------------------------------------- */
@@ -48,6 +54,7 @@ class Server{
             origin: '*',
             methods: ['GET','POST']
         }));
+        
 
         // Register App Routes
         Routes(App).register();
