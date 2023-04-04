@@ -26,7 +26,13 @@ const scheduledFunctions = require("~utilities/CronJobs");
 
 
 /* --------------------------------------------- ESTABLISH IO ON SOCKETS -------------------------------------------- */
-const io  = require('socket.io')(http);
+const io  = require('socket.io')(http, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+    }
+    
+});
 
 /* --------------------------------------- SEND IO OBJECT TO ANOTHER SERVICES --------------------------------------- */
 const MeshSockets = require('~services/sockets');
