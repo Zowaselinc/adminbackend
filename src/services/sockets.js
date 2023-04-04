@@ -3,15 +3,8 @@ const MeshSockets=(io)=>{
    /* --------------------------------------------- LISTEN FOR A CONNECTION -------------------------------------------- */
     io.on("connection",function(socket){
         /* ----------------------------------- if a connection from front end has occured ----------------------------------- */
-    socket.emit("connect","Chima you are connected in real-time");
+    socket.emit("isconnected","Chima you are connected in real-time");
     
-    
-    
-    
-
-
-
-
 
 
     
