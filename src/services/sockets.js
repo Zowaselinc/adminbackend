@@ -24,7 +24,7 @@ const MeshSockets=(io)=>{
     
     /* ------------------------ EVERYTHING THAT COMES FROM THE FRONT END IS RECEIVED INSIDE HERE ------------------------ */
     socket.on("batchupload",function(data){
-       
+       console.log(data);
         let parseddata=JSON.parse(data);
         socket.emit("batchresponse",{"error":false,"message":"Batch Upload In Progress","status":"pending"});
        /* --------------------------- WRITE THE CODE TO STORE THE DATA AND LOOP THROUGH EACH DATA -------------------------- */
