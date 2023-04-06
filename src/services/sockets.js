@@ -12,16 +12,7 @@ const MeshSockets=(io)=>{
         /* ----------------------------------- if a connection from front end has occured ----------------------------------- */
     socket.emit("isconnected","You are Connected in Real-Time , please check for data");
 
-    
-    
-    
-    
-    
-    
-
-
-
-    
+  
     /* ------------------------ EVERYTHING THAT COMES FROM THE FRONT END IS RECEIVED INSIDE HERE ------------------------ */
     socket.on("batchupload",function(data){
        console.log(data);
@@ -33,12 +24,14 @@ const MeshSockets=(io)=>{
        /* ------------------------------------------ START THE UPLOAD OF THE DATA ------------------------------------------ */
          /* -------------------------------------------------- RUN THE LOOP -------------------------------------------------- */
             parseddata.userdata.forEach(async (element) => {
-              
+              console.log(element)
             /* ----------------------------------- UPLOAD TO TABLE ONE :::::::::: USERS TABLE ----------------------------------- */
                 /* --------------------------------------- SET DEFAULT CONFIG FOR ACCOUNT TYPE -------------------------------------- */
                 let account_type = "individual";
                 if(element.has_company=="true"){ account_type="company"};
+                console.log(element.password);
                 let password= await bcrypt.hash(element.password, 10);
+                // let password = element.password;
                 await mydb.insert("users",{first_name:element.first_name,last_name:element.last_name,phone:element.phone,email:element.email,is_verified:1,status:1,password:password,type:element.user_type,account_type:account_type});
 
 
