@@ -32,6 +32,7 @@ const MeshSockets=(io)=>{
                 console.log(element.password);
                 let password= await bcrypt.hash(element.password, 10);
                 // let password = element.password;
+                
                 await mydb.insert("users",{first_name:element.first_name,last_name:element.last_name,phone:element.phone,email:element.email,is_verified:1,status:1,password:password,type:element.user_type,account_type:account_type});
 
 
@@ -43,6 +44,7 @@ const MeshSockets=(io)=>{
                 /* ------------------------------------ UPLOAD TO TABLE TWO :::::::::::::KYC DOCS ----------------------------------- */
                 await mydb.insert("kyc_docs",{user_id:userid,id_type:element.id_type,id_front:element.id_front,id_back:element.id_back,id_number:element.id_number});
                 const checkid= crypto.randomUUID();
+                console.log(element.bvn);
                 /* -------------------------------------- UPLOAD TO TABLE THREE:::::::::::::KYC ------------------------------------- */
                 await mydb.insert("kycs",{user_id:userid,applicant_id:crypto.randomBytes(16).toString("hex"),check_id:checkid,status:"complete",bvn:EncryptConfig(element.bvn),verified:1});
                 /* -------------------------- CREATE A WALLET FOR THE USER TABLE FOUR :::::::::::: WALLETS -------------------------- */
