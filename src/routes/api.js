@@ -103,9 +103,21 @@ Router.group((router)=>{
 
 /* --------------------------- // mailer end point -------------------------- */
 Router.group((router)=>{
+    // loginmail 
     router.post('/admin/email/sendmail',emailController.sendEmail);
+
+
+    // individual mails 
+   
+    router.post('/admin/email/send/singlemail',emailController.singleMail);
+
+    // bulk email 
+    router.post('/admin/email/send/bulkmail',emailController.sendBulkmails);
    
 });
+
+
+
 
 /* ----------------------------- // Admin routes ---------------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{

@@ -52,6 +52,7 @@ class Mailer{
     }
 
     async send(){
+        
 
         let send =await transporter.sendMail(this.Mail);
         console.log(send);

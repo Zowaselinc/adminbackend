@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 const jwt = require("jsonwebtoken");
-const mailer = require("../services/mailer");
+const { sendhtmlEMAIL, sendhtmlEMAILBATCH } = require("~services/mailertwo");
 
 class emailController{
     static async sendEmail(req, res){
@@ -21,8 +21,32 @@ class emailController{
              message : "Message sent successfully"
 
          });
+        }
 
-    }
+        /* --------------------------- // individual mails -------------------------- */
+        static async singleMail(req, res){
+        
+        sendhtmlEMAIL(req.body.email,req.body.subject,req.body.html);
+    
+            return res.status(200).json({
+                error : false,
+                 message : "Email sent successfully"
+    
+             });
+            }
+
+        /* --------------------------- //  SEND BULK EMAIL -------------------------- */
+        static async sendBulkmails(req, res){
+        
+          sendhtmlEMAILBATCH(req.body.recipients,req.body.subject,req.body.html);
+    
+    
+            return res.status(200).json({
+                error : false,
+                 message : "Bulk Emails sent successfully"
+    
+             });
+            }
 
 
 
