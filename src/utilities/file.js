@@ -29,7 +29,7 @@ module.exports = {
         let filePath = TEMPLATE_DIR + template.replace('.','/') + ".html";
 
         const content = fs.readFileSync(filePath).toString();
-
+        
         return TemplateHelper.parseDataToTemplate(content,data);
     }
 };
