@@ -234,6 +234,8 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 /* ---------------------------- users / company details--------------------------- */
 
 Router.middleware(['isAuthenticated']).group((router)=>{
+    
+    router.post('/admin/users/account/batchuser', UserAuthController.BatchUserUpload);
 
     router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
     
@@ -261,7 +263,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     
     router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
     
-    router.post('/admin/users/account/batchuser', UserAuthController.BatchUserUpload);
+   
 
     // router.get("admin//users/account/kybstatus", KYBController.retriveCheck);
 

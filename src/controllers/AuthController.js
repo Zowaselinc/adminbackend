@@ -1,13 +1,14 @@
 
 const {request} = require("express");
 const jwt = require("jsonwebtoken");
-const {Admin,  AccessToken, Activitylog,User, Company, Merchant, Partner, Corporate, Agent, UserCode, MerchantType } = require("~database/models");
+const {Admin,  AccessToken, Activitylog,User, Company, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, ErrorLog } = require("~database/models");
 const { validationResult } = require("express-validator");
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const md5  = require('md5');
 require('dotenv').config();
 const mailer = require("~services/mailer");
+const serveAdminid = require("~utilities/serveAdminId");
 
 class AuthController{
 
@@ -81,9 +82,21 @@ class AuthController{
         }
 
     }catch(e){
-        return res.status(500).json({
-            message: e.toString()
-        })
+        var logError = await ErrorLog.create({
+            error_name: "Error on logging in Admin",
+            error_description: e.toString(),
+            route: "/api/admin/register",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment'+e.toString()
+                
+            })
+
+        }
+
     }
 
 
@@ -159,7 +172,7 @@ class AuthController{
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment',
+                    message: 'Unable to complete request at the moment'
                     
                 })
 

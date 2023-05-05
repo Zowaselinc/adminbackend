@@ -344,7 +344,7 @@ class UserAuthController {
     
                     });
     
-                    /* -----------------------------------  kyc ---------------------------------- */
+                    /* -----------------------------------  kyc verification ---------------------------------- */
                     const applicantId = crypto.randomBytes(16).toString("hex");
                     let checkeId = crypto.randomUUID();
     
@@ -394,10 +394,12 @@ class UserAuthController {
 
 
 
+    /* --------------------------- // register company -------------------------- */
     static async saveCompany(user, data) {
         let company, userKyb;
 
         try {
+            // company registration 
             company = await Company.create({
                 user_id: user.id,
                 company_name: data.company_name,
@@ -410,7 +412,7 @@ class UserAuthController {
                 rc_number: data.rc_number,
                 company_website: data.company_website
             });
-
+                // kyb verification 
                 let checkeId = crypto.randomUUID();
                 userKyb = await KYB.create({
                     user_id:user.id,
