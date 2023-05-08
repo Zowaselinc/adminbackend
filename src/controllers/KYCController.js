@@ -339,7 +339,7 @@ class KYCController {
                 user_id: req.body.user_id,
                 applicant_id: applicantId,
                 check_id: checkeId,
-                status: "completed",
+                status: "complete",
                 bvn:  EncryptConfig(req.body.bvn),
                 verified: 1
 
@@ -394,7 +394,7 @@ class KYCController {
                         }else{
                             return res.status(200).json({
                                 error: false,
-                                message:"Failed update kyc status"
+                                message:"Failed to update kyc status"
                             })
                         }
                     }catch(err){

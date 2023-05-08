@@ -7,6 +7,7 @@ const crypto = require('crypto');
 // const Mailer = require('~services/mailer');
 const md5 = require('md5');
 const { EncryptConfig, DecryptConfig } = require("~utilities/encryption/encrypt");
+const { mydb } = require("~utilities/backupdriver");
 require('dotenv').config();
 
 
@@ -148,38 +149,25 @@ class UserAuthController {
                 });
             }));
     
-            // const token = jwt.sign(
-            //     { user_id: user.id },
-            //     process.env.TOKEN_KEY,
-            //     { expiresIn: "48h" }
-            // );
-    
-            // await UserAuthController.saveToken(user, token, req);
-    
-            // Mailer()
-            //     .to(data.email).from(process.env.MAIL_FROM)
-            //     .subject('Welcome').template('emails.WelcomeEmail').send();
-    
-            res.status(200).json({
+            return res.status(200).json({
                 error: false,
                 status: true,
-                // token: token,
                 user: user
             });
 
-        }catch(e){
+        }catch(err){
             var logError = await ErrorLog.create({
                 error_name: "Error on registering new user",
-                error_description: e.toString(),
+                error_description: err.toString(),
                 route: "/api/admin/users/register",
                 error_code: "500"
             });
             if(logError){
-                return res.status(500).json({
+                return {
                     error: true,
-                    message: 'Unable to complete request at the moment',
+                    message: 'Unable to complete request at the moment' + err.toString(),
                     
-                })
+                }
 
             }
         }
@@ -312,6 +300,7 @@ class UserAuthController {
 
     }
 
+/* ------------------------------ register user ----------------------------- */
     static async saveUser(data) {
         var user, userKycdocs, kycVerification;
         let encryptedPassword = await bcrypt.hash(data.password, 10);
@@ -325,13 +314,13 @@ class UserAuthController {
             }});
 
             if(checkUser){
-                user = {
-                    error: true,
-                    message: `User with email or phone number already exist ${checkUser}`
-                } 
+               return res.status(200).json({
+                error:true,
+                message: "User with this email or phone number already exist"
+               })
             }else{
                 user = await User.create({
-                    first_name: data.first_name,
+                   first_name: data.first_name,
                     last_name: data.last_name,
                     phone: data.phone,
                     email: data.email,
@@ -355,15 +344,15 @@ class UserAuthController {
     
                     });
     
-                    /* -----------------------------------  kyc ---------------------------------- */
+                    /* -----------------------------------  kyc verification ---------------------------------- */
                     const applicantId = crypto.randomBytes(16).toString("hex");
-                    const checkeId = crypto.randomBytes(16).toString("hex");
+                    let checkeId = crypto.randomUUID();
     
                     kycVerification = await KYC.create({
                         user_id: user.id,
                         applicant_id: applicantId,
                         check_id: checkeId,
-                        status: "completed",
+                        status: "complete",
                         bvn:  EncryptConfig(data.bvn),
                         verified: 1
     
@@ -380,23 +369,23 @@ class UserAuthController {
         } catch (err) {
             var logError = await ErrorLog.create({
                 error_name: "Error on creating user",
-                error_description: err.toString(),
+                error_description: err.toString(), 
                 route: "/api/admin/user/account/add",
                 error_code: "500"
             });
             if(logError){
-                return res.status(500).json({
+                return {
                     error: true,
                     message: 'Unable to complete request at the moment' + " " + err.toString(),
                     
-                })
+                }
 
             }
           
-            // user = {
-            //     error: true,
-            //     message: e.toString()
-            // }
+            user = {
+                error: true,
+                message: e.toString()
+            }
         }
 
         return user;
@@ -405,10 +394,12 @@ class UserAuthController {
 
 
 
+    /* --------------------------- // register company -------------------------- */
     static async saveCompany(user, data) {
         let company, userKyb;
 
         try {
+            // company registration 
             company = await Company.create({
                 user_id: user.id,
                 company_name: data.company_name,
@@ -421,15 +412,18 @@ class UserAuthController {
                 rc_number: data.rc_number,
                 company_website: data.company_website
             });
-            if(company){
+                // kyb verification 
+                let checkeId = crypto.randomUUID();
                 userKyb = await KYB.create({
                     user_id:user.id,
                     tax_id: data.tax_id,
                     cac: data.cac,
                     financial_statement: data.financial_statement,
-                    mou: data.mou
+                    mou: data.mou,
+                    check_id: checkeId,
+                    status: "pending"
                 });
-            }
+            
         } catch (err) {
             var logError = await ErrorLog.create({
                 error_name: "Error on creating user",
@@ -438,11 +432,11 @@ class UserAuthController {
                 error_code: "500"
             });
             if(logError){
-                return res.status(500).json({
+                return {
                     error: true,
                     message: 'Unable to complete request at the moment' + " " + err.toString(),
                     
-                })
+                }
 
             }
         }
@@ -689,9 +683,301 @@ class UserAuthController {
 
     }
 
+    /* ---------------------------- ENDPONT FOR BATCHUPLOAD --------------------------- */
+    static async BatchUserUpload(req, res) {
+
+        try{
+            const errors = validationResult(req);
+    
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+    
+            const data = req.body;
+            let user = await UserAuthController.batchUser(data);
+            console.log("log");
+    
+            if (!user) {
+                console.log(user)
+                return res.status(400).json({
+                    error: true,
+                    status: false,
+                    message: user
+                });
+            }
+    
+            if (data.has_company) {
+                var response = await UserAuthController.batchCompany(user, data);
+                if (response.error) {
+                    
+                    return res.status(400).json({
+                        error: true,
+                        message: response.message
+                    });
+                }
+            }
+    
+            var UserTypeModel = data.user_type == "merchant" ? Merchant : Corporate;
+           
+            let change;
+            if (data.user_type == "merchant") {
+               
+                var merchantType = await MerchantType.findOne({ where: { title: 'grower' } });
+                if (merchantType) {
+                    change = { type_id: merchantType.id };
+                }
+            } else {
+                change = { type: "red-hot" };
+                
+            }
+    
+            await UserTypeModel.create({ ...change, ...{ user_id: user.id } }).catch((error => {
+                return res.status(400).json({
+                    error: true,
+                    message: error
+                });
+            }));
+    
+            return res.status(200).json({
+                error: false,
+                status: true,
+               message: "Successful"
+            });
+
+        }catch(err){
+            var logError = await ErrorLog.create({
+                error_name: "Error on user batch upload",
+                error_description: err.toString(),
+                route: "/api/admin/users/batchuser",
+                error_code: "500"
+            });
+            if(logError){
+                return {
+                    error: true,
+                    message: 'Unable to complete request at the moment' + err.toString(),
+                    
+                }
+
+            }
+        }
+
+    }
 
 
 
+    
+    static async batchUser(data) {
+        try{
+       /* ---------------------------- Receive JSON ARRAY --------------------------- */
+
+       /* ------------------------------- create user ------------------------------ */
+       const checkUser = await User.findOne({where:{
+        [Op.or]: [
+            {email: data.email},
+            {phone: data.phone}
+        ],
+    }});
+
+    if(checkUser){
+        return {
+            error:true,
+            message: "User with this email or phone number already exist"
+           };
+    }else{
+        let encryptedPassword = await bcrypt.hash(data.password, 10);
+
+        const user = await User.create({
+        first_name: data.first_name,
+        last_name: data.last_name,
+        phone: data.phone,
+        email: data.email,
+        is_verified: 0,
+        status: 1,
+        password: encryptedPassword,
+        type: data.user_type,
+        account_type: data.has_company || data.company_email ? "company" : "individual",
+  
+  });
+
+  
+  if(user){
+    /* -------------------------- upload and verify user kycdocs ------------------------- */
+    const userKycdocs = await Kycdocs.create({
+        user_id:user.id,
+        id_type: data.id_type,
+        id_front: data.id_front,
+        id_back:data.id_back,
+        id_number: data.id_number
+
+    });
+
+    /* ----------------------- upload and verify user kyc ----------------------- */
+    const applicantId = crypto.randomBytes(16).toString("hex");
+    const checkedId = crypto.randomUUID();
+
+    const kycVerification = await KYC.create({
+        user_id: user.id,
+        applicant_id: applicantId,
+        check_id: checkedId,
+        status: "complete",
+        bvn:  EncryptConfig(data.bvn),
+        verified: 1
+
+    });
+
+    // Create user wallet
+    let wallet = await Wallet.create({
+            user_id: user.id,
+            balance: 0
+        });
+    }
+    return user.id;
+    }
+
+    }catch(error){
+        var logError = await ErrorLog.create({
+            error_name: "Error on batchupload",
+            error_description: error.toString(),
+            route: "/api/admin/user/account/batchuser",
+            error_code: "500"
+        });
+        if(logError){
+            return {
+                error: true,
+                message: 'Unable to complete request at the moment' + " " + error.toString(),
+            };
+         }
+        }
+        
+    }
+
+    static async batchCompany(user, data) {
+        
+        try{
+            /* ---------------------------- add company info ---------------------------- */
+      const company = await Company.create({
+        user_id: user.id,
+        company_name: data.company_name,
+        company_address: data.company_address,
+        company_phone: data.company_phone,
+        company_email: data.company_email,
+        state: data.company_state,
+        country: data.company_country,
+        contact_person: data.contact_person,
+        rc_number: data.rc_number,
+        company_website: data.company_website
+    });
+        if(company){
+    /* --------------------------- upload kyb document -------------------------- */
+    let checkeId = crypto.randomUUID();
+    const userKyb = await KYB.create({
+        user_id:user.id,
+        tax_id: data.tax_id,
+        cac: data.cac,
+        financial_statement: data.financial_statement,
+        mou: data.mou,
+        check_id: checkeId,
+        status: "pending"
+    });
 }
+
+        }catch(error){
+                var logError = await ErrorLog.create({
+                    error_name: "Error on batchupload",
+                    error_description: error.toString(),
+                    route: "/api/admin/user/account/batchuser",
+                    error_code: "500"
+                });
+                if(logError){
+                    
+                    return {
+                        error: true,
+                        message: 'Unable to complete request at the moment' + " " + error.toString(),
+                    }
+                 }
+             }
+           
+        }
+
+
+
+
+
+
+        /* ----------------------- END POINT FOR HUBSPOT ----------------------- */
+    static async createHubspot(req, res){
+        console.log("ssss")
+        // console.log(req.files);
+
+        // try{
+           
+        //     const data = req.body;
+
+        //     const errors = validationResult(req);
+  
+        //     if (!errors.isEmpty()) {
+        //     return res.status(400).json({
+        //         errors:true,
+        //         message: "All fields are required",
+        //         data: {}
+        //         });
+        //     }
+
+            
+        //     var hubSpotUser = await User.create({
+
+        //         first_name: data.first_name,
+        //         last_name: data.last_name,
+        //         phone: data.phone,
+        //         email: data.email,
+        //         is_verified: 0,
+        //         status: 1,
+        //         password: encryptedPassword,
+        //         type: data.user_type,
+        //         // account_type: "individual",
+        //         account_type: data.has_company || data.company_email ? "company" : "individual",
+                   
+               
+        //     });
+                    
+
+        //     if(hubSpotUser){
+        //         return res.status(200).json({
+        //             error : false,
+        //              message : "User created succesfully"
+
+        //          });
+ 
+        //     }else{
+        //         return res.status(200).json({
+        //             error : true,
+        //              message : "Failed to create user"
+  
+        //          });
+
+        //     }
+        
+
+        // }catch(e){
+        //     var logError = await ErrorLog.create({
+        //         error_name: "Error on creating block",
+        //         error_description: e.toString(),
+        //         route: "/api/admin/block/add",
+        //         error_code: "500"
+        //     });
+        //     if(logError){
+        //         return res.status(500).json({
+        //             error: true,
+        //             message: 'Unable to complete request at the moment',
+                    
+        //         })
+
+        //     }
+
+        // }
+    }
+    /* -------------------------------------------------------------------------- */
+    }
+
 
 module.exports = UserAuthController;

@@ -1,13 +1,14 @@
 
 const {request} = require("express");
 const jwt = require("jsonwebtoken");
-const {Admin,  AccessToken, Activitylog,User, Company, Merchant, Partner, Corporate, Agent, UserCode, MerchantType } = require("~database/models");
+const {Admin,  AccessToken, Activitylog,User, Company, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, ErrorLog } = require("~database/models");
 const { validationResult } = require("express-validator");
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const md5  = require('md5');
 require('dotenv').config();
 const mailer = require("~services/mailer");
+const serveAdminid = require("~utilities/serveAdminId");
 
 class AuthController{
 
@@ -54,17 +55,25 @@ class AuthController{
                 /* ------------------------- SEND NOTIFICATION EMAIL ------------------------ */
             
                 if(activlog){
-                    await mailer().to(req.body.email).from(process.env.MAIL_FROM)
-                    .subject('Login Notification').template("emails/LoginNotify").send();
-                     admin['password']="";
-                     
-                    return res.status(200).json({
+                    
+                    try {
+                        mailer().to(req.body.email).from(process.env.MAIL_FROM)
+                        .subject('Login Notification').template("emails/LoginNotify").send();
+                         admin['password']="";
+                       
+                    } catch (error) {
+                        
+                    }
+                   
+                     return res.status(200).json({
                         error : false,
                         token : token,
                         message : "Logged in successfully",
                         data: admin
                     })
                 }
+                  
+             
    
             }else{
                 return res.status(400).json({
@@ -81,9 +90,21 @@ class AuthController{
         }
 
     }catch(e){
-        return res.status(500).json({
-            message: e.toString()
-        })
+        var logError = await ErrorLog.create({
+            error_name: "Error on logging in Admin",
+            error_description: e.toString(),
+            route: "/api/admin/register",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment'+e.toString()
+                
+            })
+
+        }
+
     }
 
 
@@ -159,7 +180,7 @@ class AuthController{
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment',
+                    message: 'Unable to complete request at the moment'
                     
                 })
 

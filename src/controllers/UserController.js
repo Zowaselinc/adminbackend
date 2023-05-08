@@ -287,6 +287,10 @@ class UserController{
          }
     }
 
+    // static async addhubSpotuser(req, res){
+    //     console.log("hellow");
+    // }
+
     
 }
 
