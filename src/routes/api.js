@@ -37,6 +37,7 @@ const AccountController= require('~controllers/AccountController');
 const KYCController= require('~controllers/KYCController');
 const KYBController= require('~controllers/KYBController');
 const KycDocsController= require('~controllers/KycDocsController');
+const HubspotController= require('~controllers/HubspotController');
 
 
 
@@ -97,7 +98,10 @@ const Router = RouteProvider.Router;
 /* ------------------------- // Authentication route ------------------------ */
 Router.group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
+    
     router.post('/admin/auth/register',AdminValidator.createAdminValidator,AuthController.registerAdmin);
+
+    router.post('/admin/add', AdminValidator.createAdminValidator, AdminController.createAdmin);
    
 });
 
@@ -122,7 +126,7 @@ Router.group((router)=>{
 /* ----------------------------- // Admin routes ---------------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
 
-    router.post('/admin/add', AdminValidator.createAdminValidator, AdminController.createAdmin);
+   
     router.get('/admin/getall', AdminController.getAllAdmins);
     router.get('/admin/getbyadminid/:admin_id', AdminController.getadminbyadminid);
     router.get('/admin/getbyid/:id', AdminController.getadminbyid);
@@ -249,7 +253,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     
     router.post('/admin/users/account/batchuser', UserAuthController.BatchUserUpload);
 
-    router.post('/admin/users/account/hubspotuser', UserAuthController.createHubspot);
+    router.post('/admin/users/account/hubspotuser', HubspotController.createHubspotusers);
 
     router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
     

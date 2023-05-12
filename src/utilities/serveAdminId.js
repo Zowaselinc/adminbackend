@@ -1,6 +1,6 @@
 
 const jwt = require("jsonwebtoken");
-const { Admin, ErrorLog } = require("~database/models");
+const { Admin, } = require("~database/models");
 
 
 exports.getTheId = async(req)=>{

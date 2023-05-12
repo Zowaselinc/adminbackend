@@ -902,81 +902,61 @@ class UserAuthController {
 
 
 
+        // create hubspot users 
+        // static async createHubspotusers(req,res){
+    
+        //     try{
 
-
-        /* ----------------------- END POINT FOR HUBSPOT ----------------------- */
-    static async createHubspot(req, res){
-        console.log("ssss")
-        // console.log(req.files);
-
-        // try{
-           
-        //     const data = req.body;
-
-        //     const errors = validationResult(req);
-  
-        //     if (!errors.isEmpty()) {
-        //     return res.status(400).json({
-        //         errors:true,
-        //         message: "All fields are required",
-        //         data: {}
-        //         });
-        //     }
-
-            
-        //     var hubSpotUser = await User.create({
-
-        //         first_name: data.first_name,
-        //         last_name: data.last_name,
-        //         phone: data.phone,
-        //         email: data.email,
-        //         is_verified: 0,
-        //         status: 1,
-        //         password: encryptedPassword,
-        //         type: data.user_type,
-        //         // account_type: "individual",
-        //         account_type: data.has_company || data.company_email ? "company" : "individual",
-                   
-               
-        //     });
-                    
-
-        //     if(hubSpotUser){
-        //         return res.status(200).json({
-        //             error : false,
-        //              message : "User created succesfully"
-
-        //          });
- 
-        //     }else{
-        //         return res.status(200).json({
-        //             error : true,
-        //              message : "Failed to create user"
-  
-        //          });
-
-        //     }
-        
-
-        // }catch(e){
-        //     var logError = await ErrorLog.create({
-        //         error_name: "Error on creating block",
-        //         error_description: e.toString(),
-        //         route: "/api/admin/block/add",
-        //         error_code: "500"
-        //     });
-        //     if(logError){
-        //         return res.status(500).json({
-        //             error: true,
-        //             message: 'Unable to complete request at the moment',
-                    
+        //         // check for already existing 
+        //         var checkmailPhone = await User.findOne({
+        //             where:{email:req.body.email, phone:req.body.phone}
         //         })
 
-        //     }
+        //         if(checkmailPhone){
+        //             return res.status(200).json({
+        //                 error:true,
+        //                 message:"Email or phone number already exist"
+        //             })
+        //         }else{
 
+                
+            
+        //     let encryptedPassword = await bcrypt.hash(req.body.password, 10);
+    
+        //         const hubspotuser = await User.create({
+        //             first_name:req.body.first_name,
+        //             last_name:req.body.last_name,
+        //             phone:req.body.phone,
+        //             email:req.body.email,
+        //             password:encryptedPassword,
+        //             type: req.body.user_type,
+        //             account_type: req.body.has_company || req.body.company_email ? "company" : "individual"
+    
+        //         });
+        //         if(hubspotuser){
+        //             return res.status(200).json({
+        //                 error:false,
+        //                 message:"Hubsport user created successfully"
+        //             })
+        //         }else{
+        //             return res.status(400).json({
+        //                 error:true,
+        //                 message:"Failed to create hubspot user"
+        //             })
+        //         }
+        //     }
+    
+        //     }catch(err){
+        //         return res.status(500).json({
+        //             error: true,
+        //             message: 'Unable to complete request at the moment'+err.toString()
+                    
+        //         })
+    
+        //     }
         // }
-    }
-    /* -------------------------------------------------------------------------- */
+    
+        
     }
 
 

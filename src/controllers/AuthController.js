@@ -1,7 +1,7 @@
 
 const {request} = require("express");
 const jwt = require("jsonwebtoken");
-const {Admin,  AccessToken, Activitylog,User, Company, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, ErrorLog } = require("~database/models");
+const {Admin,  Activitylog, ErrorLog } = require("~database/models");
 const { validationResult } = require("express-validator");
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
@@ -115,7 +115,7 @@ class AuthController{
 
     static async registerAdmin(req, res){
         try{
-            var adminId = await  serveAdminid.getTheId(req);
+           
 
             const errors = validationResult(req);
   
@@ -145,6 +145,7 @@ class AuthController{
             });
 
         /* ---------------------------------- LOGIN ACTIVITY LOG --------------------------------- */
+                 var adminId = await  serveAdminid.getTheId(req);
                      
                       await Activitylog.create({
                         admin_id:adminId ,
@@ -180,7 +181,7 @@ class AuthController{
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment'
+                    message: 'Unable to complete request at the moment' + " " + e.toString()
                     
                 })
 

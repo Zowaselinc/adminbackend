@@ -99,7 +99,7 @@ class Knowledgebase_articleController{
                        action:'Viewing all article in the list'
                    });
                     /* ---------------------------------- ARTICLE ACTIVITY LOG --------------------------------- */
-                if(articles){
+                if(articles.length>0){
                     return res.status(200).json({
                         error : false,
                         message: "Articles acquired successfully",
@@ -109,7 +109,7 @@ class Knowledgebase_articleController{
                 }else{
                     return res.status(200).json({
                         error : true,
-                        message: "Unable to fetch Articles",
+                        message: "No Articles found",
                     });
 
                 }

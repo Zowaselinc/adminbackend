@@ -10,7 +10,7 @@ class AdminController{
 /* ----------------------- CREATE/ADD ADMIN END POINT ----------------------- */
     static async createAdmin(req, res){
         try{
-            var adminId = await  serveAdminid.getTheId(req);
+           
 
             const errors = validationResult(req);
   
@@ -51,6 +51,7 @@ class AdminController{
             });
                     
                       /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                      var adminId = await  serveAdminid.getTheId(req);
                      
                       await Activitylog.create({
                         admin_id:adminId ,
@@ -87,7 +88,7 @@ class AdminController{
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment',
+                    message: 'Unable to complete request at the moment'+ "" + err.toString(),
                     
                 })
 

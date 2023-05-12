@@ -1,4 +1,4 @@
-const { AccessToken, Admin} = require("~database/models");
+const { Admin} = require("~database/models");
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
 class AuthMiddleware{
