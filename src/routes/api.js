@@ -96,7 +96,7 @@ const Router = RouteProvider.Router;
 /* --------------------------- // DASHBOARD ROUTES -------------------------- */
 
 /* ------------------------- // Authentication route ------------------------ */
-Router.group((router)=>{
+Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
     
     router.post('/admin/auth/register',AdminValidator.createAdminValidator,AuthController.registerAdmin);
@@ -497,22 +497,33 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
         router.post('/admin/block/delete/:id',BlockController.deleteBlockbyid); 
     });
      /* --------------------- ZOWASEL LANDING KNOWLEDGE BASE --------------------- */
+
      /* ------------------------ ROUTE FOR ZOWASEL ARTICLE ----------------------- */
-    Router.middleware(['isAuthenticated']).group((router) => {
-        router.post('/admin/article/add',KnowledgebaseArticleValidator.articleValidator,KnowledgebaseArticle.createArticle);
+
+     Router.group((router) => {
         router.get('/admin/article/getall',KnowledgebaseArticle.getAllArticle);
         router.get('/admin/article/getbyparams/:offset/:limit',KnowledgebaseArticle.getArticlebyparams);
         router.get('/admin/article/getbyid/:id',KnowledgebaseArticle.getArticlebyid);
         router.get('/admin/article/getbyarticleid/:article_id',KnowledgebaseArticle.getArticlebyarticleid);
+
+        // knowledgebase category 
+
+        router.get('/admin/kbcategory/getall',KnowledgebasCategory.getAllKBcategory);
+        router.get('/admin/kbcategory/getbyparams/:offset/:limit',KnowledgebasCategory.getKBcategorybyparams);
+        router.get('/admin/kbcategory/getbyid/:id',KnowledgebasCategory.getKBcategorybyid);
+        router.get('/admin/kbcategory/getbycategoryid/:category_id',KnowledgebasCategory.getkbcategorybycategoryid);
+
+     });
+     
+    Router.middleware(["isAuthenticated"]).group((router) => {
+        router.post('/admin/article/add',KnowledgebaseArticleValidator.articleValidator,KnowledgebaseArticle.createArticle);
+       
         router.post('/admin/article/edit/',KnowledgebaseArticle.editArticlebyid);
         router.post('/admin/article/delete/:id',KnowledgebaseArticle.deleteArticlebyid); 
 
         /* ---------------- ROUTE FOR ZOWASEL KNOWLEDGE BASE CATEGORY --------------- */
         router.post('/admin/kbcategory/add',KnowlegebaseCategoryValidator.knowledgebasecategoryValidator,KnowledgebasCategory.createKBcategory);
-        router.get('/admin/kbcategory/getall',KnowledgebasCategory.getAllKBcategory);
-        router.get('/admin/kbcategory/getbyparams/:offset/:limit',KnowledgebasCategory.getKBcategorybyparams);
-        router.get('/admin/kbcategory/getbyid/:id',KnowledgebasCategory.getKBcategorybyid);
-        router.get('/admin/kbcategory/getbycategoryid/:category_id',KnowledgebasCategory.getkbcategorybycategoryid);
+        
         router.post('/admin/kbcategory/edit/',KnowledgebasCategory.editkbCategorybyid);
         router.post('/admin/kbcategory/delete/:id',KnowledgebasCategory.deletekbCategorybyid); 
 

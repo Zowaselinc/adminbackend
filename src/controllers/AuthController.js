@@ -45,6 +45,7 @@ class AuthController{
 
                 
                 /* -------------------------- RECORD LOGIN ACTIVITY ------------------------- */
+               
                 var activlog = await Activitylog.create({
                     admin_id:admin['admin_id'],
                     section_accessed:'Dashboard Home',
@@ -172,6 +173,7 @@ class AuthController{
             }
 
         }catch(e){
+            
             var logError = await ErrorLog.create({
                 error_name: "Error on registering new Admin",
                 error_description: e.toString(),
@@ -186,6 +188,7 @@ class AuthController{
                 })
 
             }
+            console.log(e.message );
 
         }
     }
