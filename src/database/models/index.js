@@ -74,6 +74,7 @@ const KnowledgebasCategory = DB.block= require("./knowledgebase_category.model")
 const KYC = DB.kyc= require("./kyc.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const KYB = DB.kyb= require("./kyb.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Kycdocs = DB.kycdocs= require("./kycdocs.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Sms= DB.sms= require("./adminsms.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -301,5 +302,6 @@ module.exports = {
   KnowledgebasCategory,
   KYC,
   KYB,
-  Kycdocs
+  Kycdocs,
+  Sms
 };

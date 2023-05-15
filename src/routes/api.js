@@ -38,6 +38,7 @@ const KYCController= require('~controllers/KYCController');
 const KYBController= require('~controllers/KYBController');
 const KycDocsController= require('~controllers/KycDocsController');
 const HubspotController= require('~controllers/HubspotController');
+const AdminsmsController= require('~controllers/AdminsmsController');
 
 
 
@@ -218,6 +219,17 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.get('/admin/message/getbyuserid/:id',MessageController.getMessagebyid);
     router.post('/admin/message/edit',MessageController.editMessage);
     router.post('/admin/message/delete/:id',MessageController.deleteMessage);
+ });
+
+
+ /* --------------------- //  ROUTE FOR MESSAGE END POINT -------------------- */
+Router.middleware(['isAuthenticated']).group((router)=>{
+    router.post('/admin/sms/send',AdminsmsController.sendSms);
+    router.get('/admin/sms/getallparams/:offset/:limit',AdminsmsController.getSmsbyparams);
+    router.get('/admin/sms/getbyid/:id',AdminsmsController.getSmsbyid);
+    router.get('/admin/sms/getall',AdminsmsController.getAllSms);
+    router.post('/admin/sms/edit',AdminsmsController.editSms);
+    router.post('/admin/sms/delete/:id',AdminsmsController.deleteSms);
  });
 
 
@@ -520,6 +532,7 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
        
         router.post('/admin/article/edit/',KnowledgebaseArticle.editArticlebyid);
         router.post('/admin/article/delete/:id',KnowledgebaseArticle.deleteArticlebyid); 
+        
 
         /* ---------------- ROUTE FOR ZOWASEL KNOWLEDGE BASE CATEGORY --------------- */
         router.post('/admin/kbcategory/add',KnowlegebaseCategoryValidator.knowledgebasecategoryValidator,KnowledgebasCategory.createKBcategory);
