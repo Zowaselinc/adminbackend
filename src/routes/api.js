@@ -97,8 +97,14 @@ const Router = RouteProvider.Router;
 /* --------------------------- // DASHBOARD ROUTES -------------------------- */
 
 /* ------------------------- // Authentication route ------------------------ */
-Router.middleware(['isAuthenticated']).group((router)=>{
+Router.group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
+    
+   
+   
+});
+Router.middleware(['isAuthenticated']).group((router)=>{
+   
     
     router.post('/admin/auth/register',AdminValidator.createAdminValidator,AuthController.registerAdmin);
 
@@ -227,6 +233,8 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/sms/send',AdminsmsController.sendSms);
     router.get('/admin/sms/getallparams/:offset/:limit',AdminsmsController.getSmsbyparams);
     router.get('/admin/sms/getbyid/:id',AdminsmsController.getSmsbyid);
+    router.get('/admin/sms/messageid/:message_id',AdminsmsController.getsmsBymessageid);
+    router.get('/admin/sms/byadmin/:admin',AdminsmsController.getSmsbyAdmin);
     router.get('/admin/sms/getall',AdminsmsController.getAllSms);
     router.post('/admin/sms/edit',AdminsmsController.editSms);
     router.post('/admin/sms/delete/:id',AdminsmsController.deleteSms);

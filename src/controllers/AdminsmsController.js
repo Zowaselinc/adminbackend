@@ -138,7 +138,7 @@ class AdminsmsController{
         try{
 
         
-        var singleSms = Sms.findOne({where:{id:req.params.id}})
+        var singleSms = await Sms.findOne({where:{id:req.params.id}})
                /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                var adminId = await  serveAdminid.getTheId(req);
 
@@ -149,10 +149,10 @@ class AdminsmsController{
                  action:'Viewing message'
              });
               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
-        if(singleSms.length<1){
+        if(singleSms==null){
             return res.status(200).json({
                 error:true,
-                message: 'Not found'
+                message: 'Not found! invalid id'
             })
         }else{
             return res.status(200).json({
@@ -181,6 +181,109 @@ class AdminsmsController{
     }
     }
 
+        /* ----------------------------- GET SMS BY AMIN ---------------------------- */
+
+
+
+
+    /* --------------------- GET SMS BY  ID ENDPOINT --------------------- */
+    static async getSmsbyAdmin(req,res){
+        try{
+
+        
+        var viewByadmin =await Sms.findOne({where:{admin:req.params.admin}})
+               /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+               var adminId = await  serveAdminid.getTheId(req);
+
+               await Activitylog.create({
+                 admin_id:adminId ,
+                 section_accessed:'View message by admin',
+                 page_route:'/api/admin/sms/byadmin/:admin',
+                 action:'Viewing message'
+             });
+              /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+        if(viewByadmin == null){
+            return res.status(200).json({
+                error:true,
+                message: 'Not found! invalid admin id'
+            })
+        }else{
+            return res.status(200).json({
+                error: false,
+                message: 'Message acquired successfully',
+                data: viewByadmin
+            })
+        }
+    }catch(e){
+        
+        var logError = await ErrorLog.create({
+            error_name: "Error on getting message by admin",
+            error_description: e.toString(),
+            route: "/api/admin/sms/byadmin/:admin",
+            error_code: "500"
+        });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment'+""+e.toString(),
+                
+                
+            })
+
+        }
+    }
+    }
+
+
+
+        /* -------------------------- GET SMS BY MESSAGE ID ------------------------- */
+        static async getsmsBymessageid(req,res){
+            try{
+    
+            
+            var viewBymessageid = await Sms.findOne({where:{message_id:req.params.message_id}})
+                   /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                   var adminId = await  serveAdminid.getTheId(req);
+    
+                   await Activitylog.create({
+                     admin_id:adminId ,
+                     section_accessed:'View sms by message id',
+                     page_route:'/api/admin/sms/messageid/:message_id',
+                     action:'Viewing sms'
+                 });
+                  /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+            if(viewBymessageid==null){
+                return res.status(200).json({
+                    error:true,
+                    message: 'Not found! invalid message id'
+                })
+            }else{
+                return res.status(200).json({
+                    error: false,
+                    message: 'Message acquired successfully',
+                    data: viewBymessageid
+                })
+            }
+        }catch(e){
+            
+            var logError = await ErrorLog.create({
+                error_name: "Error on getting sms by message id",
+                error_description: e.toString(),
+                route: "/api/admin/sms/messageid/:message_id",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment'+""+e.toString(),
+                    
+                    
+                })
+    
+            }
+        }
+        }
+    
         /* ------------------------------- get all sms ------------------------------ */
 
         /* ------------------------ GET ALL ADMINS END POINT ------------------------ */
@@ -256,7 +359,7 @@ class AdminsmsController{
             return res.status(200).json({
                 error: false,
                 message: "Message edited successfully",
-                data: editsms 
+               
             })
         }else{
             return res.status(200).json({
