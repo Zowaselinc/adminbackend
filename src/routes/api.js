@@ -512,7 +512,7 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
 
      /* ------------------------ ROUTE FOR ZOWASEL ARTICLE ----------------------- */
 
-     Router.group((router) => {
+     Router.middleware(["isGuest"]).group((router) => {
         router.get('/admin/article/getall',KnowledgebaseArticle.getAllArticle);
         router.get('/admin/article/getbyparams/:offset/:limit',KnowledgebaseArticle.getArticlebyparams);
         router.get('/admin/article/getbyid/:id',KnowledgebaseArticle.getArticlebyid);
@@ -532,7 +532,7 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
        
         router.post('/admin/article/edit/',KnowledgebaseArticle.editArticlebyid);
         router.post('/admin/article/delete/:id',KnowledgebaseArticle.deleteArticlebyid); 
-        
+
 
         /* ---------------- ROUTE FOR ZOWASEL KNOWLEDGE BASE CATEGORY --------------- */
         router.post('/admin/kbcategory/add',KnowlegebaseCategoryValidator.knowledgebasecategoryValidator,KnowledgebasCategory.createKBcategory);
