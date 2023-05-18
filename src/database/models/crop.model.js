@@ -6,10 +6,6 @@ let Schema = (Sequelize,mode) => {
             type: Sequelize.INTEGER(11),
             allowNull : false
         },
-        title : {
-            type: Sequelize.STRING,
-            allowNull : false
-        },
         type : {
             type: Sequelize.STRING,
             allowNull : false
@@ -27,11 +23,11 @@ let Schema = (Sequelize,mode) => {
             allowNull : false
         },
         description : {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             allowNull : false
         },
         images : {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
             // allowNull : false
         },
         currency : {
@@ -51,6 +47,10 @@ let Schema = (Sequelize,mode) => {
             allowNull : false
         },
         application : {
+            type: Sequelize.TEXT,
+            allowNull : false
+        },
+        warehouse_address : {
             type: Sequelize.STRING,
             allowNull : false
         },

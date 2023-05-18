@@ -39,6 +39,7 @@ const KYBController= require('~controllers/KYBController');
 const KycDocsController= require('~controllers/KycDocsController');
 const HubspotController= require('~controllers/HubspotController');
 const AdminsmsController= require('~controllers/AdminsmsController');
+const Manager_assigneeController= require('~controllers/Manager_assigneeController');
 
 
 
@@ -88,6 +89,7 @@ const { RegisterMerchantCorporateValidator, LoginValidator,
 
 /* --------------------------- // providerS --------------------------- */
 const RouteProvider = require('~providers/RouteProvider');
+const UserAuthValidators = require('./validators/UserAuthValidators');
 
 
 const Router = RouteProvider.Router;
@@ -99,9 +101,7 @@ const Router = RouteProvider.Router;
 /* ------------------------- // Authentication route ------------------------ */
 Router.group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
-    
-   
-   
+     
 });
 Router.middleware(['isAuthenticated']).group((router)=>{
    
@@ -273,7 +273,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     
     router.post('/admin/users/account/batchuser', UserAuthController.BatchUserUpload);
 
-    router.post('/admin/users/account/hubspotuser', HubspotController.createHubspotusers);
+    router.post('/admin/users/account/hubspotuser', RegisterMerchantCorporateValidator, HubspotController.createHubspotusers);
 
     router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
     
@@ -550,6 +550,18 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
 
         
 
+    });
+
+    /* ------------------------- ROUTE FOR LANDING PAGE ------------------------- */
+    Router.middleware(['isAuthenticated']).group((router) => {
+        /* --------------------------- LANDING PAGE ROUTE --------------------------- */
+         router.post('/admin/manager/add',Manager_assigneeController.createManagerAssignee);
+         router.get('/admin/manager/getall',Manager_assigneeController.getAllManagerAssignee);
+        //  router.get('/admin/manager/getbyparams/:offset/:limit',Manager_assigneeController. getManagerAsigneebyid);
+         router.get('/admin/manager/getbyid/:id',Manager_assigneeController.getManagerAsigneebyid);
+        //  router.get('/admin/manager/getbypageid/:page_id',Manager_assigneeController.getPagebyPageid);
+         router.post('/admin/manager/edit',Manager_assigneeController.editManagerassignee);
+         router.post('/admin/manager/delete/:id',Manager_assigneeController.delManagerAssigneeid);
     });
 
 module.exports = Router;

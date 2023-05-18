@@ -75,6 +75,7 @@ const KYC = DB.kyc= require("./kyc.model").Model(initialInstance, createSequeliz
 const KYB = DB.kyb= require("./kyb.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Kycdocs = DB.kycdocs= require("./kycdocs.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Sms= DB.sms= require("./adminsms.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const ManagerAssignee = DB.sms= require("./manager_assignee.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -260,6 +261,17 @@ User.hasOne(Kycdocs,{
   as : "kycdocs"
 });
 
+ManagerAssignee.hasOne(User,{
+  foreignKey : "id",
+  as : "user"
+});
+
+
+ManagerAssignee.hasOne(Admin,{
+  foreignKey : "id",
+  as : "admin"
+});
+
 
 module.exports = {
   DB,
@@ -303,5 +315,6 @@ module.exports = {
   KYC,
   KYB,
   Kycdocs,
-  Sms
+  Sms,
+  ManagerAssignee
 };
