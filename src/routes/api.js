@@ -275,8 +275,15 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
     router.post('/admin/users/account/hubspotuser', RegisterMerchantCorporateValidator, HubspotController.createHubspotusers);
 
+    // register corporate and merchant with or without account note, admin does kyc and kyb for users as their account are created
     router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
     
+    // update kyc status 
+    router.post('/admin/users/account/updatekycstatus',UserAuthController.updatekycStatus);
+
+    // update kyb status 
+    router.post('/admin/users/account/updatekybstatus',UserAuthController.updatekybStatus);
+
     router.get('/admin/users/getall',UserController.getAllUsers); 
 
     router.get('/admin/users/bytype/:type', UserController.getUsersByType);
@@ -299,7 +306,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     
     // router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
     
-    router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
+    // router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
     
    
 
@@ -310,14 +317,14 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     /* ----------------------------------- kyc ---------------------------------- */
     router.get('/admin/users/account/kyctypes', KYCController.getDocumentTypes);
 
-    router.post('/admin/users/account/kycverification',  KYCController.verifykyc);
+    // router.post('/admin/users/account/kycverification',  KYCController.verifykyc);
 
     //   router.get("/admin/users/account/kycstatus", KYCController.retriveCheck);
     
     // router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
 
     /* ----------------------- kyc status and verification ---------------------- */
-    router.post('/admin/users/account/updatekycstatus',  KYCController.updatekycStatus);
+    // router.post('/admin/users/account/updatekycstatus',  KYCController.updatekycStatus);
     
     /* ------------------------------ kycdocs apis ----------------------------- */
     router.post('/admin/users/account/updatekycdocs', AccountValidator.kycDocs, KycDocsController.updateKycDocs);
@@ -397,7 +404,7 @@ Router.middleware(['isAuthenticated']).group((router) => {
 /* --------------------- // ROUTES FOR CROPS END POINTS --------------------- */
 /* ------------------------------- Crop ------------------------------ */
 Router.middleware(['isAuthenticated']).group((router) => {
-router.router.post('/admin/crop/add', CropValidator.addCropValidator, CropController.add);
+router.post('/admin/crop/add', CropValidator.addCropValidator, CropController.add);
 router.get('/admin/crop/getbycropwanted', CropController.getByCropWanted);
 router.get('/admin/crop/getbycropauction', CropController.getByCropAuctions);
 router.get('/admin/crop/getbycropoffer', CropController.getByCropOffer);

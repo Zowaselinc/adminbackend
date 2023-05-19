@@ -1,4 +1,4 @@
-
+const express = require('express');
 const ApiRouter = require('./api');
 
 const bodyParser = require("body-parser");
@@ -12,6 +12,7 @@ class Routes{
         //Here we are configuring express to use body-parser as middle-ware.
         this.app.use(bodyParser.urlencoded({ extended: false }));
         this.app.use(bodyParser.json());
+        this.app.use(express.static('public'))
         this.app.use(fileUpload());
     }
 

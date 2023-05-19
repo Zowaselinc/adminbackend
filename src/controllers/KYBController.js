@@ -23,11 +23,13 @@ class KYBController {
 
                     //CREATE KYB RECORD
                     const userKyb = await KYB.create({
-                        user_id: req.body.user_id,
-                        tax_id: req.body.tax_id,
-                        cac: req.body.cac,
-                        financial_statement: req.body.financial_statement,
-                        mou: req.body.mou
+                        user_id:req.body.user_id,
+                        tax_id: data.tax_id,
+                        cac: data.cac,
+                        financial_statement: data.financial_statement,
+                        mou: data.mou,
+                        check_id: checkeId,
+                        status: "pending"
                     });
 
                     if (userKyb) {
@@ -59,6 +61,48 @@ class KYBController {
                     }
                 }
             }
+
+            // /* ---------------------------- update kyb status --------------------------- */
+            // static async updatekybStatus(req, res){
+
+            //     try{
+
+            //         const updateStatus = await KYB.update({
+            //            status:req.body.status,
+            //         },{where:{user_id : req.body.user_id}});
+
+            //         if(updateStatus){
+            //             return res.status(200).json({
+            //                 error:false,
+            //                 message:"KYB status updated"
+            //             })
+            //         }else{
+            //             return res.status(200).json({
+            //                 error: false,
+            //                 message:"Failed to update kyb status"
+            //             })
+            //         }
+            //     }catch(err){
+            //         var logError = await ErrorLog.create({
+            //             error_name: "Error on updating kyb status",
+            //             error_description: err.toString(),
+            //             route: "/api/admin/user/account/updatekybstatus",
+            //             error_code: "500"
+            //         });
+            //         if(logError){
+            //             return res.status(500).json({
+            //                 error: true,
+            //                 message: 'Unable to complete request at the moment' + err.toString(),
+                            
+            //             })
+    
+            //         }
+
+            //     }
+            // }
+
+
+        
         }
 
 module.exports = KYBController;

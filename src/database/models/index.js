@@ -261,16 +261,7 @@ User.hasOne(Kycdocs,{
   as : "kycdocs"
 });
 
-ManagerAssignee.hasOne(User,{
-  foreignKey : "id",
-  as : "user"
-});
 
-
-ManagerAssignee.hasOne(Admin,{
-  foreignKey : "id",
-  as : "admin"
-});
 
 
 module.exports = {

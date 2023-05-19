@@ -899,62 +899,89 @@ class UserAuthController {
            
         }
 
+        /* ---------------------------- update kyb status --------------------------- */
+        static async updatekybStatus(req, res){
+
+            try{
+
+                const updateStatus = await KYB.update({
+                   status:req.body.status,
+                },{where:{user_id : req.body.user_id}});
+
+                if(updateStatus){
+                    return res.status(200).json({
+                        error:false,
+                        message:"KYB status updated"
+                    })
+                }else{
+                    return res.status(200).json({
+                        error: false,
+                        message:"Failed to update kyb status"
+                    })
+                }
+            }catch(err){
+                var logError = await ErrorLog.create({
+                    error_name: "Error on updating kyb status",
+                    error_description: err.toString(),
+                    route: "/api/admin/user/account/updatekybstatus",
+                    error_code: "500"
+                });
+                if(logError){
+                    return res.status(500).json({
+                        error: true,
+                        message: 'Unable to complete request at the moment' + err.toString(),
+                        
+                    })
+
+                }
+
+            }
+        }
+
+        /* ---------------------- update and verify kyc status ---------------------- */
+
+        static async updatekycStatus(req, res){
+
+            try{
+
+                const updateStatus = await KYC.update({
+                   status:req.body.status,
+                   verified:req.body.verified
+                },{where:{user_id : req.body.user_id}});
+
+                if(updateStatus){
+                    return res.status(200).json({
+                        error:false,
+                        message:"KYC status updated"
+                    })
+                }else{
+                    return res.status(200).json({
+                        error: false,
+                        message:"Failed to update kyc status"
+                    })
+                }
+            }catch(err){
+                var logError = await ErrorLog.create({
+                    error_name: "Error on updating kyc status",
+                    error_description: err.toString(),
+                    route: "/api/admin/user/account/updatekycstatus",
+                    error_code: "500"
+                });
+                if(logError){
+                    return res.status(500).json({
+                        error: true,
+                        message: 'Unable to complete request at the moment' + err.toString(),
+                        
+                    })
+
+                }
+
+            }
+        }
 
 
 
-        // create hubspot users 
-        // static async createHubspotusers(req,res){
-    
-        //     try{
 
-        //         // check for already existing 
-        //         var checkmailPhone = await User.findOne({
-        //             where:{email:req.body.email, phone:req.body.phone}
-        //         })
-
-        //         if(checkmailPhone){
-        //             return res.status(200).json({
-        //                 error:true,
-        //                 message:"Email or phone number already exist"
-        //             })
-        //         }else{
-
-                
-            
-        //     let encryptedPassword = await bcrypt.hash(req.body.password, 10);
-    
-        //         const hubspotuser = await User.create({
-        //             first_name:req.body.first_name,
-        //             last_name:req.body.last_name,
-        //             phone:req.body.phone,
-        //             email:req.body.email,
-        //             password:encryptedPassword,
-        //             type: req.body.user_type,
-        //             account_type: req.body.has_company || req.body.company_email ? "company" : "individual"
-    
-        //         });
-        //         if(hubspotuser){
-        //             return res.status(200).json({
-        //                 error:false,
-        //                 message:"Hubsport user created successfully"
-        //             })
-        //         }else{
-        //             return res.status(400).json({
-        //                 error:true,
-        //                 message:"Failed to create hubspot user"
-        //             })
-        //         }
-        //     }
-    
-        //     }catch(err){
-        //         return res.status(500).json({
-        //             error: true,
-        //             message: 'Unable to complete request at the moment'+err.toString()
-                    
-        //         })
-    
-        //     }
-        // }
     
         
     }

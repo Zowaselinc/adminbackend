@@ -1,7 +1,7 @@
 
 const { request } = require("express");
 const { validationResult } = require("express-validator");
-const { User, ErrorLog,MerchantType,  Company, Merchant, Partner, Corporate, Agent, Crop, CropRequest } = require("~database/models");
+const { User, ErrorLog,MerchantType,  Company, Merchant, Partner, Corporate, Agent, Crop, CropRequest, KYC } = require("~database/models");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjY5ODE5NTQwLCJleHAiOjE2Njk5OTIzNDB9.6nuXTimj8kSSxxq7PvP6cg9vkOuysZPEWjRay9_zXWs
@@ -186,39 +186,88 @@ class UserController{
         });
     }
 
+    static async getUserById(req, res){
+        try{
 
-    static async getUserById(req , res){
+            var userbbyid = await User.findOne({
+                where : {
+                    id : req.params.id
+                },
+                include:[
+                    {
+                        model : KYC,
+                        as : 'kyc'
+                    }
+                ]
+            })
 
-        var id = req.params.id;
-
-        var userTypeMap = {
-            merchant : Merchant,
-            corporate : Corporate,
-            agent : Agent,
-            partner : Partner
-        };
-
-        let user = await User.findByPk(id);
-
-        if(user){
-            user = await userTypeMap[user.type].findOne({ where : {user_id : id} , include : User});
-        }
-
-        if(!user){
-            return res.status(400).json({
-                error : true,
-                message : "User not found",
+            if(userbbyid == null){
+                return res.status(400).json({
+                    error : true,
+                    message : "User not found",
+                });
+            }else{
+    
+            return res.status(200).json({
+                error : false,
+                message : "User fetched successfully",
+                data : userbbyid  
             });
         }
 
-
-        return res.status(200).json({
-            error : false,
-            message : "User fetched successfully",
-            data : user
-            
+        
+    }catch(err){
+        var logError = await ErrorLog.create({
+            error_name: "Error on getting users by id",
+            error_description: err.toString(),
+            route: "/api/admin/users/getbyid/:id",
+            error_code: "500"
         });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment'+err.toString(),
+                
+            })
+
+        }
     }
+    }
+
+
+
+    // static async getUserById(req , res){
+
+    //     var id = req.params.id;
+
+    //     var userTypeMap = {
+    //         merchant : Merchant,
+    //         corporate : Corporate,
+    //         agent : Agent,
+    //         partner : Partner
+    //     };
+
+    //     let user = await User.findByPk(id);
+
+    //     if(user){
+    //         user = await userTypeMap[user.type].findOne({ where : {user_id : id} , include : User});
+    //     }
+
+    //     if(!user){
+    //         return res.status(400).json({
+    //             error : true,
+    //             message : "User not found",
+    //         });
+    //     }
+
+
+    //     return res.status(200).json({
+    //         error : false,
+    //         message : "User fetched successfully",
+    //         data : user
+            
+    //     });
+    // }
     /* ------------------------- // GET ALL USERS STATS ------------------------- */
     static async getUserStats(req ,res){
         try{
