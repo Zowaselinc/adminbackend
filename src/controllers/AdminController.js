@@ -122,7 +122,7 @@ class AdminController{
                     });
 
                 }else{
-                    return res.status(200).json({
+                    return res.status(400).json({
                         error : true,
                         message: "Unable to fetch admin",
                     });
@@ -175,7 +175,7 @@ class AdminController{
                 data: adminparams
             })
         }else{
-            return res.status(200).json({
+            return res.status(400).json({
                 error: true,
                 message: 'Failed to acquire Admin',
                
@@ -216,7 +216,7 @@ class AdminController{
             theadmin.role= getRole.dataValues;
 
         if(adminid == null){
-            return res.status(200).json({
+            return res.status(400).json({
                 error:true,
                 message: 'invalid admin id'
             })
@@ -265,7 +265,7 @@ class AdminController{
        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
         if(theadminid == null){
-            return res.status(200).json({
+            return res.status(400).json({
                 error:true,
                 message: 'Invalid admin id'
             })
@@ -312,7 +312,7 @@ class AdminController{
        /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
 
         if(adminemail == null){
-            return res.status(200).json({
+            return res.status(400).json({
                 error:true,
                 message: 'Invalid admin email'
             })
@@ -386,7 +386,7 @@ class AdminController{
                 
             })
         }else{
-            return res.status(200).json({
+            return res.status(400).json({
                 error : true,
                 message : "Failed to edit admin",
             })
@@ -488,7 +488,7 @@ class AdminController{
                 message : "Admin deleted succesfully",
             })
         }else{
-            return res.status(200).json({
+            return res.status(400).json({
                 error : true,
                 message : "Failed to delete Admin",
             })

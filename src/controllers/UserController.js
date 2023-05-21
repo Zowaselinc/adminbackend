@@ -133,25 +133,61 @@ class UserController{
 /* ------------------------------ GET ALL USERS ----------------------------- */
 
     static async getAllUsers(req, res){
+        try{
 
-        // var users =await User.findAll();
-        var merchants = await Merchant.findAll({ include : User});
+        
 
-        var corporates = await Corporate.findAll({ include : User});
+        // // var users =await User.findAll();
+        // var merchants = await Merchant.findAll({ include : User});
 
-        var agents = await Agent.findAll({ include : User});
+        // var corporates = await Corporate.findAll({ include : User});
 
-        var partners = await Partner.findAll({ include : User});
+        // var agents = await Agent.findAll({ include : User});
 
-        var resultSet = [...merchants, ...corporates , ...agents, ...partners];
+        // var partners = await Partner.findAll({ include : User});
 
-        resultSet = resultSet.sort((a,b) => b.user_id - a.user_id);
+        // var resultSet = [...merchants, ...corporates , ...agents, ...partners];
 
-        return res.status(200).json({
-            error : false,
-            message : "Users fetched successfully",
-            data : resultSet
+        // resultSet = resultSet.sort((a,b) => b.user_id - a.user_id);
+
+        // return res.status(200).json({
+        //     error : false,
+        //     message : "Users fetched successfully",
+        //     data : resultSet
+        // });
+
+        var allUsers = await User.findAll();
+        if(allUsers){
+            return res.status(200).json({
+                erro: false,
+                message: "Users fetched successfully",
+                data: allUsers
+            });
+        }else{
+            return res.status(400).json({
+                error: true,
+                messasge : "Failed to fetch user"
+            })
+        }
+
+    }catch(err){
+        var logError = await ErrorLog.create({
+            error_name: "Error on getting all Users",
+            error_description: err.toString(),
+            route: "/api/admin/users/getall",
+            error_code: "500"
         });
+        if(logError){
+            return res.status(500).json({
+                error: true,
+                message: 'Unable to complete request at the moment',
+                
+            })
+
+        }
+            
+    }
+
 
     }
 
