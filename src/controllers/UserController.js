@@ -137,38 +137,38 @@ class UserController{
 
         
 
-        // // var users =await User.findAll();
-        // var merchants = await Merchant.findAll({ include : User});
+        // var users =await User.findAll();
+        var merchants = await Merchant.findAll({ include : User});
 
-        // var corporates = await Corporate.findAll({ include : User});
+        var corporates = await Corporate.findAll({ include : User});
 
-        // var agents = await Agent.findAll({ include : User});
+        var agents = await Agent.findAll({ include : User});
 
-        // var partners = await Partner.findAll({ include : User});
+        var partners = await Partner.findAll({ include : User});
 
-        // var resultSet = [...merchants, ...corporates , ...agents, ...partners];
+        var resultSet = [...merchants, ...corporates , ...agents, ...partners];
 
-        // resultSet = resultSet.sort((a,b) => b.user_id - a.user_id);
+        resultSet = resultSet.sort((a,b) => b.user_id - a.user_id);
 
-        // return res.status(200).json({
-        //     error : false,
-        //     message : "Users fetched successfully",
-        //     data : resultSet
-        // });
+        return res.status(200).json({
+            error : false,
+            message : "Users fetched successfully",
+            data : resultSet
+        });
 
-        var allUsers = await User.findAll();
-        if(allUsers){
-            return res.status(200).json({
-                erro: false,
-                message: "Users fetched successfully",
-                data: allUsers
-            });
-        }else{
-            return res.status(400).json({
-                error: true,
-                messasge : "Failed to fetch user"
-            })
-        }
+        // var allUsers = await User.findAll();
+        // if(allUsers){
+        //     return res.status(200).json({
+        //         erro: false,
+        //         message: "Users fetched successfully",
+        //         data: allUsers
+        //     });
+        // }else{
+        //     return res.status(400).json({
+        //         error: true,
+        //         messasge : "Failed to fetch user"
+        //     })
+        // }
 
     }catch(err){
         var logError = await ErrorLog.create({
