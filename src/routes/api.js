@@ -406,6 +406,7 @@ Router.middleware(['isAuthenticated']).group((router) => {
 Router.middleware(['isAuthenticated']).group((router) => {
 router.post('/admin/crop/add', CropValidator.addCropValidator, CropController.add);
 router.get('/admin/crop/getbycropwanted', CropController.getByCropWanted);
+router.get('/admin/crop/getall', CropController.getAllCrops);
 router.get('/admin/crop/getbycropauction', CropController.getByCropAuctions);
 router.get('/admin/crop/getbycropoffer', CropController.getByCropOffer);
 router.get('/admin/crop/getbyid/:id', CropController.getById);

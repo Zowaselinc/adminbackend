@@ -158,7 +158,66 @@ class CropController{
             }  
         }  
     }
-    // /* ---------------------------- * ADD Cropdescription * ---------------------------- */
+    /* ------------------------------ get all crops ----------------------------- */
+    static async getAllCrops(req, res){
+        try{
+
+            var allCrops = await Crop.findAll({
+                include: [
+                    {
+                    model: CropSpecification,
+                    as: 'specification',
+                },
+                {
+                    model: CropRequest,
+                    as: 'crop_request',
+                },
+                {
+                    model : Category,
+                    as : "category"
+                },
+                {
+                    model : SubCategory,
+                    as : "subcategory"
+                },
+                {
+                    model : User,
+                    as : 'user',
+                }],
+                order: [['id', 'ASC']],
+            });
+            if(allCrops){
+                return res.status(200).json({
+                    error : false,
+                    message : "Crops fetched successfully",
+                    data : allCrops
+                })
+
+            }else{
+                return res.status(400).json({
+                    error: true,
+                    messasge : "Failed to fetch crop"
+                })
+
+            }
+           
+
+        }catch(err){
+            var logError = await ErrorLog.create({
+                error_name: "Error on fetching all crops",
+                error_description: err.toString(),
+                route: "/api/admin/crop/getall",
+                error_code: "500"
+            });
+            if(logError){
+                return res.status(500).json({
+                    error: true,
+                    message: 'Unable to complete request at the moment' + "" + err.toString()
+                })
+            } 
+
+        }
+    }
     /* --------------------------- GET ALL WANTED CROPS --------------------------- */
     static async getByCropWanted(req , res){
 
@@ -173,7 +232,7 @@ class CropController{
                 return res.status(400).json({ errors: errors.array() });
             }
     
-            var findWantedCrops = await Crop.findAndCountAll({ 
+            var findWantedCrops = await Crop.findAll({ 
                 include: [
                     {
                     model: CropSpecification,
@@ -234,7 +293,7 @@ class CropController{
 
         try{
 
-            var findCropAuctions = await Crop.findAndCountAll({ 
+            var findCropAuctions = await Crop.findAll({ 
                 include: [{
                     model: CropSpecification,
                     as: 'specification',
@@ -431,7 +490,7 @@ class CropController{
      /* --------------------------- GET CROP WANTED BY USERS --------------------------- */
      static async getAllCropsByUser(req, res) {
         try {
-            var findCrops = await Crop.findAndCountAll({
+            var findCrops = await Crop.findAll({
                 include: [
                     {
                         model: CropSpecification,
@@ -485,7 +544,7 @@ class CropController{
     /* --------------------------- GET ALL CROPS TYPE BY USERID --------------------------- */
     static async getByTypeandUserID(req, res) {
         try {
-            var findCrops = await Crop.findAndCountAll({
+            var findCrops = await Crop.findAll({
                 include: [{
                     model: CropSpecification,
                     as: 'specification',
