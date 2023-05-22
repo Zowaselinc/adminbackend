@@ -1,7 +1,7 @@
 
 const { request } = require("express");
 const { validationResult } = require("express-validator");
-const { User, ErrorLog,MerchantType,  Company, Merchant, Partner, Corporate, Agent, Crop, CropRequest, KYC } = require("~database/models");
+const { User, ErrorLog,MerchantType,  Company, Merchant, Partner, Corporate, Agent, Crop, CropRequest, KYC, KYB } = require("~database/models");
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjY5ODE5NTQwLCJleHAiOjE2Njk5OTIzNDB9.6nuXTimj8kSSxxq7PvP6cg9vkOuysZPEWjRay9_zXWs
@@ -138,37 +138,70 @@ class UserController{
         
 
         // var users =await User.findAll();
-        var merchants = await Merchant.findAll({ include : User});
+        // var merchants = await Merchant.findAll({ include : User});
 
-        var corporates = await Corporate.findAll({ include : User});
+        // var corporates = await Corporate.findAll({ include : User});
 
-        var agents = await Agent.findAll({ include : User});
+        // var agents = await Agent.findAll({ include : User});
 
-        var partners = await Partner.findAll({ include : User});
+        // var partners = await Partner.findAll({ include : User});
 
-        var resultSet = [...merchants, ...corporates , ...agents, ...partners];
+        // var resultSet = [...merchants, ...corporates , ...agents, ...partners];
 
-        resultSet = resultSet.sort((a,b) => b.user_id - a.user_id);
+        // resultSet = resultSet.sort((a,b) => b.user_id - a.user_id);
 
-        return res.status(200).json({
-            error : false,
-            message : "Users fetched successfully",
-            data : resultSet
+        // return res.status(200).json({
+        //     error : false,
+        //     message : "Users fetched successfully",
+        //     data : resultSet
+        // });
+
+        var allUsers = await User.findAll({
+         
+
+            include:[
+                {
+                    model : KYC,
+                    as : 'kyc'
+                },
+                {
+                    model : KYB,
+                    as : "kyb"
+                },
+                {
+                    model : Merchant,
+                    as : "merchant"
+                },
+                {
+                    model : Corporate,
+                    as : "corporate"
+                },
+                {
+                    model : Agent,
+                    as : "agent"
+                },
+                {
+                    model : Partner,
+                    as : "partner"
+                }
+              
+            ],
+            order: [['id', 'ASC']],
         });
+       
 
-        // var allUsers = await User.findAll();
-        // if(allUsers){
-        //     return res.status(200).json({
-        //         erro: false,
-        //         message: "Users fetched successfully",
-        //         data: allUsers
-        //     });
-        // }else{
-        //     return res.status(400).json({
-        //         error: true,
-        //         messasge : "Failed to fetch user"
-        //     })
-        // }
+        if(allUsers){
+            return res.status(200).json({
+                erro: false,
+                message: "Users fetched successfully",
+                data: allUsers
+            });
+        }else{
+            return res.status(400).json({
+                error: true,
+                messasge : "Failed to fetch user"
+            })
+        }
 
     }catch(err){
         var logError = await ErrorLog.create({
@@ -180,7 +213,7 @@ class UserController{
         if(logError){
             return res.status(500).json({
                 error: true,
-                message: 'Unable to complete request at the moment',
+                message: 'Unable to complete request at the moment'+err.toString(),
                 
             })
 

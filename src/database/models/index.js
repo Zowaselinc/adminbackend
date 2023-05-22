@@ -91,6 +91,17 @@ Agent.belongsTo(User , { foreignKey : "user_id"});
 Partner.belongsTo(User , { foreignKey : "user_id"});
 
 
+// Merchant.belongsTo(KYC, { foreignKey : "user_id"});
+
+// Corporate.belongsTo(KYC , { foreignKey : "user_id"});
+
+// Agent.belongsTo(KYC , { foreignKey : "user_id"});
+
+// Partner.belongsTo(KYC , { foreignKey : "user_id"});
+
+// KYC.belongsTo(User , { foreignKey : "user_id"});
+
+
 /* ---------------------------------- CROP ---------------------------------- */
 User.hasMany(Crop, {
   foreignKey: "user_id",
@@ -246,7 +257,22 @@ User.hasOne(KYC,{
   foreignKey : "user_id",
   as : "kyc"
 });
-
+User.hasOne(Merchant,{
+  foreignKey : "user_id",
+  as : "merchant"
+});
+User.hasOne(Corporate,{
+  foreignKey : "user_id",
+  as : "corporate"
+});
+User.hasOne(Partner,{
+  foreignKey : "user_id",
+  as : "partner"
+});
+User.hasOne(Agent,{
+  foreignKey : "user_id",
+  as : "agent"
+});
 
 /* ----------------------------------- KYB ---------------------------------- */
 
