@@ -2,10 +2,9 @@
 const { validationResult } = require('express-validator');
 const crypto = require('crypto');
 const { Crop, CropSpecification, CropRequest, ErrorLog, Activitylog, Category, User, Auction, SubCategory, Bid } = require('~database/models');
-// const { uploads } = require('~cropimageupload');
+
 const serveAdminid = require("~utilities/serveAdminId");
-var appRoot = require("app-root-path");
-const FileService = require("~services/file");
+
 
 
 
@@ -18,8 +17,7 @@ class CropController{
         //     message : "Add Cropdescription "
         // });
 
-        let sampleFile;
-        let uploadPath;
+       
 
         const errors = validationResult(req);
 
@@ -27,14 +25,17 @@ class CropController{
        
         try{
 
-            if(!errors.isEmpty()){
-                // return res.status(400).json({ errors: errors.array() });
-                return res.status(200).json({
-                    "error": true,
-                    "message": "All fields are required",
-                    "data": errors
-                }) 
-            }
+            // if(!errors.isEmpty()){
+            //     return res.status(400).json({ errors: errors.array() });
+            //     return res.status(200).json({
+            //         "error": true,
+            //         "message": "All fields are required",
+            //         "data": errors
+            //     }) 
+            // }
+
+            var type = req.body.type;
+            
 
             if (type != 'wanted' && type != "sale" && type != 'auction') {
                 return res.status(400).json({
@@ -47,46 +48,6 @@ class CropController{
                 type = "offer";
             }
 
-            if (!req.files || Object.keys(req.files).length === 0) {
-                return res.status(400).json({
-                    "error": true,
-                    "message": "No files were uploaded."
-                });
-            } else{
-               
-                
-                let allImages = Object.keys(req.files);
-
-                /* -------------------------- MOVE UPLOADED FOLDER -------------------------- */
-                let my_object = [];
-                for(let i = 0; i < allImages.length; i++ ){
-                    
-                    // my_object.push(req.files[allImages[i]].name);
-                    // sampleFile = req.files[allImages[i]];
-                    // uploadPath = __dirname + '/uploads/' + req.files[allImages[i]].name;
-
-                    // sampleFile.mv(uploadPath, function(err) {
-                    //     if (err){
-                    //         return res.status(500).send(err+" Error in uploading file");
-                    //     }
-                    // });
-
-                    if (req.files[allImages[i]]) {
-
-                        let image = req.files[allImages[i]];
-
-                        var url = await FileService.uploadFile(image);
-
-                        my_object.push(url);
-
-                    }
-
-                }
-
-                /* -------------------------- MOVE UPLOADED FOLDER -------------------------- */
-
-
-
                 /* ------------------------ INSERT INTO CROP TABLE ----------------------- */
                
                 var crop = await Crop.create({
@@ -97,7 +58,7 @@ class CropController{
                     active: 1,
                     market: "crop",
                     description: req.body.description,
-                    images: JSON.stringify(my_object),
+                    images: JSON.stringify(req.body.image),
                     currency: req.body.currency,
                     is_negotiable: req.body.is_negotiable,
                     video: req.body.video,
@@ -141,7 +102,8 @@ class CropController{
                         mammalian: req.body.mammalian,
                         infested_by_weight: req.body.infested_by_weight,
                         curcumin_content: req.body.curcumin_content,
-                        extraneous: req.body.extraneous
+                        extraneous: req.body.extraneous,
+                        unit:req.body.unit
                     })
 
 
@@ -155,7 +117,9 @@ class CropController{
                             zip: req.body.zip,
                             country: req.body.country,
                             address: req.body.warehouse_address,
-                            delivery_window: req.body.delivery_window 
+                            delivery_method: req.body.delivery_method,
+                            delivery_date: req.body.delivery_date,
+                            delivery_window: JSON.stringify(req.body.delivery_window) 
                         })
                     }
 
@@ -177,7 +141,7 @@ class CropController{
                         })
                     }
                 }
-            }
+            
 
         }catch(e){
             var logError = await ErrorLog.create({
@@ -666,7 +630,7 @@ class CropController{
                             mammalian: req.body.mammalian,
                             infested_by_weight: req.body.infested_by_weight,
                             curcumin_content: req.body.curcumin_content,
-                            extraneous: req.body.extraneous
+                            extraneous: req.body.extraneous,
                             // unit: req.body.unit,
                             // liters: req.body.liters
                         },
