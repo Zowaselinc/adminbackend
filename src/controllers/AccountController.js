@@ -187,17 +187,17 @@ class AccountController {
                 }
             }
 
-        } catch (e) {
+        } catch (err) {
             var logError = await ErrorLog.create({
-                error_name: "Error on updating company details",
-                error_description: e.toString(),
+                error_name: "Error on updating users password",
+                error_description: err.toString(),
                 route: "/api/company",
                 error_code: "500",
             });
             if (logError) {
                 return res.status(500).json({
                     error: true,
-                    message: "Unable to complete request at the moment",
+                    message: "Unable to complete request at the moment" + err.toString(),
                 });
             }
         }

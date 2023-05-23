@@ -1,10 +1,11 @@
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
-const { User, Company, AccessToken, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, Wallet, ErrorLog, Kycdocs, KYC, KYB } = require("~database/models");
+const { User, Company, AccessToken, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, Wallet, ErrorLog, Kycdocs, KYC, KYB, Activitylog } = require("~database/models");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-// const Mailer = require('~services/mailer');
+const Mailer = require('~services/mailer');
+const serveAdminid = require("~utilities/serveAdminId");
 const md5 = require('md5');
 const { EncryptConfig, DecryptConfig } = require("~utilities/encryption/encrypt");
 const { mydb } = require("~utilities/backupdriver");
@@ -18,7 +19,7 @@ class UserAuthController {
     /* -------------------------------------------------------------------------- */
 
 
-    static async login(req, res) {
+    static async loginUser(req, res) {
 
         const errors = validationResult(req);
 
@@ -68,13 +69,13 @@ class UserAuthController {
             //  userType.user.password;
             const ipAddresses = req.header('x-forwarded-for');
             let ipAddress = typeof ipAddresses == 'object' ? ipAddresses[0] : ipAddresses;
-            // Mailer()
-            //     .to(user.email).from(process.env.MAIL_FROM)
-            //     .subject('New Login').template('emails.LoginNotification', {
-            //         ipaddress: ipAddress,
-            //         timestamp: (new Date()).toLocaleString(),
-            //         name: user.first_name + " " + user.last_name,
-            //     }).send();
+            Mailer()
+                .to(user.email).from(process.env.MAIL_FROM)
+                .subject('New Login').template('emails.LoginNotification', {
+                    ipaddress: ipAddress,
+                    timestamp: (new Date()).toLocaleString(),
+                    name: user.first_name + " " + user.last_name,
+                }).send();
             return res.status(200).json({
                 error: false,
                 message: "Login Successful",
@@ -113,7 +114,7 @@ class UserAuthController {
                 console.log(user)
                 return res.status(400).json({
                     error: true,
-                    message: user.message
+                    message: user.message 
                 });
             }
     
@@ -163,11 +164,11 @@ class UserAuthController {
                 error_code: "500"
             });
             if(logError){
-                return {
+                return res.status(500).json({
                     error: true,
                     message: 'Unable to complete request at the moment' + err.toString(),
                     
-                }
+                })
 
             }
         }
@@ -301,7 +302,7 @@ class UserAuthController {
     }
 
 /* ------------------------------ register user ----------------------------- */
-    static async saveUser(data) {
+    static async saveUser(data,res) {
         var user, userKycdocs, kycVerification;
         let encryptedPassword = await bcrypt.hash(data.password, 10);
 
@@ -979,6 +980,69 @@ class UserAuthController {
             }
         }
 
+        static async changeUserPassword(req, res){
+            try{
+
+                var newpassword = await bcrypt.hash(req.body.password, 10);
+
+                var changePassword = await User.update({
+                    password:newpassword
+                },{where : {id : req.body.user_id}
+
+                });
+
+                /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+                var adminId = await  serveAdminid.getTheId(req);
+                await Activitylog.create({
+                    admin_id:adminId ,
+                    section_accessed:'Change user password',
+                    page_route:'/api/admin/user/changeuserpassword',
+                    action:'Changed user password'
+                });
+                 /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+
+                if(changePassword){
+
+                    try {
+                        mailer().to(req.body.email).from(process.env.MAIL_FROM)
+                        .subject('Change password').template("emails/ChangePassword").send();
+                       
+                       
+                    } catch (error) {
+                        
+                    }
+
+                    return res.status(200).json({
+                        error : false,
+                        message : "password was changed successfully"
+                    })
+
+
+                }else{
+                    return res.status(400).json({
+                        error : true,
+                        message : "failed to change password"
+                    })
+                }
+
+            }catch(err){
+                var logError = await ErrorLog.create({
+                    error_name: "Error on changing user password",
+                    error_description: err.toString(),
+                    route: "/api/admin/user/changeuserpassword",
+                    error_code: "500"
+                });
+                if(logError){
+                    return res.status(500).json({
+                        error: true,
+                        message: 'Unable to complete request at the moment' + err.toString(),
+                        
+                    })
+
+                }
+
+            }
+        }
 
 
 

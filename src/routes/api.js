@@ -101,6 +101,8 @@ const Router = RouteProvider.Router;
 /* ------------------------- // Authentication route ------------------------ */
 Router.group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
+
+    
      
 });
 Router.middleware(['isAuthenticated']).group((router)=>{
@@ -276,8 +278,11 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/users/account/hubspotuser', RegisterMerchantCorporateValidator, HubspotController.createHubspotusers);
 
     // register corporate and merchant with or without account note, admin does kyc and kyb for users as their account are created
-    router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
     
+    router.post('/admin/users/register', RegisterMerchantCorporateValidator, UserAuthController.registerMerchantCorporate);
+
+        // change user password 
+    router.post('/admin/users/changeuserpassword',  UserAuthController.changeUserPassword);
     // update kyc status 
     router.post('/admin/users/account/updatekycstatus',UserAuthController.updatekycStatus);
 
