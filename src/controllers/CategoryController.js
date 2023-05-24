@@ -21,21 +21,7 @@ class CategoryController{
         try{
            
            
-            var confirmCategory = await Category.findOne(
-                {
-                    where: {
-                        name:req.body.name
-                    }
-                }
-            );
-
-            if(confirmCategory){
-                return res.status(200).json({
-                    error : true,
-                    message : "Category Name already exist"
-
-                });
-            }else{
+           
                
                 var category = await Category.create({
                    name:req.body.name,
@@ -59,7 +45,7 @@ class CategoryController{
                             });
     
                 }
-            }
+            
 
         }catch(error){
             var logError = await ErrorLog.create({
@@ -90,9 +76,9 @@ class CategoryController{
         try{
 
             var countOptions = {
-                attributes: { 
-                    include: [[Sequelize.fn("COUNT", Sequelize.col(`${req.params.type}s.id`)), `count`]] 
-                },
+                // attributes: { 
+                //     include: [[Sequelize.fn("COUNT", Sequelize.col(`${req.params.type}s.id`)), `count`]] 
+                // },
                 include: [{
                     model: req.params.type == "crop" ? Crop : Input,
                     attributes: []
@@ -136,7 +122,7 @@ class CategoryController{
 
             return res.status(500).json({
                 error: true,
-                message: "Unable to complete the request at the moment",
+                message: "Unable to complete the request at the moment" + error.toString(),
                 data: []
             });
         }

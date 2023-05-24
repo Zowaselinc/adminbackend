@@ -32,7 +32,7 @@ class AdminController{
             });
 
             if(checkEmail){
-                return res.status(200).json({
+                return res.status(400).json({
                     error: true,
                     message: "Email already exist"
                 })

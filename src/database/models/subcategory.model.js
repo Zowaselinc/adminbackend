@@ -8,7 +8,7 @@ let Schema = (Sequelize,mode) => {
         },
         name : {
             type: Sequelize.STRING,
-            unique : true,
+            unique : false,
             allowNull : false
         },
         type : {

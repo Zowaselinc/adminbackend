@@ -4,7 +4,7 @@ let Schema = (Sequelize,mode) => {
     return {
         name : {
             type: Sequelize.STRING,
-            unique : true,
+            unique : false,
             allowNull : false
         },
         type : {

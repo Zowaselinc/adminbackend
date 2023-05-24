@@ -24,22 +24,12 @@ class SubCategoryController{
 
         try{
             
-            if(!errors.isEmpty()){
-                return res.status(400).json({ errors: errors.array() });
-            }
+            // if(!errors.isEmpty()){
+            //     return res.status(400).json({ errors: errors.array() });
+            // }
     
 
-            const checkSubCategory = await SubCategory.findOne({ 
-                where: { category_id: req.body.category_id, name:req.body.subcategory_name } 
-            });
-
-
-            if(checkSubCategory){
-                return res.status(200).json({
-                    "error": true,
-                    "message": "Subcategory already exist"
-                })
-            }else{
+          
                 var subcategory = await SubCategory.create({
                     category_id: req.body.category_id,
                     name: req.body.subcategory_name,
@@ -60,7 +50,7 @@ class SubCategoryController{
     
                     });
                 }
-            }
+            
             
         }catch(e){
             var logError = await ErrorLog.create({
@@ -72,7 +62,7 @@ class SubCategoryController{
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment'
+                    message: 'Unable to complete request at the moment' + e.toString()
                 })
             } 
         }
