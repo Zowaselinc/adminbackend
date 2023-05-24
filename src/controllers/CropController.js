@@ -103,7 +103,7 @@ class CropController{
                         infested_by_weight: req.body.infested_by_weight,
                         curcumin_content: req.body.curcumin_content,
                         extraneous: req.body.extraneous,
-                        unit:req.body.unit
+                        // unit:req.body.unit
                     })
 
 
@@ -117,8 +117,8 @@ class CropController{
                             zip: req.body.zip,
                             country: req.body.country,
                             address: req.body.warehouse_address,
-                            delivery_method: req.body.delivery_method,
-                            delivery_date: req.body.delivery_date,
+                            // delivery_method: req.body.delivery_method,
+                            // delivery_date: req.body.delivery_date,
                             delivery_window: JSON.stringify(req.body.delivery_window) 
                         })
                     }
@@ -256,7 +256,7 @@ class CropController{
                 }],
                 where: { type: "wanted", active: 1 },
                 order: [['id', 'DESC']],
-                group: ["id"]
+                
             });
 
         
@@ -318,7 +318,7 @@ class CropController{
                 
                 where: { type: "auction", active: 1 },
                 order: [['id', 'DESC']],
-                group: ["id"]
+                
             });
 
         
@@ -340,7 +340,7 @@ class CropController{
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment'+ "" + e.toString()
+                    message: 'Unable to complete request at the moment'+ "" + error.toString()
                 })
             } 
         }
@@ -389,7 +389,7 @@ class CropController{
                     }],
                     where: { type: "offer" },
                     order: [['id', 'DESC']],
-                    group: ["id"]
+                    
                 });
     
             
@@ -431,31 +431,28 @@ class CropController{
             if(crop){
 
                 var findCrop = await Crop.findOne({ 
-                    include: [{
+                    include: [
+                        {
                         model: CropSpecification,
                         as: 'specification',
                     },
                     {
+                        model: CropRequest,
+                        as: 'crop_request',
+                    },
+                    {
                         model : Category,
-                        as : 'category'
+                        as : "category"
                     },
                     {
                         model : SubCategory,
                         as : "subcategory"
                     },
                     {
-                        model: CropRequest,
-                        as: 'crop_request',
-                        order: [['id', 'DESC']],
-                        limit: 1,
-                        
-                    },{
                         model : User,
-                        as : 'user'
+                        as : 'user',
                     }],
-                    
-                    where: { id: cropId },
-                    order: [['id', 'DESC']]
+                    order: [['id', 'ASC']],
                 });
     
                 return res.status(200).json({
@@ -578,7 +575,7 @@ class CropController{
 
                 where: { type: req.params.type, user_id: req.body.user_id },
                 order: [["id", "DESC"]],
-                group: ["id"]
+              
             });
 
             /* --------------------- If fetched the Wanted Crops --------------------- */

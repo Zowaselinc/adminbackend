@@ -6,7 +6,15 @@ let Schema = (Sequelize,mode) => {
             type : Sequelize.INTEGER,
             allowNull : false
         },
-        auction_enddate : {
+        start_date : {
+            type : Sequelize.STRING,
+            allowNull : false
+        },
+        end_date : {
+            type : Sequelize.STRING,
+            allowNull : false
+        },
+        minimum_bid: {
             type : Sequelize.STRING,
             allowNull : false
         },

@@ -52,7 +52,7 @@ module.exports = {
         body('infested_by_weight').isString(),
         body('curcumin_content').isString(),
         body('extraneous').isString(),
-        body('unit').isString(),
+        // body('unit').isString(),
         // body('kg').isString(),
         // body('liters').isString()
 
