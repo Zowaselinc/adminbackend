@@ -34,7 +34,7 @@ class CropController{
             //     }) 
             // }
 
-            var type = req.body.type;
+            // var type = req.body.type;
             
 
             if (type != 'wanted' && type != "sale" && type != 'auction') {
@@ -52,7 +52,7 @@ class CropController{
                
                 var crop = await Crop.create({
                     user_id: req.body.user_id,
-                    type: type,
+                    type: "wanter",
                     category_id: req.body.category_id,
                     subcategory_id: req.body.subcategory_id,
                     active: 1,
@@ -103,7 +103,7 @@ class CropController{
                         infested_by_weight: req.body.infested_by_weight,
                         curcumin_content: req.body.curcumin_content,
                         extraneous: req.body.extraneous,
-                        // unit:req.body.unit
+                        
                     })
 
 
@@ -116,10 +116,8 @@ class CropController{
                             state: req.body.state,
                             zip: req.body.zip,
                             country: req.body.country,
-                            address: req.body.warehouse_address,
-                            // delivery_method: req.body.delivery_method,
-                            // delivery_date: req.body.delivery_date,
-                            delivery_window: JSON.stringify(req.body.delivery_window) 
+                            address: req.body.warehouse_address,                          
+                            delivery_window: "{'from':'2023-05-18','to':'2023-05-24'}" 
                         })
                     }
 
@@ -604,27 +602,20 @@ class CropController{
 
     /* ---------------------------- * EDIT Project by ID * ---------------------------- */
     static async EditById(req, res) {
-        // return res.status(200).json({
-        //     message : "Add Cropdescription "
-        // });
-
-        let sampleFile;
-        let uploadPath;
+       
 
         const errors = validationResult(req);
 
-        let randomid = crypto.randomBytes(8).toString("hex");
-        // let allImages = Object.keys(req.files);
-        // console.log(__dirname + '/uploads/' + req.files[allImages[0]].name);
+        
         try {
-            if (!errors.isEmpty()) {
-                // return res.status(400).json({ errors: errors.array() });
-                return res.status(200).json({
-                    error: true,
-                    message: "All fields are required",
-                    data: errors,
-                });
-            }
+            // if (!errors.isEmpty()) {
+            //     // return res.status(400).json({ errors: errors.array() });
+            //     return res.status(200).json({
+            //         error: true,
+            //         message: "All fields are required",
+            //         data: errors,
+            //     });
+            // }
 
             /* ------------------------ UPDATE INTO CROP TABLE ----------------------- */
 
@@ -639,15 +630,14 @@ class CropController{
                         active: 0,
                         market: "crop",
                         description: req.body.description,
-                        // images: my_object.toString(),
+                        images: JSON.stringify(req.body.image),
                         currency: req.body.currency,
                         is_negotiable: req.body.is_negotiable,
                         video: req.body.video,
                         packaging: req.body.packaging,
                         application: req.body.application,
-                        manufacture_name: req.body.manufacture_name,
-                        manufacture_date: req.body.manufacture_date,
-                        expiration_date: req.body.expiration_date,
+                        warehouse_address: req.body.warehouse_address,
+                   
                     },
                     { where: { id: req.body.crop_id } }
                 );
@@ -687,8 +677,7 @@ class CropController{
                             infested_by_weight: req.body.infested_by_weight,
                             curcumin_content: req.body.curcumin_content,
                             extraneous: req.body.extraneous,
-                            // unit: req.body.unit,
-                            // liters: req.body.liters
+                        
                         },
                         { where: { model_id: req.body.crop_id } }
                     );
@@ -701,9 +690,7 @@ class CropController{
                                 zip: req.body.zip,
                                 country: req.body.country,
                                 address: req.body.address,
-                                delivery_method: req.body.delivery_method,
-                                delivery_date: req.body.delivery_date,
-                                delivery_window: req.body.delivery_window,
+                                delivery_window:JSON.stringify(req.body.delivery_window),
                             },
                             { where: { crop_id: req.body.crop_id } }
                         );
@@ -711,7 +698,7 @@ class CropController{
                         return res.status(200).json({
                             error: false,
                             message: "Crop edited successfully",
-                            // "product": product, Cropspec, ProdRequest
+                           
                         });
                     }
                 }
@@ -719,14 +706,14 @@ class CropController{
                 return res.status(400).json({
                     error: true,
                     message: "No such crop found",
-                    data: req.body,
+                    
                 });
             }
         } catch (e) {
             var logError = await ErrorLog.create({
                 error_name: "Error on edit a crop",
                 error_description: e.toString(),
-                route: "/api/crop/editbyid",
+                route: "/api/admin/crop/editbyid",
                 error_code: "500",
             });
             if (logError) {
