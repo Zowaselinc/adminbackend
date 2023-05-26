@@ -34,7 +34,7 @@ class CropController{
             //     }) 
             // }
 
-            // var type = req.body.type;
+            var type = req.body.type;
             
 
             if (type != 'wanted' && type != "sale" && type != 'auction') {
@@ -52,7 +52,7 @@ class CropController{
                
                 var crop = await Crop.create({
                     user_id: req.body.user_id,
-                    type: "wanter",
+                    type: type,
                     category_id: req.body.category_id,
                     subcategory_id: req.body.subcategory_id,
                     active: 1,
@@ -117,7 +117,7 @@ class CropController{
                             zip: req.body.zip,
                             country: req.body.country,
                             address: req.body.warehouse_address,                          
-                            delivery_window: "{'from':'2023-05-18','to':'2023-05-24'}" 
+                            delivery_window: JSON.stringify(req.body.delivery_window)
                         })
                     }
 

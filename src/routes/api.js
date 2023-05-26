@@ -409,7 +409,7 @@ Router.middleware(['isAuthenticated']).group((router) => {
 /* --------------------- // ROUTES FOR CROPS END POINTS --------------------- */
 /* ------------------------------- Crop ------------------------------ */
 Router.middleware(['isAuthenticated']).group((router) => {
-router.post('/admin/crop/add', CropValidator.addCropValidator, CropController.add);
+router.post('/admin/crop/add', CropController.add);
 router.get('/admin/crop/getbycropwanted', CropController.getByCropWanted);
 router.get('/admin/crop/getall', CropController.getAllCrops);
 router.get('/admin/crop/getbycropauction', CropController.getByCropAuctions);
