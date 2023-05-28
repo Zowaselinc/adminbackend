@@ -415,6 +415,7 @@ router.get('/admin/crop/getall', CropController.getAllCrops);
 router.get('/admin/crop/getbycropauction', CropController.getByCropAuctions);
 router.get('/admin/crop/getbycropoffer', CropController.getByCropOffer);
 router.get('/admin/crop/getbyid/:id', CropController.getById);
+router.get('/admin/crop/getbyuserid/:user_id', CropController.getAllCropsByUser);
 router.post('/admin/crop/activatecrop/:id', CropController.activateCropById);
 router.post('/admin/crop/deactivatecrop/:id', CropController.deactivateCropById);
 // router.post('/admin/crop/product/editbyid', CropValidator.addCropValidator, CropController.editbyid);
