@@ -9,46 +9,23 @@ class InputProducts{
 
     static async createInput(req , res){
 
-        let sampleFile;
-        let uploadPath;
+      
 
-        const errors = validationResult(req);
+        // const errors = validationResult(req);
 
-        let randomid = crypto.randomBytes(8).toString('hex');
+        
         
         try{
 
-            if(!errors.isEmpty()){
-                return res.status(400).json({
-                    "error": true,
-                    "message": "All fields are required",
-                    "data": []
-                }) 
-            }
+            // if(!errors.isEmpty()){
+            //     return res.status(400).json({
+            //         "error": true,
+            //         "message": "All fields are required",
+            //         "data": []
+            //     }) 
+            // }
 
-            if (!req.files || Object.keys(req.files).length === 0) {
-                return res.status(400).json({
-                    "error": true,
-                    "message": "No input images(s) found.",
-                    "data": []
-                })
             
-            }else{
-                
-                
-                let allImages = Object.keys(req.files);
-
-                /* -------------------------- MOVE UPLOADED FOLDER -------------------------- */
-                let my_object = [];
-                for(let i = 0; i < allImages.length; i++ ){
-                    
-                    my_object.push(req.files[allImages[i]].name);
-                    sampleFile = req.files[allImages[i]];
-                    uploadPath = __dirname + "/uploads/" + req.files[allImages[i]].name;
-
-                    sampleFile.mv(uploadPath, function(err) {
-                    });
-                }
                 /* -------------------------- MOVE UPLOADED FOLDER -------------------------- */
 
 
@@ -67,7 +44,9 @@ class InputProducts{
                     kilograms: req.body.kilograms,
                     grams: req.body. grams,
                     liters: req.body.liters,
+                    pieces_carton: req.body.pieces_carton,
                     price: req.body.price,
+                    images: JSON.stringify(req.body.images),
                     currency: req.body.currency,
                     manufacture_name: req.body.manufacture_name,
                     manufacture_date: req.body.manufacture_date,
@@ -75,7 +54,7 @@ class InputProducts{
                     expiry_date: req.body.expiry_date,
                     manufacture_country: req.body.manufacture_country,
                     video: req.body.video,
-                    images: my_object.toString(),
+                    active: 1
                 })
                 
                   /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
@@ -94,25 +73,29 @@ class InputProducts{
                     return res.status(200).json({
                         "error": false,
                         "message": "Input created successfully",
-                        data: []
-                    })
+                        
+                    });
+
+                }else{
+                    return res.status(200).json({
+                        "error": true,
+                        "message": "False failed to create input",
+                        
+                    });
 
                 }
-  
-            
-            }
 
         }catch(e){
             var logError = await ErrorLog.create({
                 error_name: "Error on adding an input",
                 error_description: e.toString(),
-                route: "/api/input/product/add",
+                route: "/api/admin/input/add",
                 error_code: "500"
             });
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment'
+                    message: 'Unable to complete request at the moment ' + e.toString()
                 })
             }  
         }

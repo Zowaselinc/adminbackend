@@ -507,6 +507,10 @@ class CropController{
                         model: CropRequest,
                         as: 'crop_request',
                     },
+                    {
+                        model: User,
+                        as: 'user',
+                    },
                 ],
 
                 where: { user_id: req.params.user_id, active: 1 },

@@ -397,7 +397,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
  /* ---------------------------------- INPUT --------------------------------- */
 Router.middleware(['isAuthenticated']).group((router) => {
 
-    router.post('/admin/input/add', InputsValidator.createInputValidator,Input.createInput);
+    router.post('/admin/input/add',Input.createInput);
     router.get('/admin/input/getallbyuserid/:user_id', Input.getallInputsByUser);
     router.get('/admin/input/getall', Input.getallInputs);
     router.get('/admin/input/getbyid/:id', Input.getInputsById);

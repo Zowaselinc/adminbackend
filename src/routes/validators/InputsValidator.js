@@ -15,6 +15,7 @@ module.exports = {
         body('kilograms').isString().not().isEmpty(),
         body('grams').isString().not().isEmpty(),
         body('liters').isString().not().isEmpty(),
+        body('pieces_carton').isString().not().isEmpty(),
         body('price').isString().not().isEmpty(),
         body('currency').isString().not().isEmpty(),
         body('manufacture_name').isString().not().isEmpty(),
