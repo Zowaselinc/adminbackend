@@ -418,6 +418,8 @@ router.get('/admin/crop/getbyid/:id', CropController.getById);
 router.get('/admin/crop/getbyuserid/:user_id', CropController.getAllCropsByUser);
 router.post('/admin/crop/activatecrop/:id', CropController.activateCropById);
 router.post('/admin/crop/deactivatecrop/:id', CropController.deactivateCropById);
+router.post('/admin/crop/delete/:id', CropController.deleteCropById);
+router.post('/admin/crop/update', CropController.EditById);
 // router.post('/admin/crop/product/editbyid', CropValidator.addCropValidator, CropController.editbyid);
 
 
