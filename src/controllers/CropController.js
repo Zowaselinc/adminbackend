@@ -425,10 +425,7 @@ class CropController{
         try{
             const cropId = req.params.id;
     
-            var crop = await Crop.findOne({ where: { id: cropId } });
-            if(crop){
-
-                var findCrop = await Crop.findOne({ 
+            var crop = await Crop.findOne({ 
                     include: [
                         {
                         model: CropSpecification,
@@ -451,12 +448,14 @@ class CropController{
                         as : 'user',
                     }],
                     order: [['id', 'ASC']],
+                    where: { id: cropId },
                 });
+            if(crop){
     
                 return res.status(200).json({
                     error : false,
                     message : "Single crop grabbed successfully",
-                    data : findCrop
+                    data : crop
                 })
             }else{
                 return res.status(400).json({
@@ -475,7 +474,7 @@ class CropController{
             if(logError){
                 return res.status(500).json({
                     error: true,
-                    message: 'Unable to complete request at the moment'
+                    message: 'Unable to complete request at the moment'+e.toString()
                 })
             } 
         }
