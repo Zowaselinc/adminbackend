@@ -6,8 +6,6 @@ const { Crop, CropSpecification, CropRequest, ErrorLog, Activitylog, Category, U
 const serveAdminid = require("~utilities/serveAdminId");
 
 
-
-
 class CropController{
 
     /* ---------------------------- * ADD Cropdescription * ---------------------------- */
