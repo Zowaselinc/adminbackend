@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
-const { User, MerchantType, Corporate, Merchant } = require("~database/models");
+const { User, MerchantType, Corporate, Merchant, Wallet } = require("~database/models");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -51,6 +51,10 @@ class HubspotController {
                 account_type: element.has_company || element.company_email ? "company" : "individual",
 
             });
+            let wallet = await Wallet.create({
+              user_id: user.id,
+              balance: 0
+          });
             sendhtmlEMAIL(element.email,"ZOWASEL PLATFORM UPGRADE",`
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
             <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" style="Font-family: 'Radio Canada', sans-serif;">
