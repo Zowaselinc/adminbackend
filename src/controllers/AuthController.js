@@ -7,8 +7,12 @@ const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const md5  = require('md5');
 require('dotenv').config();
-const mailer = require("~services/mailer");
+const message = require("~services/sendgridMailer");
 const serveAdminid = require("~utilities/serveAdminId");
+// const sgMail = require('@sendgrid/mail');
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+
 
 class AuthController{
 
@@ -58,9 +62,15 @@ class AuthController{
                 if(activlog){
                     
                     try {
-                        mailer().to(req.body.email).from(process.env.MAIL_FROM)
+                        message().to(req.body.email).from(process.env.SENDGRID_FROM)
                         .subject('Login Notification').template("emails/LoginNotify").send();
                          admin['password']="";
+
+                         console.log('Email sent')
+
+
+                        
+            
                        
                     } catch (error) {
                         

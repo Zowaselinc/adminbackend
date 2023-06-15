@@ -1,153 +1,4 @@
-const { Op } = require("sequelize");
-const jwt = require("jsonwebtoken");
-const { User, MerchantType, Corporate, Merchant, Wallet } = require("~database/models");
-const { body, validationResult } = require('express-validator');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
-// const Mailer = require('~services/mailer');
-const md5 = require('md5');
-const { EncryptConfig, DecryptConfig } = require("~utilities/encryption/encrypt");
-const { mydb } = require("~utilities/backupdriver");
-const { sendhtmlEMAIL,sendhtmlEMAILBATCH } = require("~services/semdgridMailertwo");
-require('dotenv').config();
-const emialRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-
-
-
-
-class HubspotController {
-  static async createHubspotusers(req, res) {
-
-    try {
-
-
-      const batchuser = req.body.batchuser;
-      // console.log(batchuser);
-      batchuser.forEach(async element => {
-        /* -------------------------- CREATE AND SAVE USER -------------------------- */
-
-        // check for already existing 
-        var checkmailPhone = await User.findOne({
-          where: { email: element.email, phone: element.phone }
-        })
-
-        if (checkmailPhone) {
-          return res.status(200).json({
-            error: true,
-            message: "Email or phone number already exist"
-          })
-        } else {
-
-
-
-          let encryptedPassword = await bcrypt.hash(element.password, 10);
-          var user = await User.create({
-            first_name: element.first_name,
-            last_name: element.last_name,
-            phone: element.phone,
-            email: element.email,
-            password: encryptedPassword,
-            type: element.user_type,
-            account_type: element.has_company || element.company_email ? "company" : "individual",
-
-          });
-          let wallet = await Wallet.create({
-            user_id: user.id,
-            balance: 0
-          });
-          sendhtmlEMAIL(element.email, "ZOWASEL PLATFORM UPGRADE", `
-            <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
-            <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" style="Font-family: 'Radio Canada', sans-serif;">
-              <head> </head>
-              <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <meta name="x-apple-disable-message-reformatting" /><!--[if !mso]><!-->
-                <meta http-equiv="X-UA-Compatible" content="IE=edge" /><!--<![endif]-->
-                <style type="text/css">
-                  * {
-                    text-size-adjust: 100%;
-                    -ms-text-size-adjust: 100%;
-                    -moz-text-size-adjust: 100%;
-                    -webkit-text-size-adjust: 100%;
-                  }
-            
-                  html {
-                    height: 100%;
-                    width: 100%;
-                  }
-            
-                  body {
-                    height: 100% !important;
-                    margin: 0 !important;
-                    padding: 0 !important;
-                    width: 100% !important;
-                    mso-line-height-rule: exactly;
-                  }
-            
-                  div[style*="margin: 16px 0"] {
-                    margin: 0 !important;
-                  }
-            
-                  table,
-                  td {
-                    mso-table-lspace: 0pt;
-                    mso-table-rspace: 0pt;
-                  }
-            
-                  img {
-                    border: 0;
-                    height: auto;
-                    line-height: 100%;
-                    outline: none;
-                    text-decoration: none;
-                    -ms-interpolation-mode: bicubic;
-                  }
-            
-                  .ReadMsgBody,
-                  .ExternalClass {
-                    width: 100%;
-                  }
-            
-                  .ExternalClass,
-                  .ExternalClass p,
-                  .ExternalClass span,
-                  .ExternalClass td,
-                  .ExternalClass div {
-                    line-height: 100%;
-                  }
-                </style><!--[if gte mso 9]>
-                  <style type="text/css">
-                  li { text-indent: -1em; }
-                  table td { border-collapse: collapse; }
-                  </style>
-                  <![endif]-->
-                <title> Zowasel Welcome Email </title>
-                <style>
-                  @media only screen and (max-width:600px) {
-            
-                    .column,
-                    .column-filler {
-                      box-sizing: border-box;
-                      float: left;
-                    }
-            
-                    .col-sm-12 {
-                      display: block;
-                      width: 100% !important;
-                    }
-                  }
-                </style>
-                <!-- content -->
-                <link href="https://fonts.googleapis.com/css2?family=Radio+Canada&amp;display=swap" rel="stylesheet" />
-                <!--[if gte mso 9]><xml>
-                   <o:OfficeDocumentSettings>
-                    <o:AllowPNG/>
-                    <o:PixelsPerInch>96</o:PixelsPerInch>
-                   </o:OfficeDocumentSettings>
-                  </xml><![endif]-->
-              </head>
-              <body class="body" style="Font-family: 'Radio Canada', sans-serif; background-color: #FFFFFF; margin: 0; width: 100%;">
+<body class="body" style="Font-family: 'Radio Canada', sans-serif; background-color: #FFFFFF; margin: 0; width: 100%;">
     <table class="bodyTable" role="presentation" width="100%" align="left" border="0" cellpadding="0" cellspacing="0" style="Font-family: 'Radio Canada', sans-serif; width: 100%; background-color: #FFFFFF; margin: 0;" bgcolor="#FFFFFF">
       <tbody><tr style="Font-family: 'Radio Canada', sans-serif;">
         <td class="body__content" width="100%" valign="top" style="color: #616161;font-family: Helvetica,Arial,sans-serif;font-size: 16px;line-height: 20px;Font-family: 'Radio Canada', sans-serif;">
@@ -161,7 +12,7 @@ class HubspotController {
                             <tbody><tr class="row__row" style="Font-family: 'Radio Canada', sans-serif; text-align: center;" align="center">
                               <td class="px-xs column col-sm-12" width="600" style="Font-family: 'Radio Canada', sans-serif; padding: 0 10px;width: 100%; text-align: center" align="center" valign="top">
                                 <center style="Font-family: 'Radio Canada', sans-serif; text-align: center;">
-                                <img src="https://zowaselassets-com.stackstaging.com/logo.png" alt="Zowasel logo" border="0" class="img__block" style="Font-family: 'Radio Canada', sans-serif; max-width: 100%; text-align: unset; display: inline-block;" />
+                                  <img src="https://zowaselassets-com.stackstaging.com/logo.png" alt="Zowasel logo" border="0" class="img__block" style="Font-family: 'Radio Canada', sans-serif; max-width: 100%; text-align: unset; display: inline-block;">
                                   <center style="Font-family: 'Radio Canada', sans-serif; text-align: center;">
                                   </center>
                                 </center>
@@ -202,8 +53,8 @@ class HubspotController {
                               <td class="column col-sm-12" width="600" style="Font-family: 'Radio Canada', sans-serif;width: 100%;" valign="top">
                                 <div class="whitebg my mt-sm" style="line-height: 40px; color: #616161; font-family: Helvetica,Arial,sans-serif; Font-family: 'Radio Canada', sans-serif; margin: 0; background-color: #FFFFFF;">To access your upgraded account, visit  <a href="https://platform.zowasel.com" style="text-decoration: none;">Zowasel (click here)</a> please use the following login details:
 <p></p><ul style="margin-top: 5px;">
-    <li>Email: ${element.email}</li>
-    <li>Temporary Password: ${element.password}</li>
+    <li>Email: [Enter your email address]</li>
+    <li>Temporary Password: [Enter your temporary password]</li>
 </ul>
 Please remember to change your temporary password when you log in for the first time to ensure the security of your account.<p></p></div>
                               </td>
@@ -272,58 +123,3 @@ The Zowasel Team
     <div style="Font-family: 'Radio Canada', sans-serif; display: none; white-space: nowrap; font-size: 15px; line-height: 0; text-align: center;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
   
 </body>
-            </html>
-            `);
-
-
-          var UserTypeModel = element.user_type == "merchant" ? Merchant : Corporate;
-
-          let change;
-          if (element.user_type == "merchant") {
-
-            var merchantType = await MerchantType.findOne({ where: { title: 'grower' } });
-            if (merchantType) {
-              change = { type_id: merchantType.id };
-            }
-          } else {
-            change = { type: "red-hot" };
-
-          }
-
-          await UserTypeModel.create({ ...change, ...{ user_id: user.id } }).catch((error => {
-            return res.status(400).json({
-              error: true,
-              message: error.sqlMessage
-            });
-          }));
-
-
-        }
-
-        /* -------------------------- CREATE AND SAVE USER -------------------------- */
-      });
-
-
-      return res.status(200).json({
-        error: false,
-        message: 'Hubspot data uploaded successfully'
-
-      })
-
-    } catch (error) {
-
-
-      return res.status(500).json({
-        error: true,
-        message: 'Unable to complete request at the moment' + '' + err.toString()
-
-      });
-
-    }
-  }
-
-
-}
-
-
-module.exports = HubspotController;

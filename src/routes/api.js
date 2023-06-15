@@ -40,6 +40,7 @@ const KycDocsController= require('~controllers/KycDocsController');
 const HubspotController= require('~controllers/HubspotController');
 const AdminsmsController= require('~controllers/AdminsmsController');
 const Manager_assigneeController= require('~controllers/Manager_assigneeController');
+const VfdwalletController= require('~controllers/VfdwalletController');
 
 
 
@@ -580,6 +581,11 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
         //  router.get('/admin/manager/getbypageid/:page_id',Manager_assigneeController.getPagebyPageid);
          router.post('/admin/manager/edit',Manager_assigneeController.editManagerassignee);
          router.post('/admin/manager/delete/:id',Manager_assigneeController.delManagerAssigneeid);
+    });
+
+    Router.group((router) => {
+        /* --------------------------- LANDING PAGE ROUTE --------------------------- */
+        router.post('/admin/vfd/add',VfdwalletController.createVfdaccount)
     });
 
 module.exports = Router;

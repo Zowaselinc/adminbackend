@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
-const { User, Company, AccessToken, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, Wallet, ErrorLog, Kycdocs, KYC, KYB, Activitylog } = require("~database/models");
+const { User, Company, AccessToken, Merchant, Partner, Corporate, Agent, UserCode, MerchantType, Wallet, ErrorLog, Kycdocs, KYC, KYB, Activitylog, Vfdwallet } = require("~database/models");
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -10,6 +10,7 @@ const md5 = require('md5');
 const { EncryptConfig, DecryptConfig } = require("~utilities/encryption/encrypt");
 const { mydb } = require("~utilities/backupdriver");
 require('dotenv').config();
+const axios = require('axios');
 
 
 class UserAuthController {
@@ -310,7 +311,7 @@ class UserAuthController {
             const checkUser = await User.findOne({where:{
                 [Op.or]: [
                     {email: data.email},
-                    {phone: data.phone}
+                    // {phone: data.phone}
                 ],
             }});
 
@@ -358,6 +359,45 @@ class UserAuthController {
                         verified: 1
     
                     });
+
+                    const requestData = {
+                        
+                        first_name:data.first_name,
+                        last_name:data.last_name,
+                        middlename:"",
+                        dob:"",
+                        address:"",
+                        gender:"",
+                        phone:data.phone,
+                        bvn:data.bvn
+                    };
+                    // const c_key = `${process.env.CONSUMER_KEY}:${process.env.CONSUMER_SECRET}`;
+                    // const base64Data = Buffer.from(c_key).toString('base64');
+                    // console.log(base64Data)
+        
+                    const config = {
+                        headers: {
+                          'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`,
+                        }
+                      };
+                    
+              
+                    axios.post(process.env.BASE_URL+
+                        "/wallet2/clientdetails/create?wallet-credentials="+process.env.WALLET_CREDENTIALS, 
+                        requestData, config)
+                    .then(response => {
+                        
+        
+                        const responseData = response.data;
+                        const data = responseData.data;
+                        const accountNum = data.accountNo;
+        
+                        let vfdWallet = Vfdwallet.create({
+                            user_id:user.id,
+                            account_number:accountNum
+                        });
+                        
+                    })
     
                 }
                 // Create user wallet
@@ -1043,6 +1083,36 @@ class UserAuthController {
 
             }
         }
+
+        // vfd endpoint 
+
+        static async createVfdaccount(req, res){
+            const requestData = {
+                firstname:req.body.firstname,
+                lastname:req.body.lastname,
+                middlename:req.body.middlename,
+                dob:req.body.dob,
+                address:req.body.address,
+                gender:req.body.gender,
+                phone:req.body.phone,
+                bvn:req.body.bvn
+            };
+            const c_key = `${process.env.CONSUMER_KEY}:${process.env.CONSUMER_SECRET}`;
+  const base64Data = Buffer.from(c_key).toString('base64');
+  console.log(base64Data)
+      
+            axios.post('https://api.example.com/endpoint', requestData)
+    .then(response => {
+      // Handle the response
+      
+      res.json(response.data);
+    })
+    .catch(error => {
+      // Handle any errors
+      res.status(500).json({ error: 'An error occurred' });
+    });
+        }
+        
 
 
 

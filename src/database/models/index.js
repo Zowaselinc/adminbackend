@@ -75,7 +75,8 @@ const KYC = DB.kyc= require("./kyc.model").Model(initialInstance, createSequeliz
 const KYB = DB.kyb= require("./kyb.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Kycdocs = DB.kycdocs= require("./kycdocs.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Sms= DB.sms= require("./adminsms.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
-const ManagerAssignee = DB.sms= require("./manager_assignee.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const ManagerAssignee = DB.sms= require("./manager_assignee.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Vfdwallet = DB.sms= require("./vfdwallet.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -333,5 +334,6 @@ module.exports = {
   KYB,
   Kycdocs,
   Sms,
-  ManagerAssignee
+  ManagerAssignee,
+  Vfdwallet
 };
