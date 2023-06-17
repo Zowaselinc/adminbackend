@@ -98,64 +98,169 @@ class UserAuthController {
     /*                              register marchant                             */
     /* -------------------------------------------------------------------------- */
 
-    static async registerMerchantCorporate(req, res) {
+    static async proceedWithRegistration(req, res) {
+        const data = req.body;
+                    let user = await UserAuthController.saveUser(data);
+                    console.log("log");
+            
+                    if (user.error) {
+                        console.log(user)
+                        return res.status(400).json({
+                            error: true,
+                            message: user.message
+                        });
+                    }
+            
+                    if (data.has_company) {
+                        var response = await UserAuthController.saveCompany(user, data);
+                        if (response.error) {
+                            
+                            return res.status(400).json({
+                                error: true,
+                                message: response.message
+                            });
+                        }
+                    }
+            
+                    var UserTypeModel = data.user_type == "merchant" ? Merchant : Corporate;
+                
+                    let change;
+                    if (data.user_type == "merchant") {
+                    
+                        var merchantType = await MerchantType.findOne({ where: { title: 'grower' } });
+                        if (merchantType) {
+                            change = { type_id: merchantType.id };
+                        }
+                    } else {
+                        change = { type: "red-hot" };
+                        
+                    }
+            
+                    await UserTypeModel.create({ ...change, ...{ user_id: user.id } }).catch((error => {
+                        return res.status(400).json({
+                            error: true,
+                            message: error.sqlMessage
+                        });
+                    }));
+            
+                    return res.status(200).json({
+                        error: false,
+                        status: true,
+                        user: user
+                    });
+    }
 
+    static async registerMerchantCorporate(req, res) {
         try{
+            let verifyKyc = 0, proceedwithnokyc = 0;
             const errors = validationResult(req);
     
             if (!errors.isEmpty()) {
                 return res.status(400).json({ errors: errors.array() });
             }
-    
-            const data = req.body;
-            let user = await UserAuthController.saveUser(data);
-            console.log("log");
-    
-            if (user.error) {
-                console.log(user)
-                return res.status(400).json({
-                    error: true,
-                    message: user.message 
-                });
-            }
-    
-            if (data.has_company) {
-                var response = await UserAuthController.saveCompany(user, data);
-                if (response.error) {
-                    
-                    return res.status(400).json({
-                        error: true,
-                        message: response.message
-                    });
-                }
-            }
-    
-            var UserTypeModel = data.user_type == "merchant" ? Merchant : Corporate;
-           
-            let change;
-            if (data.user_type == "merchant") {
-               
-                var merchantType = await MerchantType.findOne({ where: { title: 'grower' } });
-                if (merchantType) {
-                    change = { type_id: merchantType.id };
-                }
-            } else {
-                change = { type: "red-hot" };
+
+            /* --------------------- verify kyc at this point first --------------------- */
+            if (req.body.runkyc == 1) {
+                proceedwithnokyc = 0;
+                let authkey;
                 
+                axios.post("https://api.qoreid.com/token", {
+                    "clientId": "MPLJJO6C6HC905MIKY92",
+                    "secret": "fe14fe9bc71349f884581f73df7d8aa4"
+                })
+                .then(response => {
+                    
+                    authkey = response.data.accessToken;
+                    // console.log(response)
+                        const config = {
+                            headers: {
+                              'Authorization': `Bearer ${authkey}`,
+                            }
+                        };
+                        let requestData;
+                        let kyc_base_url;
+                        if(req.body.id_type == "identity_card"){
+                            kyc_base_url = `https://api.qoreid.com/v1/ng/identities/virtual-nin/${req.body.id_number}`;
+                            requestData = {
+                                firstname: req.body.first_name,
+                                lastname: req.body.last_name,
+                                phone: req.body.phone,
+                                dob: "",
+                                email: req.body.email,
+                                gender: ""
+                            };
+                        } else if (req.body.id_type == "voter_card"){
+                            kyc_base_url = `https://api.qoreid.com/v1/ng/identities/vin/${req.body.id_number}`;
+                            requestData = {
+                                firstname: req.body.first_name,
+                                lastname: req.body.last_name,
+                                dob: "",
+                            };
+                        } else if (req.body.id_type == "driving_licence"){
+                            kyc_base_url = `https://api.qoreid.com/v1/ng/identities/drivers-license/${req.body.id_number}`;
+                            requestData = {
+                                firstname: req.body.first_name,
+                                lastname: req.body.last_name
+                            };
+                        } else if (req.body.id_type == "passport"){
+                            kyc_base_url = `https://api.qoreid.com/v1/ng/identities/passport/${req.body.id_number}`;
+                            requestData = {
+                                firstname: req.body.first_name,
+                                lastname: req.body.last_name,
+                                dob: "",
+                                gender: ""
+                            };
+                        }
+        
+                        axios.post(kyc_base_url, requestData, config)
+                        .then(response => {
+                            res.send(response);
+                            // if(response.data.statusCode) {
+                            //     return res.status(200).json({
+                            //         error: true,
+                            //         message: "KYC Verification failed "+verifyKyc
+                            //     });
+                            // } else {
+                            //     let matchData;
+                            //     if(req.body.id_type == "identity_card"){
+                            //         matchData = response.data.summary.v_nin_check.status;
+                            //     } else if (req.body.id_type == "voter_card"){
+                            //         matchData = response.data.summary.voters_card_check.status;
+                            //     } else if (req.body.id_type == "driving_licence"){
+                            //         matchData = response.data.summary.drivers_license_check.status;
+                            //     } else if (req.body.id_type == "passport"){
+                            //         matchData = response.data.summary.passport_ng_check.status;
+                            //     }
+                            //     if(matchData != "NO_MATCH") {
+                            //         UserAuthController.proceedWithRegistration(req, res)
+                            //     } else {
+                            //         return res.status(200).json({
+                            //             error: true,
+                            //             message: "KYC Verification failed "+verifyKyc
+                            //         });
+                            //     }
+                            // }
+                            
+                        });
+
+                    
+                })
+
+
+            } else {
+                UserAuthController.proceedWithRegistration(req, res);
             }
-    
-            await UserTypeModel.create({ ...change, ...{ user_id: user.id } }).catch((error => {
-                return res.status(400).json({
-                    error: true,
-                    message: error.sqlMessage
-                });
-            }));
-    
-            return res.status(200).json({
-                error: false,
-                status: true,
-                user: user
-            });
+            
+            // if(verifyKyc != undefined && proceedwithnokyc == 0){
+            //     if(verifyKyc == 1){
+                    
+            //     } else {
+            //         return res.status(200).json({
+            //             error: true,
+            //             message: "KYC Verification failed "+verifyKyc
+            //         });
+            //     }
+            // }
 
         }catch(err){
             var logError = await ErrorLog.create({
@@ -355,6 +460,9 @@ class UserAuthController {
                         applicant_id: applicantId,
                         check_id: checkeId,
                         status: "complete",
+                        id_type: data.id_type,
+                        id_number: data.id_number,
+                        files: {front: data.id_front, back: data.id_back},
                         bvn:  EncryptConfig(data.bvn),
                         verified: 1
     

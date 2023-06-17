@@ -7,12 +7,12 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
 const jwt = require("jsonwebtoken");
-const { sendhtmlEMAIL, sendhtmlEMAILBATCH } = require("~services/mailertwo");
+const { sendhtmlEMAIL, sendhtmlEMAILBATCH } = require("~services/semdgridMailertwo");
 
 class emailController{
     static async sendEmail(req, res){
         
-      await mailer().to(req.body.email).from(process.env.MAIL_FROM)
+      await mailer().to(req.body.email).from(process.env.SENDGRID_FROM)
         .subject('Verify').template("emails/WelcomeEmail").send();
 
 
