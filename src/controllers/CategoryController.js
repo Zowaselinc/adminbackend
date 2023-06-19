@@ -291,7 +291,7 @@ class CategoryController{
         var logError = await ErrorLog.create({
             error_name: "Error on deleting Category by id",
             error_description: e.toString(),
-            route: "/api/admin/crop/category",
+            route: "/api/admin/crop/category/delete/:id",
             error_code: "500"
         });
         if(logError){

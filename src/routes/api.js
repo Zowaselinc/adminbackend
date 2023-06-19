@@ -276,7 +276,9 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     
     router.post('/admin/users/account/batchuser', UserAuthController.BatchUserUpload);
 
-    router.post('/admin/users/account/hubspotuser', RegisterMerchantCorporateValidator, HubspotController.createHubspotusers);
+    router.post('/admin/hubspotuser/add', RegisterMerchantCorporateValidator, HubspotController.createHubspotusers);
+ 
+    router.post('/admin/hubspotuser/delete/:id', RegisterMerchantCorporateValidator, HubspotController.deleHubspotUsers);
 
     // register corporate and merchant with or without account note, admin does kyc and kyb for users as their account are created
     

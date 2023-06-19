@@ -322,6 +322,46 @@ The Zowasel Team
     }
   }
 
+  // DELETE HUBSPORT USERS BY ID 
+
+  static async deleHubspotUsers(req, res){
+    try{
+
+    var delHubspotusers = await User.destroy({where : {id:req.params.id}});
+
+    // find and delete that hubspot user's wallet 
+    var delwallet = await Wallet.destroy({where : {user_id : req.params.id}});
+    if(delHubspotusers){
+      return res.status(200).json({
+        error: false,
+        message:"Hubspot user deleted successfuly"
+      })
+    }else{
+      return res.status(400).json({
+        error: true,
+        message : "Failed to delete hubspot user"
+      })
+    }
+  }catch(error){
+
+    var logError = await ErrorLog.create({
+      error_name: "Error on deleting hubspot users by id",
+      error_description: error.toString(),
+      route: "/admin/hubspotuser/delete/:id",
+      error_code: "500"
+  });
+  if(logError){
+      return res.status(500).json({
+          error: true,
+          message: 'Unable to complete request at the moment' + '' + error.toString(),
+      })
+
+  }
+  }
+
+  
+}
+
 
 }
 
