@@ -201,7 +201,7 @@ class UserAuthController {
                                     firstname: req.body.first_name,
                                     lastname: req.body.last_name,
                                     phone: req.body.phone,
-                                    dob: req.body.dateofbirth,
+                                    dob: "2022-10-10",
                                     email: req.body.email,
                                     gender: req.body.gender
                                 };
@@ -210,7 +210,7 @@ class UserAuthController {
                                 requestData = {
                                     firstname: req.body.first_name,
                                     lastname: req.body.last_name,
-                                    dob: req.body.dateofbirth,
+                                    dob: "2022-10-10",
                                 };
                             } else if (req.body.id_type == "driving_licence"){
                                 kyc_base_url = `https://api.qoreid.com/v1/ng/identities/drivers-license/${req.body.id_number}`;
