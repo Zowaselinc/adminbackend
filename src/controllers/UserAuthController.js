@@ -159,96 +159,121 @@ class UserAuthController {
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            /* --------------------- verify kyc at this point first --------------------- */
-            if (req.body.runkyc == 1) {
-                proceedwithnokyc = 0;
-                let authkey;
-                
-                axios.post("https://api.qoreid.com/token", {
-                    "clientId": "MPLJJO6C6HC905MIKY92",
-                    "secret": "fe14fe9bc71349f884581f73df7d8aa4"
+            /* ---------- check if user exists before even proceeding with kyc ---------- */
+            var checkUser = await User.findAll({
+                where: { 
+                    [Op.or]: [
+                        { email: req.body.email }, 
+                        { phone: req.body.phone }
+                    ]
+                }
+            })
+            
+            if(checkUser.length > 0){
+                return res.status(400).json({
+                    error: true,
+                    message: "User with this email or phone number already exist"
                 })
-                .then(response => {
-                    
-                    authkey = response.data.accessToken;
-                    // console.log(response)
-                        const config = {
-                            headers: {
-                              'Authorization': `Bearer ${authkey}`,
-                            }
-                        };
-                        let requestData;
-                        let kyc_base_url;
-                        if(req.body.id_type == "identity_card"){
-                            kyc_base_url = `https://api.qoreid.com/v1/ng/identities/virtual-nin/${req.body.id_number}`;
-                            requestData = {
-                                firstname: req.body.first_name,
-                                lastname: req.body.last_name,
-                                phone: req.body.phone,
-                                dob: "",
-                                email: req.body.email,
-                                gender: ""
-                            };
-                        } else if (req.body.id_type == "voter_card"){
-                            kyc_base_url = `https://api.qoreid.com/v1/ng/identities/vin/${req.body.id_number}`;
-                            requestData = {
-                                firstname: req.body.first_name,
-                                lastname: req.body.last_name,
-                                dob: "",
-                            };
-                        } else if (req.body.id_type == "driving_licence"){
-                            kyc_base_url = `https://api.qoreid.com/v1/ng/identities/drivers-license/${req.body.id_number}`;
-                            requestData = {
-                                firstname: req.body.first_name,
-                                lastname: req.body.last_name
-                            };
-                        } else if (req.body.id_type == "passport"){
-                            kyc_base_url = `https://api.qoreid.com/v1/ng/identities/passport/${req.body.id_number}`;
-                            requestData = {
-                                firstname: req.body.first_name,
-                                lastname: req.body.last_name,
-                                dob: "",
-                                gender: ""
-                            };
-                        }
-        
-                        axios.post(kyc_base_url, requestData, config)
-                        .then(response => {
-                            res.send(response);
-                            // if(response.data.statusCode) {
-                            //     return res.status(200).json({
-                            //         error: true,
-                            //         message: "KYC Verification failed "+verifyKyc
-                            //     });
-                            // } else {
-                            //     let matchData;
-                            //     if(req.body.id_type == "identity_card"){
-                            //         matchData = response.data.summary.v_nin_check.status;
-                            //     } else if (req.body.id_type == "voter_card"){
-                            //         matchData = response.data.summary.voters_card_check.status;
-                            //     } else if (req.body.id_type == "driving_licence"){
-                            //         matchData = response.data.summary.drivers_license_check.status;
-                            //     } else if (req.body.id_type == "passport"){
-                            //         matchData = response.data.summary.passport_ng_check.status;
-                            //     }
-                            //     if(matchData != "NO_MATCH") {
-                            //         UserAuthController.proceedWithRegistration(req, res)
-                            //     } else {
-                            //         return res.status(200).json({
-                            //             error: true,
-                            //             message: "KYC Verification failed "+verifyKyc
-                            //         });
-                            //     }
-                            // }
-                            
-                        });
-
-                    
-                })
-
-
             } else {
-                UserAuthController.proceedWithRegistration(req, res);
+                /* --------------------- verify kyc at this point first --------------------- */
+                if (req.body.runkyc == 1) {
+                    proceedwithnokyc = 0;
+                    let authkey;
+                    
+                    axios.post("https://api.qoreid.com/token", {
+                        "clientId": "MPLJJO6C6HC905MIKY92",
+                        "secret": "fe14fe9bc71349f884581f73df7d8aa4"
+                    })
+                    .then(response => {
+                        
+                        authkey = response.data.accessToken;
+                        // console.log(response)
+                            const config = {
+                                headers: {
+                                  'Authorization': `Bearer ${authkey}`,
+                                }
+                            };
+                            let requestData;
+                            let kyc_base_url;
+                            if(req.body.id_type == "identity_card"){
+                                kyc_base_url = `https://api.qoreid.com/v1/ng/identities/virtual-nin/${req.body.id_number}`;
+                                requestData = {
+                                    firstname: req.body.first_name,
+                                    lastname: req.body.last_name,
+                                    phone: req.body.phone,
+                                    dob: req.body.dateofbirth,
+                                    email: req.body.email,
+                                    gender: req.body.gender
+                                };
+                            } else if (req.body.id_type == "voter_card"){
+                                kyc_base_url = `https://api.qoreid.com/v1/ng/identities/vin/${req.body.id_number}`;
+                                requestData = {
+                                    firstname: req.body.first_name,
+                                    lastname: req.body.last_name,
+                                    dob: req.body.dateofbirth,
+                                };
+                            } else if (req.body.id_type == "driving_licence"){
+                                kyc_base_url = `https://api.qoreid.com/v1/ng/identities/drivers-license/${req.body.id_number}`;
+                                requestData = {
+                                    firstname: req.body.first_name,
+                                    lastname: req.body.last_name
+                                };
+                            } else if (req.body.id_type == "passport"){
+                                kyc_base_url = `https://api.qoreid.com/v1/ng/identities/passport/${req.body.id_number}`;
+                                requestData = {
+                                    firstname: req.body.first_name,
+                                    lastname: req.body.last_name,
+                                    dob: req.body.dateofbirth,
+                                    gender: req.body.gender
+                                };
+                            }
+            
+                            axios.post(kyc_base_url, requestData, config)
+                            .then(response => {
+    
+                                let matchData;
+                                if(req.body.id_type == "identity_card"){
+                                    matchData = response.data.summary.v_nin_check.status;
+                                } else if (req.body.id_type == "voter_card"){
+                                    matchData = response.data.summary.voters_card_check.status;
+                                } else if (req.body.id_type == "driving_licence"){
+                                    matchData = response.data.summary.drivers_license_check.status;
+                                } else if (req.body.id_type == "passport"){
+                                    matchData = response.data.summary.passport_ng_check.status;
+                                }
+                                if(matchData != "NO_MATCH") {
+                                    UserAuthController.proceedWithRegistration(req, res);
+                                } else {
+                                    return res.status(400).json({
+                                        error: true,
+                                        message: "KYC Verification failed",
+                                        data: response.data
+                                    });
+                                }
+                                
+                            })
+                            .catch(error => {
+                                if(Object.keys(error).length > 0){
+                                    let axiosError = error.response.data;
+                                    if(axiosError.statusCode == 400){
+                                        res.status(400).json({
+                                            error:true,
+                                            message: axiosError.message
+                                        })
+                                        return false;
+                                    } else {
+                                        res.status(400).json({error: true, message: "Invalid ID Supplied", data: error})
+                                    }
+                                }
+                            })
+    
+                        
+                    })
+    
+    
+                } else {
+                    UserAuthController.proceedWithRegistration(req, res);
+                }
             }
             
             // if(verifyKyc != undefined && proceedwithnokyc == 0){
@@ -413,108 +438,93 @@ class UserAuthController {
         let encryptedPassword = await bcrypt.hash(data.password, 10);
 
         try {
-            const checkUser = await User.findOne({where:{
-                [Op.or]: [
-                    {email: data.email},
-                    // {phone: data.phone}
-                ],
-            }});
+            // const checkUser = await User.findOne({where:{
+            //     [Op.or]: [
+            //         {email: data.email},
+            //         {phone: data.phone}
+            //     ],
+            // }});
 
-            if(checkUser){
-               return res.status(200).json({
-                error:true,
-                message: "User with this email or phone number already exist"
-               })
-            }else{
-                user = await User.create({
-                   first_name: data.first_name,
-                    last_name: data.last_name,
-                    phone: data.phone,
-                    email: data.email,
-                    is_verified: 0,
-                    status: 1,
-                    password: encryptedPassword,
-                    type: data.user_type,
-                    // account_type: "individual",
-                    account_type: data.has_company || data.company_email ? "company" : "individual",
-                   
-                });
+            user = await User.create({
+                first_name: data.first_name,
+                last_name: data.last_name,
+                phone: data.phone,
+                email: data.email,
+                is_verified: 0,
+                status: 1,
+                password: encryptedPassword,
+                type: data.user_type,
+                dob: data.dateofbirth,
+                gender: data.gender,
+                // account_type: "individual",
+                account_type: data.has_company || data.company_email ? "company" : "individual",
+                
+            });
 
-                if(user){
-                    /* -------------------------------- kyc docs -------------------------------- */
-                    userKycdocs = await Kycdocs.create({
-                        user_id:user.id,
-                        id_type: data.id_type,
-                        id_front: data.id_front,
-                        id_back:data.id_back,
-                        id_number: data.id_number
-    
-                    });
-    
-                    /* -----------------------------------  kyc verification ---------------------------------- */
-                    const applicantId = crypto.randomBytes(16).toString("hex");
-                    let checkeId = crypto.randomUUID();
-    
-                    kycVerification = await KYC.create({
-                        user_id: user.id,
-                        applicant_id: applicantId,
-                        check_id: checkeId,
-                        status: "complete",
-                        id_type: data.id_type,
-                        id_number: data.id_number,
-                        files: {front: data.id_front, back: data.id_back},
-                        bvn:  EncryptConfig(data.bvn),
-                        verified: 1
-    
-                    });
+            if(user){
+                
+                const applicantId = crypto.randomBytes(16).toString("hex");
+                let checkeId = crypto.randomUUID();
 
-                    const requestData = {
-                        
-                        first_name:data.first_name,
-                        last_name:data.last_name,
-                        middlename:"",
-                        dob:"",
-                        address:"",
-                        gender:"",
-                        phone:data.phone,
-                        bvn:data.bvn
-                    };
-                    // const c_key = `${process.env.CONSUMER_KEY}:${process.env.CONSUMER_SECRET}`;
-                    // const base64Data = Buffer.from(c_key).toString('base64');
-                    // console.log(base64Data)
-        
-                    const config = {
-                        headers: {
-                          'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`,
-                        }
-                      };
-                    
-              
-                    axios.post(process.env.BASE_URL+
-                        "/wallet2/clientdetails/create?wallet-credentials="+process.env.WALLET_CREDENTIALS, 
-                        requestData, config)
-                    .then(response => {
-                        
-        
-                        const responseData = response.data;
-                        const data = responseData.data;
-                        const accountNum = data.accountNo;
-        
-                        let vfdWallet = Vfdwallet.create({
-                            user_id:user.id,
-                            account_number:accountNum
-                        });
-                        
-                    })
-    
-                }
-                // Create user wallet
-                let wallet = await Wallet.create({
+                kycVerification = await KYC.create({
                     user_id: user.id,
-                    balance: 0
+                    applicant_id: applicantId,
+                    check_id: checkeId,
+                    status: "complete",
+                    id_type: data.id_type,
+                    id_number: data.id_number,
+                    files: JSON.stringify({front: data.id_front, back: data.id_back}),
+                    bvn:  EncryptConfig(data.bvn),
+                    verified: 1
+
                 });
-            }
+
+                const requestData = {
+                    
+                    first_name:data.first_name,
+                    last_name:data.last_name,
+                    middlename:"",
+                    dob:"",
+                    address:"",
+                    gender:"",
+                    phone:data.phone,
+                    bvn:data.bvn
+                };
+                // const c_key = `${process.env.CONSUMER_KEY}:${process.env.CONSUMER_SECRET}`;
+                // const base64Data = Buffer.from(c_key).toString('base64');
+                // console.log(base64Data)
+    
+                const config = {
+                    headers: {
+                        'Authorization': `Bearer ${process.env.ACCESS_TOKEN}`,
+                    }
+                    };
+                
             
+                axios.post(process.env.BASE_URL+
+                    "/wallet2/clientdetails/create?wallet-credentials="+process.env.WALLET_CREDENTIALS, 
+                    requestData, config)
+                .then(response => {
+                    
+    
+                    const responseData = response.data;
+                    const data = responseData.data;
+                    const accountNum = data.accountNo;
+    
+                    let vfdWallet = Vfdwallet.create({
+                        user_id:user.id,
+                        account_number:accountNum
+                    });
+                    
+                })
+
+            }
+            // Create user wallet
+            let wallet = await Wallet.create({
+                user_id: user.id,
+                balance: 0
+            });
+
         } catch (err) {
             var logError = await ErrorLog.create({
                 error_name: "Error on creating user",
