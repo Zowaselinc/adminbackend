@@ -223,7 +223,7 @@ class UserAuthController {
                                 requestData = {
                                     firstname: req.body.first_name,
                                     lastname: req.body.last_name,
-                                    dob: req.body.dateofbirth,
+                                    dob: "2022-10-10",
                                     gender: req.body.gender
                                 };
                             }
