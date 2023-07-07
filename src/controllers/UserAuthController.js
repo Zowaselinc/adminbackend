@@ -4,7 +4,8 @@ const { User, Company, AccessToken, Merchant, Partner, Corporate, Agent, UserCod
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const Mailer = require('~services/mailer');
+const Mailer = require("~services/sendgridMailer");
+// const Mailer = require('~services/mailer');
 const serveAdminid = require("~utilities/serveAdminId");
 const md5 = require('md5');
 const { EncryptConfig, DecryptConfig } = require("~utilities/encryption/encrypt");
@@ -71,7 +72,7 @@ class UserAuthController {
             const ipAddresses = req.header('x-forwarded-for');
             let ipAddress = typeof ipAddresses == 'object' ? ipAddresses[0] : ipAddresses;
             Mailer()
-                .to(user.email).from(process.env.MAIL_FROM)
+                .to(user.email).from(process.env.SENDGRID_FROM)
                 .subject('New Login').template('emails.LoginNotification', {
                     ipaddress: ipAddress,
                     timestamp: (new Date()).toLocaleString(),
@@ -438,12 +439,7 @@ class UserAuthController {
         let encryptedPassword = await bcrypt.hash(data.password, 10);
 
         try {
-            // const checkUser = await User.findOne({where:{
-            //     [Op.or]: [
-            //         {email: data.email},
-            //         {phone: data.phone}
-            //     ],
-            // }});
+            
 
             user = await User.create({
                 first_name: data.first_name,
@@ -465,7 +461,7 @@ class UserAuthController {
                 
                 const applicantId = crypto.randomBytes(16).toString("hex");
                 let checkeId = crypto.randomUUID();
-
+                /* ---------------------------- kyc verification ---------------------------- */
                 kycVerification = await KYC.create({
                     user_id: user.id,
                     applicant_id: applicantId,
@@ -511,6 +507,7 @@ class UserAuthController {
                     const data = responseData.data;
                     const accountNum = data.accountNo;
     
+                    
                     let vfdWallet = Vfdwallet.create({
                         user_id:user.id,
                         account_number:accountNum
@@ -518,12 +515,13 @@ class UserAuthController {
                     
                 })
 
-            }
+        
             // Create user wallet
             let wallet = await Wallet.create({
                 user_id: user.id,
                 balance: 0
             });
+        }
 
         } catch (err) {
             var logError = await ErrorLog.create({
@@ -1162,7 +1160,7 @@ class UserAuthController {
                 if(changePassword){
 
                     try {
-                        mailer().to(req.body.email).from(process.env.MAIL_FROM)
+                        mailer().to(req.body.email).from(process.env.SENDGRID_FROM)
                         .subject('Change password').template("emails/ChangePassword").send();
                        
                        
@@ -1202,34 +1200,7 @@ class UserAuthController {
             }
         }
 
-        // vfd endpoint 
-
-        static async createVfdaccount(req, res){
-            const requestData = {
-                firstname:req.body.firstname,
-                lastname:req.body.lastname,
-                middlename:req.body.middlename,
-                dob:req.body.dob,
-                address:req.body.address,
-                gender:req.body.gender,
-                phone:req.body.phone,
-                bvn:req.body.bvn
-            };
-            const c_key = `${process.env.CONSUMER_KEY}:${process.env.CONSUMER_SECRET}`;
-  const base64Data = Buffer.from(c_key).toString('base64');
-  console.log(base64Data)
-      
-            axios.post('https://api.example.com/endpoint', requestData)
-    .then(response => {
-      // Handle the response
-      
-      res.json(response.data);
-    })
-    .catch(error => {
-      // Handle any errors
-      res.status(500).json({ error: 'An error occurred' });
-    });
-        }
+        
         
 
 

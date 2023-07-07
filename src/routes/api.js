@@ -41,6 +41,7 @@ const HubspotController= require('~controllers/HubspotController');
 const AdminsmsController= require('~controllers/AdminsmsController');
 const Manager_assigneeController= require('~controllers/Manager_assigneeController');
 const VfdwalletController= require('~controllers/VfdwalletController');
+const SmsController= require('~controllers/SmsController');
 
 
 
@@ -585,9 +586,13 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
          router.post('/admin/manager/delete/:id',Manager_assigneeController.delManagerAssigneeid);
     });
 
+
+    
+
     Router.group((router) => {
         /* --------------------------- LANDING PAGE ROUTE --------------------------- */
         router.post('/admin/vfd/add',VfdwalletController.createVfdaccount)
+        router.post('/admin/sendgridsms/sendsms',SmsController.sendTheSms)
     });
 
 module.exports = Router;

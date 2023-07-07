@@ -15,7 +15,8 @@ const options = {
   };
    const transporter = nodemailer.createTransport(sgTransport(options));
 
-const sendhtmlEMAIL=async (email,subject,html)=>{try {
+const sendhtmlEMAIL=async (email,subject,html)=>{
+  try {
     // send mail with defined transport object
 let info = await transporter.sendMail({
     from: process.env.SENDGRID_FROM, // sender address

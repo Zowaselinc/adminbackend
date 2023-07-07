@@ -14,8 +14,7 @@ let Schema = (Sequelize,mode) => {
         },
         email : {
             type : Sequelize.STRING,
-            allowNull : false,
-            unique : true
+            allowNull : false
         },
         dob : {
             type: Sequelize.STRING,
