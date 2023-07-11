@@ -602,21 +602,8 @@ class CropController{
     /* --------------------------- GET ALL CROPS TYPE BY USERID --------------------------- */
 
     /* ---------------------------- * EDIT Project by ID * ---------------------------- */
-    static async EditById(req, res) {
-       
-
-        const errors = validationResult(req);
-
-        
-        try {
-            // if (!errors.isEmpty()) {
-            //     // return res.status(400).json({ errors: errors.array() });
-            //     return res.status(200).json({
-            //         error: true,
-            //         message: "All fields are required",
-            //         data: errors,
-            //     });
-            // }
+    static async EditById(req, res) {  
+        try {  
 
             /* ------------------------ UPDATE INTO CROP TABLE ----------------------- */
 
@@ -625,9 +612,8 @@ class CropController{
                 var updateCrop = await Crop.update(
                     {
                         user_id: req.body.user_id,
-                        type: req.body.type,
-                        category: req.body.category,
-                        sub_category: req.body.sub_category,
+                        category_id: req.body.category_id,
+                        subcategory_id: req.body.subcategory_id,
                         active: 0,
                         market: "crop",
                         description: req.body.description,
@@ -640,6 +626,7 @@ class CropController{
                         warehouse_address: req.body.warehouse_address,
                    
                     },
+                    
                     { where: { id: req.body.crop_id } }
                 );
 

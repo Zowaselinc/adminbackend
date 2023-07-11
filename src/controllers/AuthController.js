@@ -9,6 +9,7 @@ const md5  = require('md5');
 require('dotenv').config();
 const message = require("~services/sendgridMailer");
 const { sendhtmlEMAIL } = require("~services/semdgridMailertwo");
+const { sendSms } = require("~services/sms");
 const serveAdminid = require("~utilities/serveAdminId");
 // const sgMail = require('@sendgrid/mail');
 // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -365,6 +366,9 @@ class AuthController{
              </body>
 
            </html>`);
+
+        
+
 
         /* ---------------------------------- LOGIN ACTIVITY LOG --------------------------------- */
                  var adminId = await  serveAdminid.getTheId(req);

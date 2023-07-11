@@ -21,14 +21,14 @@ class Manager_assigneeController{
             // }
             // check if a user has been assigned to an admin, that same user should not be assigned to that admin again 
 
-            var checkUser = await ManagerAssignee.findOne({where: {user_id : req.body.user_id}});
+            // var checkUser = await ManagerAssignee.findOne({where: {user_id : req.body.user_id}});
 
-            if(checkUser){
-                return res.status(400).json({
-                    error:true,  
-                    message : "This user has already been assigned to an admin"
-                })
-            }else{
+            // if(checkUser){
+            //     return res.status(400).json({
+            //         error:true,  
+            //         message : "This user has already been assigned to an admin"
+            //     })
+            // }else{
 
             var theManagerAssignee = await ManagerAssignee.create({
                 admin_id:req.body.admin_id,
@@ -63,7 +63,7 @@ class Manager_assigneeController{
                  });
 
             }
-        }
+        // }
 
         }catch(err){
             var logError = await ErrorLog.create({

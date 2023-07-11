@@ -137,31 +137,16 @@
                                 <p class="mb-sm text p" style="display: block; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px; Font-family: 'Radio Canada', sans-serif; padding: 0; margin: 0; color: #616161; margin-bottom: 10px; text-align: center;">Hi there,</p>
                                 <p class="mb-sm text p" style="display: block; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px; Font-family: 'Radio Canada', sans-serif; padding: 0; margin: 0; color: #616161; margin-bottom: 10px; text-align: center;"> Please use the following login details </p>
                                 <p class="mb-sm text p" style="display: block; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px; Font-family: 'Radio Canada', sans-serif; padding: 0; margin: 0; color: #616161; margin-bottom: 10px; text-align: center;"> To access your admin account</p>
-                                <!-- <p class="mb-sm text p" style="display: block; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px; Font-family: 'Radio Canada', sans-serif; padding: 0; margin: 0; color: #616161; margin-bottom: 10px; text-align: center;"><ul style="margin-top: 5px; list-style: none; color: #616161;">
-                                    <li>Email: ${element.email}</li>
-                                    <li>Temporary Password: ${element.password}</li>
-                                    </ul> </p> -->
+                                <p class="mb-sm text p" style="display: block; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px; Font-family: 'Radio Canada', sans-serif; padding: 0; margin: 0; color: #616161; margin-bottom: 10px; text-align: center;"><ul style="margin-top: 5px; list-style: none; color: #616161;">
+                                    <li>Email: ${req.body.email}</li>
+                                    <li>Password: ${req.body.password}</li>
+                                    </ul> </p>
                                 <!-- <p class="mb-sm text p" style="display: block; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px; Font-family: 'Radio Canada', sans-serif; padding: 0; margin: 0; color: #616161; margin-bottom: 10px; text-align: center;"> Best Regards </p> -->
                                 
                               </td>
                             </tr>
                           </table>
-                        </div>
-                        <div class="whitebg row" style="Font-family: 'Radio Canada', sans-serif; background-color: #FFFFFF; text-align: center;">
-                            <table class="row__table" width="100%" align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="Font-family: 'Radio Canada', sans-serif; table-layout: fixed; text-align: center;">
-                              <tr class="row__row" style="Font-family: 'Radio Canada', sans-serif; text-align: center;" align="center">
-                                <td class="column col-sm-12" width="600" style="Font-family: 'Radio Canada', sans-serif;width: 100%; text-align: center" align="center" valign="top">
-                                 
-                                  <p class="mb-sm text p" style="display: block; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px; Font-family: 'Radio Canada', sans-serif; padding: 0; margin: 0; color: #616161; margin-bottom: 10px; text-align: center;"><ul style="margin-top: 5px; list-style: none; color: #616161;">
-                                      <li>Email: ${element.email}</li>
-                                      <li>Temporary Password: ${element.password}</li>
-                                      </ul> </p>
-                                  <!-- <p class="mb-sm text p" style="display: block; font-family: Helvetica,Arial,sans-serif; font-size: 16px; line-height: 20px; Font-family: 'Radio Canada', sans-serif; padding: 0; margin: 0; color: #616161; margin-bottom: 10px; text-align: center;"> Best Regards </p> -->
-                                  
-                                </td>
-                              </tr>
-                            </table>
-                          </div>
+                        </div>       
                         <div class="whitebg mt mb-lg row" style="Font-family: 'Radio Canada', sans-serif; background-color: #FFFFFF; margin-bottom: 55px; margin-top: 25px; text-align: center;">
                           <table class="row__table" width="100%" align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="Font-family: 'Radio Canada', sans-serif; table-layout: fixed; text-align: center;">
                             <tr class="row__row" style="Font-family: 'Radio Canada', sans-serif; text-align: center;" align="center">
@@ -209,4 +194,5 @@
     </table>
     <div style="Font-family: 'Radio Canada', sans-serif; display: none; white-space: nowrap; font-size: 15px; line-height: 0; text-align: center;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </div>
   </body>
+
 </html>
