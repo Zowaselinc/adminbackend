@@ -42,6 +42,7 @@ const AdminsmsController= require('~controllers/AdminsmsController');
 const Manager_assigneeController= require('~controllers/Manager_assigneeController');
 const VfdwalletController= require('~controllers/VfdwalletController');
 const SmsController= require('~controllers/SmsController');
+const UserbasicController = require('~controllers/UsebasicController');
 
 
 
@@ -103,6 +104,7 @@ const Router = RouteProvider.Router;
 /* ------------------------- // Authentication route ------------------------ */
 Router.group((router)=>{
     router.post('/admin/auth/login',AuthValidator.loginAdminValidator,AuthController.login );
+    router.post('/admin/auth/register',AdminValidator.createAdminValidator,AuthController.registerAdmin);
 
     
      
@@ -110,7 +112,6 @@ Router.group((router)=>{
 Router.middleware(['isAuthenticated']).group((router)=>{
    
     
-    router.post('/admin/auth/register',AdminValidator.createAdminValidator,AuthController.registerAdmin);
 
     router.post('/admin/add', AdminValidator.createAdminValidator, AdminController.createAdmin);
    
@@ -274,7 +275,12 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 /* ---------------------------- users / company details--------------------------- */
 
 Router.middleware(['isAuthenticated']).group((router)=>{
+                    // CREATE BASIC USERS 
+    router.post('/admin/users/account/addbasicuser', UserbasicController.registerBasicMerchantCorporate);
+                    // DELETE BASIC USER 
+    router.post('/admin/users/account/deletebasicuser/:id', UserbasicController.deleteBsicuser);
     
+                    // CREATE BATCH USER 
     router.post('/admin/users/account/batchuser', UserAuthController.BatchUserUpload);
 
     router.post('/admin/hubspotuser/add', RegisterMerchantCorporateValidator, HubspotController.createHubspotusers);
@@ -315,7 +321,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     
     // router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
     
-    // router.post('/admin/users/account/kyb', AccountValidator.startKYB, KYBController.startKybVerification);
+    router.post('/admin/users/account/verifykyb', KYBController.startKybVerification);
     
    
 
@@ -326,7 +332,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     /* ----------------------------------- kyc ---------------------------------- */
     router.get('/admin/users/account/kyctypes', KYCController.getDocumentTypes);
 
-    // router.post('/admin/users/account/kycverification',  KYCController.verifykyc);
+    router.post('/admin/users/account/kycverification',  KYCController.verifykyc);
 
     //   router.get("/admin/users/account/kycstatus", KYCController.retriveCheck);
     

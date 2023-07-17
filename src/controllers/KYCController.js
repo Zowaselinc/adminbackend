@@ -322,25 +322,34 @@ class KYCController {
             static async verifykyc(req, res){
                 try{
 
-                const errors = validationResult(req);
+                    let data = req.body
+
+            //     const errors = validationResult(req);
     
-                if (!errors.isEmpty()) {
-                return res.status(400).json({
-                    errors:true,
-                    message: "All fields are required",
-                    data: {}
-                    });
-            }
+            //     if (!errors.isEmpty()) {
+            //     return res.status(400).json({
+            //         errors:true,
+            //         message: "All fields are required",
+            //         data: {}
+            //         });
+            // }
 
             const applicantId = crypto.randomBytes(16).toString("hex");
             const checkeId = crypto.randomBytes(16).toString("hex");
+            let userbvn = "";
+            if(data.bvn != ""){
+                userbvn = EncryptConfig(data.bvn)
+            }
 
             var kycVerification = await KYC.create({
                 user_id: req.body.user_id,
                 applicant_id: applicantId,
                 check_id: checkeId,
                 status: "complete",
-                bvn:  EncryptConfig(req.body.bvn),
+                id_type: data.id_type,
+                id_number: data.id_number,
+                files: JSON.stringify({front: data.id_front, back: data.id_back}),
+                bvn:  userbvn,
                 verified: 1
 
             });

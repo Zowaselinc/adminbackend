@@ -121,7 +121,7 @@ class UserAuthController {
                                 message: response.message
                             });
                         }
-                    }
+                    }   
             
                     var UserTypeModel = data.user_type == "merchant" ? Merchant : Corporate;
                 
@@ -1199,6 +1199,11 @@ class UserAuthController {
 
             }
         }
+
+
+
+
+       
 
         
         

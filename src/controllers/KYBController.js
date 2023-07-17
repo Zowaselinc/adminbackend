@@ -4,24 +4,26 @@ const { validationResult } = require("express-validator");
 const { use } = require("~routes/api");
 const { KYB, Company, ErrorLog } = require("~database/models");
 const fs = require('fs');
+const crypto = require('crypto');
 
 class KYBController {
     static async startKybVerification(req, res) {
 
-        const errors = validationResult(req);
-        const body = req.body
+        // const errors = validationResult(req);
+        const data = req.body
 
 
         try {
-            if (!errors.isEmpty()) {
-                return res.status(400).json({
-                    error: true,
-                    message: "All fields are required",
-                    data: errors,
-                        });
-                    }
+            // if (!errors.isEmpty()) {
+            //     return res.status(400).json({
+            //         error: true,
+            //         message: "All fields are required",
+            //         data: errors,
+            //             });
+            //         }
 
                     //CREATE KYB RECORD
+                    let checkeId = crypto.randomUUID();
                     const userKyb = await KYB.create({
                         user_id:req.body.user_id,
                         tax_id: data.tax_id,
@@ -31,6 +33,8 @@ class KYBController {
                         check_id: checkeId,
                         status: "pending"
                     });
+
+                    
 
                     if (userKyb) {
                         return res.status(200).json({

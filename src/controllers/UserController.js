@@ -183,6 +183,10 @@ class UserController{
                 {
                     model : Partner,
                     as : "partner"
+                },
+                {
+                    model : Company,
+                    as : "company"
                 }
               
             ],
