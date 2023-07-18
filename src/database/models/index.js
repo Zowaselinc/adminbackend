@@ -113,6 +113,11 @@ Crop.belongsTo(User, {
   as: "user"
 });
 
+Crop.belongsTo(Company, {
+  foreignKey: "id",
+  as: "usercompany"
+})
+
 Crop.belongsTo(Category, {
   foreignKey: "category_id",
   as: "category"
@@ -131,7 +136,8 @@ Crop.hasOne(CropSpecification, {
 Crop.hasOne(Auction,{
   foreignKey : "crop_id",
   as : "auction"
-})
+});
+
 
 
 

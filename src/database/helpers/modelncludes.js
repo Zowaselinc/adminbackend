@@ -1,4 +1,4 @@
-const { Crop, CropSpecification, User, Category, Negotiation, Order, SubCategory } = require("../models");
+const { Crop, CropSpecification, User, Category, Negotiation, Order, SubCategory, Company } = require("../models");
 
 const ModelIncludes = {
 
@@ -9,7 +9,8 @@ const ModelIncludes = {
             { model: CropSpecification, as: "specification" },
             { model: User, as: "user" },
             { model: Category, as: "category" },
-            { model : SubCategory, as : "subcategory"}
+            { model : SubCategory, as : "subcategory"},
+          
         ]
     },
 

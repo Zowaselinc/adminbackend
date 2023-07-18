@@ -1,7 +1,7 @@
 //Import validation result
 const { validationResult } = require('express-validator');
 const crypto = require('crypto');
-const { Crop, CropSpecification, CropRequest, ErrorLog, Activitylog, Category, User, Auction, SubCategory, Bid } = require('~database/models');
+const { Crop, CropSpecification, CropRequest, ErrorLog, Activitylog, Category, User, Auction, SubCategory, Bid, Company } = require('~database/models');
 
 const serveAdminid = require("~utilities/serveAdminId");
 
@@ -179,7 +179,13 @@ class CropController{
                 {
                     model : User,
                     as : 'user',
-                }],
+                },
+                {
+                    model : Company,
+                    as : 'usercompany',
+                },
+                
+            ],
                 order: [['id', 'ASC']],
             });
             if(allCrops){
@@ -508,6 +514,7 @@ class CropController{
                         model: User,
                         as: 'user',
                     },
+                   
                 ],
 
                 where: { user_id: req.params.user_id, active: 1 },
@@ -558,6 +565,7 @@ class CropController{
                     model: CropRequest,
                     as: 'crop_request',
                 },
+                
                 {
                     model: Auction,
                     required: false,
