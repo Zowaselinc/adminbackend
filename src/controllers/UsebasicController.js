@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
-const { User,MerchantType,Corporate, Merchant,Wallet,Company, ErrorLog, Activitylog,} = require("~database/models");
+const { User,MerchantType,Corporate, Merchant,Wallet,Company, ErrorLog, Activitylog, KYC, KYB,} = require("~database/models");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
@@ -263,12 +263,12 @@ class UserbasicController {
             var UserTypeModel = data.user_type == "merchant" ? Merchant : Corporate;
   
             /* ------- send message or mail or both depending on the one supplied ------- */
-            if (data.email != "" && data.phone != ""){
+            if (data.email != "null" && data.phone != "null"){
               sendSms(data.phone, phoneMessageContent);
               sendhtmlEMAIL(data.email, "ZOWASEL PLATFORM UPGRADE", emailMessageContent);  
-            }else if (data.email != "" && data.phone == ""){
+            }else if (data.email != "null" && data.phone == "null"){
               sendhtmlEMAIL(data.email, "ZOWASEL PLATFORM UPGRADE", emailMessageContent);  
-            } else if(data.phone != "" && data.email == ""){
+            } else if(data.phone != "null" && data.email == "null"){
               sendSms(data.phone, phoneMessageContent);
             } 
          
@@ -344,7 +344,7 @@ class UserbasicController {
 
     static async saveBasicUser(data) {
         try {
-            let user;
+            let user, kycVerification;
             let encryptedPassword = await bcrypt.hash(data.password, 10);
 
             user = await User.create({
@@ -363,6 +363,28 @@ class UserbasicController {
                     data.has_company || data.company_email ? "company" : "individual",
             });
 
+            if(user){
+
+              const applicantId = crypto.randomBytes(16).toString("hex");
+              const checkeId = crypto.randomBytes(16).toString("hex");
+            let userbvn = "";
+            if(data.bvn != ""){
+                userbvn = EncryptConfig(data.bvn)
+            }
+
+             kycVerification = await KYC.create({
+                user_id: user.id,
+                applicant_id: applicantId,
+                check_id: checkeId,
+                status: "complete",
+                id_type: data.id_type,
+                id_number: data.id_number,
+                files: JSON.stringify({front: data.id_front, back: data.id_back}),
+                bvn:  userbvn,
+                verified: 1
+
+            });
+
             let wallet = await Wallet.create({
                 user_id: user.id,
                 balance: 0,
@@ -370,6 +392,8 @@ class UserbasicController {
            
 
             return user;
+
+          }
 
         } catch (error) {
             var logError = await ErrorLog.create({
@@ -392,7 +416,9 @@ class UserbasicController {
     }
 
     static async saveBasicCompany(user, data) {
-        let company;
+
+        let company, userkyb;
+        
 
         try {
             // company registration
@@ -408,6 +434,17 @@ class UserbasicController {
                 rc_number: data.rc_number,
                 company_website: data.company_website,
             });
+
+            let checkeId = crypto.randomUUID();
+               userkyb = await KYB.create({
+                  user_id: user.id,
+                  tax_id: data.tax_id,
+                  cac: data.cac,
+                  financial_statement: data.financial_statement,
+                  mou: data.mou,
+                  check_id: checkeId,
+                  status: "pending"
+              });
 
 
             
