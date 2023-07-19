@@ -25,8 +25,6 @@ class InputProducts{
             //     }) 
             // }
 
-            
-                /* -------------------------- MOVE UPLOADED FOLDER -------------------------- */
 
 
                 /* ------------------------ INSERT INTO PRODUCT TABLE ----------------------- */
@@ -460,7 +458,7 @@ class InputProducts{
             }  
         }
     }
-    // static async getallInputsByDeliveryMethod(req , res){}
+   
 }
 
 module.exports = InputProducts;

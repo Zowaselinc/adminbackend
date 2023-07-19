@@ -158,6 +158,7 @@ class CropController{
     static async getAllCrops(req, res){
         try{
 
+           
             var allCrops = await Crop.findAll({
                 include: [
                     {
@@ -180,10 +181,7 @@ class CropController{
                     model : User,
                     as : 'user',
                 },
-                {
-                    model : Company,
-                    as : 'usercompany',
-                },
+                
                 
             ],
                 order: [['id', 'ASC']],
@@ -194,6 +192,7 @@ class CropController{
                     message : "Crops fetched successfully",
                     data : allCrops
                 })
+        
 
             }else{
                 return res.status(400).json({
