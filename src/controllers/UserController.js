@@ -409,6 +409,49 @@ class UserController{
          }
     }
 
+
+        /* --------- update corporate type to either blue-chip or brown-chip -------- */
+
+        static async updateCorporateype(req, res){
+            try{
+
+                var changeType = await Corporate.update({
+                    id: req.body.id,
+                    type: req.body.type
+
+                },{where:{id:req.body.id}});
+
+                if(changeType){
+                   return res.status(200).json({
+                        error: false,
+                        message: "corporate type updated successfully"
+                    })
+                }else{
+                   return res.status(400).json({
+                    error: true,
+                    message: "Failed to update corporate type"
+                   })
+                }
+
+            }catch(error){
+                var logError = await ErrorLog.create({
+                    error_name: "Error on changing corporate type",
+                    error_description: e.toString(),
+                    route: "/api/admin/users/changecorptype",
+                    error_code: "500"
+                });
+                if(logError){
+                    return res.status(500).json({
+                        error: true,
+                        message: 'Unable to complete request at the moment' + error.toString(),
+                        
+                    })
+        
+                }
+
+            }
+        }
+
     
 
     

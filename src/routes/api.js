@@ -279,6 +279,10 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/users/account/addbasicuser', UserbasicController.registerBasicMerchantCorporate);
                     // DELETE BASIC USER 
     router.post('/admin/users/account/deletebasicuser/:id', UserbasicController.deleteBsicuser);
+
+                    // CHANGE CORPORATE TYPE TO EITHER BLUE-CHIP OR BROWN-CHIP 
+    router.post('/admin/users/account/changecorptype', UserController.updateCorporateype);
+
     
                     // CREATE BATCH USER 
     router.post('/admin/users/account/batchuser', UserAuthController.BatchUserUpload);
