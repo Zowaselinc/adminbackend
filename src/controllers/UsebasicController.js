@@ -329,7 +329,7 @@ class UserbasicController {
             var logError = await ErrorLog.create({
                 error_name: "Error on creating user",
                 error_description: error.toString(),
-                route: "/admin/user/create",
+                route: "/api/admin/user/create",
                 error_code: "500",
             });
             // return res.status(500).json({
@@ -344,7 +344,7 @@ class UserbasicController {
 
     static async saveBasicUser(data) {
         try {
-            let user, kycVerification;
+            let user;
             let encryptedPassword = await bcrypt.hash(data.password, 10);
 
             user = await User.create({
@@ -363,16 +363,16 @@ class UserbasicController {
                     data.has_company || data.company_email ? "company" : "individual",
             });
 
-            if(user){
 
               const applicantId = crypto.randomBytes(16).toString("hex");
               const checkeId = crypto.randomBytes(16).toString("hex");
+
             let userbvn = "";
             if(data.bvn != ""){
                 userbvn = EncryptConfig(data.bvn)
             }
 
-             kycVerification = await KYC.create({
+             var kycVerification = await KYC.create({
                 user_id: user.id,
                 applicant_id: applicantId,
                 check_id: checkeId,
@@ -393,7 +393,7 @@ class UserbasicController {
 
             return user;
 
-          }
+          
 
         } catch (error) {
             var logError = await ErrorLog.create({
@@ -417,7 +417,7 @@ class UserbasicController {
 
     static async saveBasicCompany(user, data) {
 
-        let company, userkyb;
+        let company;
         
 
         try {
@@ -436,7 +436,7 @@ class UserbasicController {
             });
 
             let checkeId = crypto.randomUUID();
-               userkyb = await KYB.create({
+             var  userkyb = await KYB.create({
                   user_id: user.id,
                   tax_id: data.tax_id,
                   cac: data.cac,
@@ -456,13 +456,13 @@ class UserbasicController {
                 route: "/api/admin/user/account/add",
                 error_code: "500",
             });
-            if (logError) {
-                return res.status(500).json({
-                    error: true,
-                    message:
-                        "Unable to complete request at the moment sooooooooo" + " " + "" +error.toString(),
-                });
-            }
+            // if (logError) {
+            //     return res.status(500).json({
+            //         error: true,
+            //         message:
+            //             "Unable to complete request at the moment sooooooooo" + " " + "" +error.toString(),
+            //     });
+            // }
         }
 
         return company;

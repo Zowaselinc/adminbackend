@@ -4,7 +4,6 @@ let Schema = (Sequelize, mode) => {
     return {
         user_id: {
             type: Sequelize.INTEGER,
-            unique: true,
             allowNull: false
         },
         company_name: {
@@ -17,7 +16,7 @@ let Schema = (Sequelize, mode) => {
         company_email: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: true
+            
         },
         company_phone: {
             type: Sequelize.STRING,
