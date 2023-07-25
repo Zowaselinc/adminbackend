@@ -133,6 +133,23 @@ Router.group((router)=>{
 });
 
 
+Router.group((router) => {
+    /* ------------------------SEND SINGLE AND BULK SMS ENDPOINT  --------------------------- */
+    
+    router.post('/admin/sendgridsms/sendsinglesms',SmsController.sendTheSms)
+    
+    router.post('/admin/sendgridsms/sendbulksms',SmsController.sendBulkSms)
+});
+
+                    // VFD BANK ACCOUNT CREATION ENDPOINT 
+
+Router.group((router) => {
+  
+    router.post('/admin/vfd/add',VfdwalletController.createVfdaccount)
+
+});
+
+
 
 
 /* ----------------------------- // Admin routes ---------------------------- */
@@ -599,11 +616,7 @@ router.get('/admin/crop/conversation/getallparams/:offset/:limit', NegotiationCo
 
     
 
-    Router.group((router) => {
-        /* --------------------------- LANDING PAGE ROUTE --------------------------- */
-        router.post('/admin/vfd/add',VfdwalletController.createVfdaccount)
-        router.post('/admin/sendgridsms/sendsms',SmsController.sendTheSms)
-    });
+   
 
 module.exports = Router;
 

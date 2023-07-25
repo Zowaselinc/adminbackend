@@ -9,7 +9,7 @@ const md5 = require('md5');
 const { EncryptConfig, DecryptConfig } = require("~utilities/encryption/encrypt");
 const { mydb } = require("~utilities/backupdriver");
 const { sendhtmlEMAIL,sendhtmlEMAILBATCH } = require("~services/semdgridMailertwo");
-const { sendSms } = require("~services/sms");
+const { sendSmsSINGLE } = require("~services/sms");
 require('dotenv').config();
 const emialRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
@@ -284,12 +284,12 @@ The Zowasel Team
 
           /* ------- send message or mail or both depending on the one supplied ------- */
           if (element.email != "null" && element.phone != "null"){
-            sendSms(element.phone, phoneMessageContent);
+           sendSmsSINGLE(element.phone, phoneMessageContent);
             sendhtmlEMAIL(element.email, "ZOWASEL PLATFORM UPGRADE", emailMessageContent);  
           }else if (element.email != "null" && element.phone == "null"){
             sendhtmlEMAIL(element.email, "ZOWASEL PLATFORM UPGRADE", emailMessageContent);  
           } else if(element.phone != "null" && element.email == "null"){
-            sendSms(element.phone, phoneMessageContent);
+           sendSmsSINGLE(element.phone, phoneMessageContent);
           }
 
           let change;

@@ -7,7 +7,7 @@ const crypto = require("crypto");
 const md5 = require("md5");
 const { mydb } = require("~utilities/backupdriver");
 const { sendhtmlEMAIL,} = require("~services/semdgridMailertwo");
-const { sendSms } = require("~services/sms");
+const { sendSmsSINGLE } = require("~services/sms");
 const serveAdminid = require("~utilities/serveAdminId");
 require("dotenv").config();
 
@@ -261,15 +261,15 @@ class UserbasicController {
             Thank you for trusting Zowasel. Best regards, Zowasel Team.`;
   
             var UserTypeModel = data.user_type == "merchant" ? Merchant : Corporate;
-  
+ ś
             /* ------- send message or mail or both depending on the one supplied ------- */
             if (data.email != "null" && data.phone != "null"){
-              sendSms(data.phone, phoneMessageContent);
+              sendSmsSINGLE(data.phone, phoneMessageContent);
               sendhtmlEMAIL(data.email, "ZOWASEL PLATFORM UPGRADE", emailMessageContent);  
             }else if (data.email != "null" && data.phone == "null"){
               sendhtmlEMAIL(data.email, "ZOWASEL PLATFORM UPGRADE", emailMessageContent);  
             } else if(data.phone != "null" && data.email == "null"){
-              sendSms(data.phone, phoneMessageContent);
+              sendSmsSINGLE(data.phone, phoneMessageContent);
             } 
          
                 var UserTypeModel = data.user_type == "merchant" ? Merchant : Corporate;

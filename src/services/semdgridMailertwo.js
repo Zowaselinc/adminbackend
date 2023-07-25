@@ -32,7 +32,8 @@ let info = await transporter.sendMail({
 }
 
 }
-const sendhtmlEMAILBATCH=async (recipients,subject,html)=>{try {
+const sendhtmlEMAILBATCH=async (recipients,subject,html)=>{
+  try {
 
 
     recipients.forEach(async element => {
