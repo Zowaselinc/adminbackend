@@ -1,5 +1,5 @@
 const express = require('express');
-const { ErrorLog } = require("~database/models");
+const { ErrorLog, Activitylog } = require("~database/models");
 const app = express();
 const sgMail = require('@sendgrid/mail');
 require('dotenv').config();
