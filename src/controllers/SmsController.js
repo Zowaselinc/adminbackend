@@ -15,17 +15,20 @@ class SmsController {
 
         try{
 
+       
+
         sendSmsSINGLE(req.body.phone,req.body.sms);
-        /* ------------------------------ activity log ------------------------------ */
-        var adminId = await  serveAdminid.getTheId(req);
-                            
-        await Activitylog.create({
-        admin_id:adminId ,
-        section_accessed:'Sending individual sms)',
-        page_route:'/api/admin/sendgrid/sendsinglesms',
-        action:'sent an sms'
-    });
-    //   end
+        
+              /* ------------------------------ activity log ------------------------------ */
+              var adminId = await  serveAdminid.getTheId(req);                    
+              await Activitylog.create({
+              admin_id:adminId ,
+              section_accessed:'Sending individual sms',
+              page_route:'/api/admin/sendgrid/sendsinglesms',
+              action:'sent an sms'
+          });
+          //   end
+       
 
         return res.status(200).json({
             error : false,
@@ -56,9 +59,7 @@ class SmsController {
     static async sendBulkSms(req, res) {
         try{
 
-        sendSmsBATCH(req.body.recipients,req.body.sms);
-
-         /* ------------------------------ activity log ------------------------------ */
+             /* ------------------------------ activity log ------------------------------ */
          var adminId = await  serveAdminid.getTheId(req);
                             
          await Activitylog.create({
@@ -68,6 +69,10 @@ class SmsController {
          action:'Sent bulk sms '
      });
      //   end
+
+        sendSmsBATCH(req.body.recipients,req.body.sms);
+
+        
 
         return res.status(200).json({
             error : false,

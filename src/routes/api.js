@@ -109,6 +109,7 @@ Router.group((router)=>{
     
      
 });
+
 Router.middleware(['isAuthenticated']).group((router)=>{
    
     
@@ -118,7 +119,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 });
 
 /* --------------------------- // mailer end point -------------------------- */
-Router.group((router)=>{
+Router.middleware(['isAuthenticated']).group((router)=>{
     // loginmail 
     router.post('/admin/email/sendmail',emailController.sendEmail);
 
@@ -133,11 +134,11 @@ Router.group((router)=>{
 });
 
 
-Router.group((router) => {
+Router.middleware(['isAuthenticated']).group((router) => {
     /* ------------------------SEND SINGLE AND BULK SMS ENDPOINT  --------------------------- */
     
     router.post('/admin/sendgridsms/sendsinglesms',SmsController.sendTheSms)
-    
+
     router.post('/admin/sendgridsms/sendbulksms',SmsController.sendBulkSms)
 });
 
