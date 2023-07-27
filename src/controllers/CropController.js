@@ -317,7 +317,7 @@ class CropController{
                 }
             ],
                 
-                where: { type: "auction", active: 1 },
+                where: { type: "auction" },
                 order: [['id', 'DESC']],
                 
             });
