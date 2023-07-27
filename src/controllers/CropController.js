@@ -689,6 +689,18 @@ class CropController{
                             },
                             { where: { crop_id: req.body.crop_id } }
                         );
+                        if(updateCropRequest){
+                            var updateCropAuction = await Auction.update({
+                                
+                                    crop_id: crop.id,
+                                    start_date: req.body.start_date,
+                                    end_date: req.body.end_date,
+                                    minimum_bid: req.body.minimum_bid,
+                                  
+                              
+                            },
+                            {where: {crop_id: req.body.crop_id}});
+                        }
 
                         return res.status(200).json({
                             error: false,
