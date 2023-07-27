@@ -516,7 +516,7 @@ class CropController{
                    
                 ],
 
-                where: { user_id: req.params.user_id, active: 1 },
+                where: { user_id: req.params.user_id,  },
                 order: [['id', 'DESC']]
             });
 
@@ -529,7 +529,7 @@ class CropController{
             });
         } catch (error) {
             var logError = await ErrorLog.create({
-                error_name: "Error on fetching crop wanted",
+                error_name: "Error on fetching crop by id ",
                 error_description: error.toString(),
                 route: "/api/user/crops",
                 error_code: "500",
@@ -593,7 +593,7 @@ class CropController{
             });
         } catch (error) {
             var logError = await ErrorLog.create({
-                error_name: "Error on fetching crop wanted",
+                error_name: "Error on fetching crop by user type and user id",
                 error_description: error.toString(),
                 route: "/api/user/crops",
                 error_code: "500",
