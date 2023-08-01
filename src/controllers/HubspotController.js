@@ -11,6 +11,7 @@ const { mydb } = require("~utilities/backupdriver");
 const { sendhtmlEMAIL,sendhtmlEMAILBATCH } = require("~services/semdgridMailertwo");
 const { sendSmsSINGLE } = require("~services/sms");
 require('dotenv').config();
+const serveAdminid = require("~utilities/serveAdminId");
 const emialRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
 
@@ -206,6 +207,8 @@ class HubspotController {
 <p></p><ul style="margin-top: 5px;">
   <li>Email: ${element.email}</li>
   <li>Temporary Password: ${element.password}</li>
+  or
+  <li>Phone no: ${element.phone}</li>
 </ul>
 Please remember to change your temporary password when you log in for the first time to ensure the security of your account.<p></p></div>
                             </td>
@@ -308,6 +311,18 @@ The Zowasel Team
               message: error.sqlMessage
             });
           }));
+
+
+          /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
+          var adminId = await  serveAdminid.getTheId(req);
+                            
+          await Activitylog.create({
+          admin_id:adminId ,
+          section_accessed:'Adding users in batch (corporate or merchant)',
+          page_route:'/api/admin/user/account/addbatchbasicuser',
+          action:'Added new users in batch (corporate or merchant)'
+      });
+      //   end
 
 
         // }

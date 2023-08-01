@@ -295,6 +295,8 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 Router.middleware(['isAuthenticated']).group((router)=>{
                     // CREATE BASIC USERS 
     router.post('/admin/users/account/addbasicuser', UserbasicController.registerBasicMerchantCorporate);
+                                        // BATCH BASIC USER 
+    router.post('/admin/users/account/addbatchbasicuser', UserbasicController.basicBatchUser);
                     // DELETE BASIC USER 
     router.post('/admin/users/account/deletebasicuser/:id', UserbasicController.deleteBsicuser);
 
