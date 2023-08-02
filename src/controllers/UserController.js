@@ -137,24 +137,7 @@ class UserController{
 
         
 
-        // var users =await User.findAll();
-        // var merchants = await Merchant.findAll({ include : User});
-
-        // var corporates = await Corporate.findAll({ include : User});
-
-        // var agents = await Agent.findAll({ include : User});
-
-        // var partners = await Partner.findAll({ include : User});
-
-        // var resultSet = [...merchants, ...corporates , ...agents, ...partners];
-
-        // resultSet = resultSet.sort((a,b) => b.user_id - a.user_id);
-
-        // return res.status(200).json({
-        //     error : false,
-        //     message : "Users fetched successfully",
-        //     data : resultSet
-        // });
+       
 
         var allUsers = await User.findAll({
          

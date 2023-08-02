@@ -358,12 +358,12 @@ class KYCController {
             if(kycVerification){
                 return res.status(200).json({
                     error: false,
-                    message:"successfull"
+                    message:"KYC verification successfull"
                 })
             }else{
                 return res.status(200).json({
                     error: true,
-                    message:"failed"
+                    message:"KYC verification failed"
                 })
             }
 
@@ -372,7 +372,7 @@ class KYCController {
                 var logError = await ErrorLog.create({
                     error_name: "Error on kyc verification",
                     error_description: err.toString(),
-                    route: "/api/admin/users/accounnt/",
+                    route: "/api/admin/users/accounnt/kycverification",
                     error_code: "500"
                 });
                 if(logError){
@@ -386,25 +386,71 @@ class KYCController {
                     }
                 }
 
+                // *********************************************************************************************************
+                /* ---------------------------- UPDATE KYC STATUS --------------------------- */
+
                 static async updatekycStatus(req, res){
 
                     try{
+                        var checkuserid = await KYC.findOne({
+                            where:{user_id : req.body.user_id}
 
-                        const updateStatus = await KYC.update({
-                           status:req.body.status,
-                           verified:req.body.verified
-                        },{where:{user_id : req.body.user_id}});
+                        });
 
-                        if(updateStatus){
-                            return res.status(200).json({
-                                error:false,
-                                message:"KYC status updated"
-                            })
+                        if(checkuserid){
+
+                            const updateStatus = await KYC.update({
+                            status:req.body.status,
+                            verified:req.body.verified
+                            },{where:{user_id : req.body.user_id}});
+
+                            if(updateStatus){
+                                return res.status(200).json({
+                                    error:false,
+                                    message:"KYC status updated",
+                                   
+                                })
+                            }else{
+                                
+
+                                return res.status(200).json({
+                                    error: true,
+                                    message:"Failed to update kyc status"
+                                })
+                            }
                         }else{
+                           
+
+
+                            const applicantId = crypto.randomBytes(16).toString("hex");
+                            const checkeId = crypto.randomBytes(16).toString("hex");
+                            
+                            let userbvn = "";
+                            if(req.body.bvn != ""){
+                                userbvn = EncryptConfig(req.body.bvn)
+                            }
+
+                            var kycVerification = await KYC.create({
+                                user_id: req.body.user_id,
+                                applicant_id: applicantId,
+                                check_id: checkeId,
+                                status: req.body.status,
+                                id_type: req.body.id_type,
+                                id_number: req.body.id_number,
+                                files: JSON.stringify({front: req.body.id_front, back: req.body.id_back}),
+                                bvn:  userbvn,
+                                verified: req.body.verified
+                
+                            });
+                            if(kycVerification){
+
                             return res.status(200).json({
                                 error: false,
-                                message:"Failed to update kyc status"
-                            })
+                                message:"KYC status updated Successful"
+                            });
+
+                        }
+
                         }
                     }catch(err){
                         var logError = await ErrorLog.create({

@@ -318,7 +318,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
         // change user password 
     router.post('/admin/users/changeuserpassword',  UserAuthController.changeUserPassword);
     // update kyc status 
-    router.post('/admin/users/account/updatekycstatus',UserAuthController.updatekycStatus);
+    router.post('/admin/users/account/updatekycstatus',KYCController.updatekycStatus);
 
     // update kyb status 
     router.post('/admin/users/account/updatekybstatus',UserAuthController.updatekybStatus);

@@ -69,14 +69,15 @@ const Color = DB.color = require("./color.model.js").Model(initialInstance, crea
 const Assignnegotiation = DB.assign_negotiation= require("./assign_negotiation.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Page = DB.page= require("./page.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Block= DB.block= require("./block.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
-const KnowledgebaseArticle = DB.block= require("./knowlegebase_article.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
-const KnowledgebasCategory = DB.block= require("./knowledgebase_category.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const KnowledgebaseArticle = DB.KnowledgebaseArticle= require("./knowlegebase_article.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const KnowledgebasCategory = DB.KnowledgebasCategory= require("./knowledgebase_category.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const KYC = DB.kyc= require("./kyc.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const KYB = DB.kyb= require("./kyb.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Kycdocs = DB.kycdocs= require("./kycdocs.model").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Sms= DB.sms= require("./adminsms.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
-const ManagerAssignee = DB.sms= require("./manager_assignee.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
-const Vfdwallet = DB.sms= require("./vfdwallet.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const ManagerAssignee = DB. managerAssignee= require("./manager_assignee.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Vfdwallet = DB.vfdwallet= require("./vfdwallet.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Email = DB.email= require("./email.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -343,5 +344,6 @@ module.exports = {
   Kycdocs,
   Sms,
   ManagerAssignee,
-  Vfdwallet
+  Vfdwallet,
+  Email
 };

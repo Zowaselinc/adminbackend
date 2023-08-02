@@ -139,7 +139,7 @@ class MessageController{
 
         var messagesent = await Message.findOne({where: {sender_id : req.params.id}});
         var messagereceived = await Message.findOne({where: {receiver_id : req.params.id}});
-      console.log(messagesent)
+        console.log(messagesent)
         var allMessages = messagesent.concat(messagereceived);
                /* ---------------------------------- ADMIN ACTIVITY LOG --------------------------------- */
                var adminId = await  serveAdminid.getTheId(req);
