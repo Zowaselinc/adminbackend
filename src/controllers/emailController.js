@@ -109,12 +109,29 @@ class emailController{
 
             }
 
-
-
-
             }
 
+            // /* ------------------------ store emails on database ------------------------ */
+            // static async storeEmails(req, res){
+            //     try{
 
+            //     }catch(error){
+            //         var logError = await ErrorLog.create({
+            //             error_name: "Error on  email",
+            //             error_description: error.toString(),
+            //             route: "/api/admin/email/bulkmail",
+            //             error_code: "500"
+            //         });
+            //         if(logError){
+            //             return res.status(500).json({
+            //                 error: true,
+            //                 message: 'Unable to complete request at the moment'+ "" + error.toString(),
+                            
+            //             });
+            //     }
+
+            //     }
+            // }
 
 
 
