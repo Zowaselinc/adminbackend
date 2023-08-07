@@ -9,6 +9,7 @@ const { mydb } = require("~utilities/backupdriver");
 const { sendhtmlEMAIL,} = require("~services/semdgridMailertwo");
 const { sendSmsSINGLE } = require("~services/sms");
 const serveAdminid = require("~utilities/serveAdminId");
+const { EncryptConfig } = require("~utilities/encryption/encrypt");
 require("dotenv").config();
 
 
@@ -486,9 +487,12 @@ class UserbasicController {
       /* -------------------------------------------------------------------------- */
 
       static async basicBatchUser(req, res) {
+        var user;
         try {
 
+
           const batchbasicuser = req.body.batchbasicuser;
+         
           batchbasicuser.forEach(async element =>{
             
             /* ---------------- this end point creates users with out kyc --------------- */
@@ -506,9 +510,9 @@ class UserbasicController {
             //     });
             // } else {
               
-                var user = await UserbasicController.saveBasicBatchUser(element);
+               user = await UserbasicController.saveBasicBatchUser(element);
 
-
+            
                 const emailMessageContent = `
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
             <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" style="Font-family: 'Radio Canada', sans-serif;">
@@ -762,10 +766,10 @@ class UserbasicController {
 
                 await UserTypeModel.create({ ...change, ...{ user_id: user.id } }).catch(
                     (error) => {
-                        return res.status(400).json({
-                            error: true,
-                            message: error.sqlMessage,
-                        });
+                        // return res.status(400).json({
+                        //     error: true,
+                        //     message: error.sqlMessage,
+                        // });
                     }
                 );
 
@@ -791,7 +795,7 @@ class UserbasicController {
                 //   end
               });
 
-                     return res.status(200).json({
+                return res.status(200).json({
                     error: false,
                     message: "users registered successfully",
                     
@@ -821,7 +825,7 @@ class UserbasicController {
 
     static async saveBasicBatchUser(element) {
         try {
-            let user;
+            var user;
             let encryptedPassword = await bcrypt.hash(element.password, 10);
 
             user = await User.create({
@@ -837,7 +841,7 @@ class UserbasicController {
                 gender: element.gender,
                 // account_type: "individual",
                 account_type:
-                    element.has_company || element.company_email ? "company" : "individual",
+                  element.has_company || element.company_email ? "company" : "individual",
             });
 
 
@@ -848,6 +852,7 @@ class UserbasicController {
             if(element.bvn != ""){
                 userbvn = EncryptConfig(element.bvn)
             }
+           
 
              var kycVerification = await KYC.create({
                 user_id: user.id,
@@ -873,6 +878,7 @@ class UserbasicController {
           
 
         } catch (error) {
+          console.log(error);
             var logError = await ErrorLog.create({
                 error_name: "Error on creating batch basic user",
                 error_description: error.toString(),
@@ -894,7 +900,7 @@ class UserbasicController {
 
     static async saveBasicBatchCompany(user, element) {
 
-        let company;
+        let company
         
 
         try {

@@ -130,6 +130,17 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
     // bulk email 
     router.post('/admin/email/send/bulkmail',emailController.sendBulkmails);
+
+    /* ----------------------- store mails on the database ---------------------- */
+    router.post('/admin/email/storeemail',emailController.storeEmails);
+
+    router.get('/admin/email/getall',emailController.getAllEmails);
+
+    router.get('/admin/email/getbyid/:id',emailController.getEmailbyid);
+
+    router.post('/admin/email/editemail',emailController.editEmail);
+
+    router.post('/admin/email/deleteemail/:id',emailController.deleteEmail);
    
 });
 
@@ -363,7 +374,7 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     // router.get("/admin/users/account/kycdocument/:id", KYCController.getDocument);
 
     /* ----------------------- kyc status and verification ---------------------- */
-    // router.post('/admin/users/account/updatekycstatus',  KYCController.updatekycStatus);
+    
     
     /* ------------------------------ kycdocs apis ----------------------------- */
     router.post('/admin/users/account/updatekycdocs', AccountValidator.kycDocs, KycDocsController.updateKycDocs);
