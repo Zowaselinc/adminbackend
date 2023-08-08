@@ -9,53 +9,7 @@ const jwt = require("jsonwebtoken");
 
 class ActivitylogController{
 
-    /* --------------------------- CREATE ACTIVITYLOG --------------------------- */
-    // static async createActivitylog(req, res){
-    //     try{
-    //         const error = validationResult(req);
-    //         if(!error.isEmpty()){
-    //             return res.status(400).json({
-    //                 errors:true,
-    //                 message: "All fields are required",
-    //                 data: {}
-    //                 });
-    //         }
-    //         var activlog = await Activitylog.create({
-    //             admin_id:req.body.admin_id,
-    //             section_accessed:req.body.section_accessed,
-    //             page_route:req.body.page_route,
-    //             action:req.body.action
-    //         });
-    //         if(activlog){
-    //             return res.status(200).json({
-    //                 error:false,
-    //                 message:"Activitylog created successfully"
-    //             })
-    //         }else{
-    //             return res.status(200).json({
-    //                 error : true,
-    //                  message : "Failed to create activitylog"
-  
-    //              });
-    //         }
-
-    //     }catch(e){
-    //         var logError = await ErrorLog.create({
-    //             error_name: "Error on creating Activitylogs",
-    //             error_description: e.toString(),
-    //             route: "/api/admin/activitylog/add",
-    //             error_code: "500"
-    //         });
-    //         if(logError){
-    //             return res.status(500).json({
-    //                 error: true,
-    //                 message: 'Unable to complete request at the moment',
-        
-    //             })
     
-    //         }
-    //     }
-    // }
 /* ------------------------ GET ALL ACTIVITYLOGS END POINT ------------------------ */
             static async getAllActivitylogs(req, res){
                 try{
