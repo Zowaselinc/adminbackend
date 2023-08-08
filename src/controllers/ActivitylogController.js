@@ -116,7 +116,8 @@ class ActivitylogController{
        
         var activitylogparams = await Activitylog.findAll({
             limit:limit,
-            offset:offset
+            offset:offset,
+            order :[['id', 'DESC']]
         });
 
         var paramsarray = [];

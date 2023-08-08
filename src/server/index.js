@@ -1,14 +1,16 @@
 
 const express = require('express');
-const formData = require("express-form-data");
+const fileUpload = require('express-fileupload');
+// const formData = require("express-form-data");
 const os= require('os');
 const App = express();
 
+App.use(fileUpload());
 const options = {
     uploadDir:os.tmpdir(),
     autoClean:true
 };
-App.use(formData.parse(options));
+// App.use(formData.parse(options));
      /* ---------------------------------------------------- STEP ONE ---------------------------------------------------- */
 /* ------------- CREATE A SEPARATE NODE HTTP SERVER DIFFERENT FROM EXPRESS AND ATTACH App aboce into it ------------- */
 const http = require ('http',{

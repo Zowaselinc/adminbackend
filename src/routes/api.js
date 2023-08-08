@@ -120,6 +120,8 @@ Router.middleware(['isAuthenticated']).group((router)=>{
 
 /* --------------------------- // mailer end point -------------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
+    // email file upload 
+    router.post('/admin/email/uploadimg', emailController.uploadImg);
     // loginmail 
     router.post('/admin/email/sendmail',emailController.sendEmail);
 
