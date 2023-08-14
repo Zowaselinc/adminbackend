@@ -16,7 +16,6 @@ class GalleryContoller{
    static async uploadImg(req, res){
     try{
 
-
         if(req.files){
        }
     //    console.log(req.files)
@@ -26,7 +25,6 @@ class GalleryContoller{
        //all express static files go to public , they can be accessed without public on the url
        let filepath =`public`;
        //direct path to access files after upload
-       
        
     //    Re-edit the subfilepath to avoid duplicate files of same name
         let subfilepath= `/email/${uuid()}${filename}`;
