@@ -10,6 +10,7 @@ const options = {
     uploadDir:os.tmpdir(),
     autoClean:true
 };
+App.use(express.static("public"));
 // App.use(formData.parse(options));
      /* ---------------------------------------------------- STEP ONE ---------------------------------------------------- */
 /* ------------- CREATE A SEPARATE NODE HTTP SERVER DIFFERENT FROM EXPRESS AND ATTACH App aboce into it ------------- */

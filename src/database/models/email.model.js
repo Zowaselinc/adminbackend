@@ -2,6 +2,10 @@ const generateTimestamps = require("./timestamps");
 
 let Schema = (Sequelize, mode) => {
     return {
+        admin_id: {
+            type: Sequelize.STRING,
+           
+        },
         subject: {
             type: Sequelize.STRING,
            
@@ -10,7 +14,7 @@ let Schema = (Sequelize, mode) => {
             type: Sequelize.TEXT,
         },
         recipients: {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT,
         },
         status: {
             type: Sequelize.STRING,

@@ -43,6 +43,7 @@ const Manager_assigneeController= require('~controllers/Manager_assigneeControll
 const VfdwalletController= require('~controllers/VfdwalletController');
 const SmsController= require('~controllers/SmsController');
 const UserbasicController = require('~controllers/UsebasicController');
+const GalleryContoller = require('~controllers/GalleryController');
 
 
 
@@ -118,10 +119,19 @@ Router.middleware(['isAuthenticated']).group((router)=>{
    
 });
 
+/* ---------------------------- gallery endpoint ---------------------------- */
+Router.middleware(['isAuthenticated']).group((router)=>{
+     // email file upload 
+     router.post('/admin/gallery/uploadimg', GalleryContoller.uploadImg);
+
+
+     router.post('/admin/gallery/deletefile', GalleryContoller.deleteFile);
+
+
+});
 /* --------------------------- // mailer end point -------------------------- */
 Router.middleware(['isAuthenticated']).group((router)=>{
-    // email file upload 
-    router.post('/admin/email/uploadimg', emailController.uploadImg);
+   
     // loginmail 
     router.post('/admin/email/sendmail',emailController.sendEmail);
 
@@ -134,9 +144,13 @@ Router.middleware(['isAuthenticated']).group((router)=>{
     router.post('/admin/email/send/bulkmail',emailController.sendBulkmails);
 
     /* ----------------------- store mails on the database ---------------------- */
-    router.post('/admin/email/storeemail',emailController.storeEmails);
+    router.post('/admin/email/draftmail',emailController.draftMail);
 
     router.get('/admin/email/getall',emailController.getAllEmails);
+
+    router.get('/admin/email/getbyparams/:offset/:limit',emailController.getEmailsbyparams);
+
+    router.get('/admin/email/getbyaminid/:admin_id',emailController.getEmailbyadminid);
 
     router.get('/admin/email/getbyid/:id',emailController.getEmailbyid);
 

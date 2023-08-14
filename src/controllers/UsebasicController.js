@@ -333,13 +333,7 @@ class UserbasicController {
                 route: "/api/admin/user/create",
                 error_code: "500",
             });
-            // return res.status(500).json({
-            //     error: true,
-            //     message: 'Unable to complete request at the moment commmmmmmmm' + '' + error.toString(),
-            // })
-            // if(logError){
-
-            // }
+          
         }
     }
 
@@ -497,18 +491,7 @@ class UserbasicController {
             
             /* ---------------- this end point creates users with out kyc --------------- */
 
-            // var checkUser = await User.findAll({
-            //     where: {
-            //         [Op.or]: [{ email: req.body.email }, { phone: req.body.phone }],
-            //     },
-            // });
-
-            // if (checkUser.length > 0) {
-            //     return res.status(400).json({
-            //         error: true,
-            //         message: "User with this email or phone number already exist",
-            //     });
-            // } else {
+           
               
                user = await UserbasicController.saveBasicBatchUser(element);
 
@@ -809,13 +792,7 @@ class UserbasicController {
                 route: "/api/admin/user/account/addbatchbasicuser",
                 error_code: "500",
             });
-            // return res.status(500).json({
-            //     error: true,
-            //     message: 'Unable to complete request at the moment commmmmmmmm' + '' + error.toString(),
-            // })
-            // if(logError){
-
-            // }
+            
         }
     }
 

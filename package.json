@@ -50,7 +50,8 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nodemon": "^2.0.20",
     "sequelize": "^6.25.3",
-    "socket.io": "^4.6.1"
+    "socket.io": "^4.6.1",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "link-module-alias": "^1.2.0"

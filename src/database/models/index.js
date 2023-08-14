@@ -78,6 +78,7 @@ const Sms= DB.sms= require("./adminsms.model.js").Model(initialInstance, createS
 const ManagerAssignee = DB. managerAssignee= require("./manager_assignee.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Vfdwallet = DB.vfdwallet= require("./vfdwallet.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 const Email = DB.email= require("./email.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
+const Gallery = DB.gallery= require("./gallary.model.js").Model(initialInstance, createSequelizeInstance(), Sequelize);
 
 //Register Relationships
 //---------------------------------------------------
@@ -295,6 +296,13 @@ User.hasOne(Kycdocs,{
   as : "kycdocs"
 });
 
+Email.hasOne(Admin,{
+  foreignKey : "admin_id",
+  as : "admin"
+});
+
+
+
 
 
 
@@ -345,5 +353,6 @@ module.exports = {
   Sms,
   ManagerAssignee,
   Vfdwallet,
-  Email
+  Email,
+  Gallery
 };
