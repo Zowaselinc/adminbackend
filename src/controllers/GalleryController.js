@@ -38,7 +38,7 @@ class GalleryContoller{
         if(err){
             return res.status(400).json({
                 error:true,
-                message: "failed to upload file"
+                message: "failed to upload file" + err
                 
                 
             });
