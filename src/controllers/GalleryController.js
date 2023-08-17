@@ -23,7 +23,7 @@ class GalleryContoller{
        var filename = file.name
        console.log(filename);
        //all express static files go to public , they can be accessed without public on the url
-       let filepath =`public`;
+       let filepath =`./public`;
        //direct path to access files after upload
        
     //    Re-edit the subfilepath to avoid duplicate files of same name
@@ -106,7 +106,10 @@ static async deleteFile(req,res){
             
             if(err){
                 
-               console.log("Failed to delete file ",err)
+               return res.json({
+                error:true,
+                message:"Failed to delete file " + err
+            })
                
              }else{
                 return res.json({message:"File deleted successfully"
