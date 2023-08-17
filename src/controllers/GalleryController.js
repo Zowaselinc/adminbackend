@@ -35,6 +35,7 @@ class GalleryContoller{
        //move file to required folder
        file.mv(mainfilepath, function(err){
         
+        
         if(err){
             return res.status(400).json({
                 error:true,
@@ -44,14 +45,13 @@ class GalleryContoller{
             });
             
         }else{
+            
             return res.status(200).json({
                 error:false,
                 message:"file uploaded",
                 file: subfilepath
             })
         }
-       
-
        });
     //    insert uploade files into gallery table 
        await Gallery.create({
@@ -59,6 +59,7 @@ class GalleryContoller{
         image_path:subfilepath
             
        })
+    //    
     //    console.log(filepath);
     }catch(error){
         var logError = await ErrorLog.create({
@@ -94,7 +95,7 @@ static async deleteFile(req,res){
     }
    
         // locate the image and the file where the image or file to be deleted is located 
-    const rootfolder = "public/email"
+    const rootfolder = "./public/email"
 
     // the file path 
     const filepath = `${rootfolder}/${imagename}`
