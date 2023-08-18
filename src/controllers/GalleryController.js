@@ -23,7 +23,7 @@ class GalleryContoller{
        var filename = file.name
        console.log(filename);
        //all express static files go to public , they can be accessed without public on the url
-       let filepath =`public`;
+       let filepath =`./public`;
        //direct path to access files after upload
        
     //    Re-edit the subfilepath to avoid duplicate files of same name
@@ -35,6 +35,7 @@ class GalleryContoller{
        //move file to required folder
        file.mv(mainfilepath, function(err){
         
+        
         if(err){
             return res.status(400).json({
                 error:true,
@@ -44,14 +45,13 @@ class GalleryContoller{
             });
             
         }else{
+            
             return res.status(200).json({
                 error:false,
                 message:"file uploaded",
                 file: subfilepath
             })
         }
-       
-
        });
     //    insert uploade files into gallery table 
        await Gallery.create({
@@ -59,6 +59,7 @@ class GalleryContoller{
         image_path:subfilepath
             
        })
+    //    
     //    console.log(filepath);
     }catch(error){
         var logError = await ErrorLog.create({
@@ -94,7 +95,7 @@ static async deleteFile(req,res){
     }
    
         // locate the image and the file where the image or file to be deleted is located 
-    const rootfolder = "public/email"
+    const rootfolder = "./public/email"
 
     // the file path 
     const filepath = `${rootfolder}/${imagename}`
@@ -106,7 +107,10 @@ static async deleteFile(req,res){
             
             if(err){
                 
-               console.log("Failed to delete file ",err)
+               return res.json({
+                error:true,
+                message:"Failed to delete file " + err
+            })
                
              }else{
                 return res.json({message:"File deleted successfully"
