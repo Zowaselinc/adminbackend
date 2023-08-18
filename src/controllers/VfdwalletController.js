@@ -179,6 +179,15 @@ class VfdwalletController {
         });
     }
 
+    static async getMainAccount(req, res) {
+        const account = await VbankProvider.accountEnquiry();
+        return res.status(200).json({
+            error: false,
+            message: "Account fetched",
+            data: account
+        });
+    }
+
 
 
 
