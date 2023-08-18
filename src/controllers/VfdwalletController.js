@@ -184,7 +184,7 @@ class VfdwalletController {
         return res.status(200).json({
             error: false,
             message: "Account fetched",
-            data: account
+            data: account.data
         });
     }
 
