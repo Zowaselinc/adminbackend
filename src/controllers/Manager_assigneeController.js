@@ -19,16 +19,17 @@ class Manager_assigneeController{
             //     data: {}
             //     });
             // }
+
             // check if a user has been assigned to an admin, that same user should not be assigned to that admin again 
 
-            // var checkUser = await ManagerAssignee.findOne({where: {user_id : req.body.user_id}});
+            var checkUser = await ManagerAssignee.findOne({where: {user_id : req.body.user_id}});
 
-            // if(checkUser){
-            //     return res.status(400).json({
-            //         error:true,  
-            //         message : "This user has already been assigned to an admin"
-            //     })
-            // }else{
+            if(checkUser){
+                return res.status(400).json({
+                    error:true,  
+                    message : "This user has already been assigned to an admin"
+                })
+            }else{
 
             var theManagerAssignee = await ManagerAssignee.create({
                 admin_id:req.body.admin_id,
@@ -42,32 +43,32 @@ class Manager_assigneeController{
                      
                       await Activitylog.create({
                         admin_id:adminId ,
-                        section_accessed:'Adding Manager assignee',
+                        section_accessed:'Account manager section',
                         page_route:'/api/admin/manager/add',
-                        action:'Added new manager assignee'
+                        action:'Assigned a user to an account manager'
                     });
                      /* ----------------------------------  ACTIVITY LOG --------------------------------- */
 
             if(theManagerAssignee){
                 return res.status(200).json({
                     error : false,
-                     message : "Manager assignee created succesfully"
+                     message : "You have successfully assigned a user to an account manager"
 
                  });
  
             }else{
                 return res.status(200).json({
                     error : true,
-                     message : "Failed to create Manager assignee"
+                     message : "Failed to assign user to an account manager"
   
                  });
 
             }
-        // }
+        }
 
         }catch(err){
             var logError = await ErrorLog.create({
-                error_name: "Error on creating Assigning Manager",
+                error_name: "Error on assinging user to an account manager",
                 error_description: err.toString(),
                 route: "/api/admin/manager/add",
                 error_code: "500"
