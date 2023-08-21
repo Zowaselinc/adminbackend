@@ -175,8 +175,10 @@ Router.group((router) => {
 
     router.post('/admin/vfd/add', VfdwalletController.createVfdaccount)
     router.get('/admin/vfd', VfdwalletController.getVbankWallet)
+    router.get('/admin/vfd/account', VfdwalletController.getMainAccount)
     router.get('/admin/vfd/loan', VfdwalletController.getLoans)
     router.post('/admin/loan/disburse', VfdwalletController.disburseLoan)
+    router.post('/admin/vfd/transfer', VfdwalletController.transferToAccount)
 
 });
 
